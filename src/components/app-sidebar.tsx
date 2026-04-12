@@ -46,15 +46,17 @@ import {
 } from "@/components/ui/sidebar";
 import { trpc } from "@/lib/trpc";
 
-// Sections known to have content in F1/F2. Anything not in this set
-// renders greyed with a "soon" badge. As content lands in F3/F4 we add
-// section IDs here (or eventually replace with a tRPC query).
+// Sections known to have content. Anything not in this set renders greyed
+// with a "soon" badge. As content lands we add section IDs here (or
+// eventually replace with a `sections.list` tRPC query that reflects
+// content state automatically — tracked in ROADMAP).
 const SECTIONS_WITH_CONTENT = new Set<string>([
-  // F2 samples are stitched into these three sections.
-  "gca-overview",
-  "gca-module-1-warmup",
+  // F2 samples
   "behavioral-respect-for-individuals",
   "system-design-banking",
+  // F3 — GCA content
+  "gca-overview", // 1 MCQ (F2) + 6 MCQ (F3)
+  "gca-module-1-warmup", // 8 code exercises across hashmap-complement + palindrome-check
 ]);
 
 export function AppSidebar() {
