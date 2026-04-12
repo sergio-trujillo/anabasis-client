@@ -3,9 +3,17 @@
 // goal-driven, not gamified), SettingsSheet (F2), i18n (F2).
 
 import { Fragment } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useLocation, useParams } from "react-router";
-import { MoonIcon, SunIcon } from "lucide-react";
-import { useTheme } from "@/components/theme-provider";
+import { LanguagesIcon, MoonIcon, SunIcon } from "lucide-react";
+import { BASE_THEMES, useTheme } from "@/components/theme-provider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { SUPPORTED_LANGUAGES } from "@/lib/i18n";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -20,9 +28,11 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { trpc } from "@/lib/trpc";
 
 export function AppHeader() {
+  const { t, i18n } = useTranslation();
   const { theme, cycleTheme } = useTheme();
   const segments = useBreadcrumbs();
-  const isDark = theme === "lone-dusk-bro";
+  const isDark = BASE_THEMES[theme].mode === "dark";
+  const activeLang = i18n.language.split("-")[0] ?? "en";
 
   return (
     <header className="sticky top-0 z-40 flex h-12 shrink-0 items-center justify-between border-b bg-background px-4">
@@ -32,7 +42,7 @@ export function AppHeader() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="hidden sm:inline-flex">
-              <BreadcrumbLink render={<Link to="/">Anabasis</Link>} />
+              <BreadcrumbLink render={<Link to="/">{t("brand.name")}</Link>} />
             </BreadcrumbItem>
             {segments.map((seg) => (
               <Fragment key={seg.path}>
@@ -55,11 +65,40 @@ export function AppHeader() {
       </div>
 
       <div className="flex items-center gap-1">
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-8"
+                title={t("language.tooltip")}
+              >
+                <LanguagesIcon className="size-4" />
+                <span className="sr-only">{t("language.tooltip")}</span>
+              </Button>
+            }
+          />
+          <DropdownMenuContent align="end">
+            {SUPPORTED_LANGUAGES.map((lng) => (
+              <DropdownMenuItem
+                key={lng}
+                onClick={() => i18n.changeLanguage(lng)}
+                className={activeLang === lng ? "font-semibold" : ""}
+              >
+                <span className="mr-2 text-xs font-mono text-muted-foreground uppercase">
+                  {lng}
+                </span>
+                {t(`language.${lng}`)}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
         <Button
           variant="ghost"
           size="icon"
           className="size-8"
-          title="Toggle theme (D)"
+          title={t("theme.toggleTooltip")}
           onClick={cycleTheme}
         >
           {isDark ? <SunIcon className="size-4" /> : <MoonIcon className="size-4" />}

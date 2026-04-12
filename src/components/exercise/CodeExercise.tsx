@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { CheckIcon, XIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "@server/routers/_app";
 import { Badge } from "@/components/ui/badge";
@@ -10,12 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { bilingual } from "@/lib/i18n";
 import { trpc } from "@/lib/trpc";
 
 type ExerciseOutput = inferRouterOutputs<AppRouter>["exercises"]["get"];
 type Code = Extract<ExerciseOutput, { type: "code" }>;
 
 export function CodeExercise({ exercise }: { exercise: Code }) {
+  const { t } = useTranslation();
   const [code, setCode] = useState(exercise.starterCode);
   const runJava = trpc.runner.runJava.useMutation();
   const data = runJava.data;
@@ -23,11 +26,11 @@ export function CodeExercise({ exercise }: { exercise: Code }) {
   return (
     <div className="space-y-5">
       <p className="text-foreground leading-relaxed whitespace-pre-wrap">
-        {exercise.statement.en}
+        {bilingual(exercise.statement)}
       </p>
 
       <div className="space-y-2">
-        <Label>Solution.java</Label>
+        <Label>{t("code.label")}</Label>
         <Textarea
           value={code}
           onChange={(e) => setCode(e.target.value)}
@@ -40,7 +43,7 @@ export function CodeExercise({ exercise }: { exercise: Code }) {
         onClick={() => runJava.mutate({ studentCode: code, testCode: exercise.testCode })}
         disabled={runJava.isPending}
       >
-        {runJava.isPending ? "Running javac + JUnit…" : "Run tests"}
+        {runJava.isPending ? t("code.running") : t("code.run")}
       </Button>
 
       {data && (
@@ -48,10 +51,14 @@ export function CodeExercise({ exercise }: { exercise: Code }) {
           <CardContent className="p-4 space-y-3">
             <div className="flex items-center gap-3">
               <Badge variant={data.success ? "default" : "destructive"}>
-                {data.success ? "PASS" : "FAIL"}
+                {data.success ? t("code.pass") : t("code.fail")}
               </Badge>
               <span className="text-sm text-muted-foreground">
-                {data.passedTests}/{data.totalTests} tests · {data.timeMs} ms
+                {t("code.testsSummary", {
+                  passed: data.passedTests,
+                  total: data.totalTests,
+                  ms: data.timeMs,
+                })}
               </span>
             </div>
 

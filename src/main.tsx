@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router";
 import { App } from "./App";
 import { ThemeProvider } from "./components/theme-provider";
 import "./index.css";
+import "./lib/i18n"; // side-effect: initializes i18next before first render
 import { TRPC_URL, trpc } from "./lib/trpc";
 
 function Root() {

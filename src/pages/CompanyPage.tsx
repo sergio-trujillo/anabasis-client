@@ -1,19 +1,14 @@
 // Company landing — shows the active 4 F1 sample exercises (one per type).
 // F2 will replace this with a loop roadmap + countdown header.
 
+import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { bilingual } from "@/lib/i18n";
 import { trpc } from "@/lib/trpc";
-
-const TYPE_LABEL: Record<string, string> = {
-  mcq: "MCQ",
-  code: "Code",
-  "open-prompt": "Open Prompt",
-  "interviewer-chat": "Interviewer Chat",
-};
 
 const TYPE_VARIANT: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
   mcq: "default",
@@ -23,6 +18,7 @@ const TYPE_VARIANT: Record<string, "default" | "secondary" | "outline" | "destru
 };
 
 export function CompanyPage() {
+  const { t } = useTranslation();
   const { companySlug = "" } = useParams();
   const companyQuery = trpc.companies.get.useQuery({ slug: companySlug });
   const exercisesQuery = trpc.exercises.list.useQuery();
@@ -51,7 +47,7 @@ export function CompanyPage() {
         )}
 
         <h2 className="text-xs uppercase tracking-wider text-muted-foreground mb-3">
-          F1 sample exercises — one of each type
+          {t("company.samplesHeader")}
         </h2>
 
         {exercisesQuery.isPending && (
@@ -71,10 +67,10 @@ export function CompanyPage() {
                     <CardHeader className="py-4">
                       <div className="flex items-center justify-between gap-3">
                         <CardTitle className="text-sm font-medium font-heading">
-                          {ex.title.en}
+                          {bilingual(ex.title)}
                         </CardTitle>
                         <Badge variant={TYPE_VARIANT[ex.type] ?? "default"}>
-                          {TYPE_LABEL[ex.type] ?? ex.type}
+                          {t(`exercise.types.${ex.type}`)}
                         </Badge>
                       </div>
                     </CardHeader>

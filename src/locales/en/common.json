@@ -1,0 +1,100 @@
+{
+  "brand": {
+    "name": "Anabasis",
+    "subtitle": "ἀνάβασις · the ascent",
+    "tagline": "Company-specific interview prep, one campaign at a time."
+  },
+  "nav": {
+    "activeCampaigns": "Active campaigns",
+    "comingSoon": "Coming soon",
+    "overview": "Overview",
+    "practice": "Random practice",
+    "mockExam": "Mock exam",
+    "back": "Back",
+    "backToCatalog": "Back to catalog"
+  },
+  "catalog": {
+    "title": "Anabasis",
+    "chooseCampaign": "Choose a campaign",
+    "loading": "Loading catalog…",
+    "errorLoading": "Error loading catalog",
+    "active": "active",
+    "soon": "soon",
+    "locked": "locked"
+  },
+  "company": {
+    "loading": "Loading…",
+    "samplesHeader": "F1 sample exercises — one of each type"
+  },
+  "exercise": {
+    "loading": "Loading exercise…",
+    "types": {
+      "mcq": "MCQ",
+      "code": "Code",
+      "open-prompt": "Open Prompt",
+      "interviewer-chat": "Interviewer Chat"
+    }
+  },
+  "mcq": {
+    "submit": "Submit",
+    "checking": "Checking…",
+    "correct": "Correct",
+    "incorrect": "Not quite",
+    "tryAgain": "Try again"
+  },
+  "code": {
+    "label": "Solution.java",
+    "run": "Run tests",
+    "running": "Compiling javac + JUnit…",
+    "pass": "PASS",
+    "fail": "FAIL",
+    "testsSummary": "{{passed}}/{{total}} tests · {{ms}} ms",
+    "nextProblem": "Next problem"
+  },
+  "openPrompt": {
+    "question": "Question",
+    "placeholder": "Your answer… use STAR (Situation, Task, Action, Result) and include numbers.",
+    "submit": "Submit for evaluation",
+    "evaluating": "Judge is reading (~15 s)…",
+    "strongAnswer": "Strong answer",
+    "roomToTighten": "Room to tighten up",
+    "hits": "Hits",
+    "misses": "Missed",
+    "warnings": "Warnings"
+  },
+  "interviewerChat": {
+    "personaLabel": "Persona:",
+    "turnCounter": "turn {{current}} / {{total}}",
+    "placeholder": "Answer the interviewer…",
+    "evalTitle": "Interview evaluation",
+    "covered": "Covered",
+    "missed": "Missed",
+    "send": "Send",
+    "enterHint": "Enter to send · Shift+Enter for newline"
+  },
+  "theme": {
+    "toggleTooltip": "Toggle theme (D)"
+  },
+  "language": {
+    "tooltip": "Change language",
+    "en": "English",
+    "es": "Español"
+  },
+  "loader": {
+    "interviewerTyping": "Interviewer is typing…"
+  },
+  "practice": {
+    "title": "Random practice",
+    "subtitle": "A random Capital One problem. Solve, run, next.",
+    "problemLabel": "Problem",
+    "editorLabel": "Your code",
+    "resultsLabel": "Results",
+    "emptyPool": "No code problems in the pool yet.",
+    "noResultsYet": "Run the tests to see results.",
+    "nextProblem": "Next problem",
+    "resetCode": "Reset code"
+  },
+  "footer": {
+    "phase": "F2 · Capital One"
+  }
+}

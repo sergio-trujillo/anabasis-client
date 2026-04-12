@@ -1,0 +1,100 @@
+{
+  "brand": {
+    "name": "Anabasis",
+    "subtitle": "ἀνάβασις · el ascenso",
+    "tagline": "Preparación de entrevistas específica por empresa, una campaña a la vez."
+  },
+  "nav": {
+    "activeCampaigns": "Campañas activas",
+    "comingSoon": "Próximamente",
+    "overview": "Resumen",
+    "practice": "Práctica aleatoria",
+    "mockExam": "Simulacro de examen",
+    "back": "Volver",
+    "backToCatalog": "Volver al catálogo"
+  },
+  "catalog": {
+    "title": "Anabasis",
+    "chooseCampaign": "Elige una campaña",
+    "loading": "Cargando catálogo…",
+    "errorLoading": "Error al cargar catálogo",
+    "active": "activa",
+    "soon": "pronto",
+    "locked": "bloqueada"
+  },
+  "company": {
+    "loading": "Cargando…",
+    "samplesHeader": "Ejercicios de muestra — uno de cada tipo"
+  },
+  "exercise": {
+    "loading": "Cargando ejercicio…",
+    "types": {
+      "mcq": "Opción múltiple",
+      "code": "Código",
+      "open-prompt": "Respuesta abierta",
+      "interviewer-chat": "Chat con entrevistador"
+    }
+  },
+  "mcq": {
+    "submit": "Enviar",
+    "checking": "Verificando…",
+    "correct": "Correcto",
+    "incorrect": "Casi, pero no",
+    "tryAgain": "Intentar de nuevo"
+  },
+  "code": {
+    "label": "Solution.java",
+    "run": "Ejecutar pruebas",
+    "running": "Compilando javac + JUnit…",
+    "pass": "PASÓ",
+    "fail": "FALLÓ",
+    "testsSummary": "{{passed}}/{{total}} pruebas · {{ms}} ms",
+    "nextProblem": "Siguiente problema"
+  },
+  "openPrompt": {
+    "question": "Pregunta",
+    "placeholder": "Tu respuesta… usa STAR (Situación, Tarea, Acción, Resultado) e incluye números.",
+    "submit": "Enviar para evaluación",
+    "evaluating": "El juez está leyendo (~15 s)…",
+    "strongAnswer": "Respuesta sólida",
+    "roomToTighten": "Hay espacio para ajustar",
+    "hits": "Aciertos",
+    "misses": "Faltó cubrir",
+    "warnings": "Advertencias"
+  },
+  "interviewerChat": {
+    "personaLabel": "Entrevistadora:",
+    "turnCounter": "turno {{current}} / {{total}}",
+    "placeholder": "Responde a la entrevistadora…",
+    "evalTitle": "Evaluación de la entrevista",
+    "covered": "Cubierto",
+    "missed": "Faltó",
+    "send": "Enviar",
+    "enterHint": "Enter para enviar · Shift+Enter para nueva línea"
+  },
+  "theme": {
+    "toggleTooltip": "Cambiar tema (D)"
+  },
+  "language": {
+    "tooltip": "Cambiar idioma",
+    "en": "English",
+    "es": "Español"
+  },
+  "loader": {
+    "interviewerTyping": "La entrevistadora está escribiendo…"
+  },
+  "practice": {
+    "title": "Práctica aleatoria",
+    "subtitle": "Un problema al azar de Capital One. Resuelve, corre, siguiente.",
+    "problemLabel": "Problema",
+    "editorLabel": "Tu código",
+    "resultsLabel": "Resultados",
+    "emptyPool": "Aún no hay problemas de código en el pool.",
+    "noResultsYet": "Corre las pruebas para ver los resultados.",
+    "nextProblem": "Siguiente problema",
+    "resetCode": "Restablecer código"
+  },
+  "footer": {
+    "phase": "F2 · Capital One"
+  }
+}

@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { CheckIcon, XIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "@server/routers/_app";
 import { Button } from "@/components/ui/button";
+import { bilingual } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/lib/trpc";
 
@@ -12,13 +14,14 @@ type ExerciseOutput = inferRouterOutputs<AppRouter>["exercises"]["get"];
 type Mcq = Extract<ExerciseOutput, { type: "mcq" }>;
 
 export function McqExercise({ exercise }: { exercise: Mcq }) {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState<string | null>(null);
   const evalMcq = trpc.exercises.evaluateMcq.useMutation();
   const result = evalMcq.data;
 
   return (
     <div className="space-y-5">
-      <p className="text-foreground leading-relaxed">{exercise.prompt.en}</p>
+      <p className="text-foreground leading-relaxed">{bilingual(exercise.prompt)}</p>
 
       <ul className="space-y-2">
         {exercise.options.map((opt) => {
@@ -46,7 +49,7 @@ export function McqExercise({ exercise }: { exercise: Mcq }) {
                 <span className="text-muted-foreground mr-2 font-mono">
                   {opt.id.toUpperCase()}.
                 </span>
-                {opt.label.en}
+                {bilingual(opt.label)}
               </button>
             </li>
           );
@@ -58,7 +61,7 @@ export function McqExercise({ exercise }: { exercise: Mcq }) {
           onClick={() => selected && evalMcq.mutate({ id: exercise.id, optionId: selected })}
           disabled={!selected || evalMcq.isPending}
         >
-          {evalMcq.isPending ? "Checking…" : "Submit"}
+          {evalMcq.isPending ? t("mcq.checking") : t("mcq.submit")}
         </Button>
       )}
 
@@ -77,9 +80,9 @@ export function McqExercise({ exercise }: { exercise: Mcq }) {
             ) : (
               <XIcon className="size-4 text-destructive" />
             )}
-            {result.correct ? "Correct" : "Not quite"}
+            {result.correct ? t("mcq.correct") : t("mcq.incorrect")}
           </p>
-          <p className="text-sm text-muted-foreground">{result.explanation.en}</p>
+          <p className="text-sm text-muted-foreground">{bilingual(result.explanation)}</p>
         </div>
       )}
     </div>

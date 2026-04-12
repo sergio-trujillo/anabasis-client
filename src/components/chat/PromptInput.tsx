@@ -2,6 +2,7 @@
 // Button + Textarea + theme tokens.
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { SendIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,6 +16,7 @@ export function PromptInput({
   disabled?: boolean;
   placeholder?: string;
 }) {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
 
   function submit() {
@@ -31,7 +33,7 @@ export function PromptInput({
           rows={1}
           value={value}
           disabled={disabled}
-          placeholder={placeholder ?? "Your response…"}
+          placeholder={placeholder ?? t("interviewerChat.placeholder")}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -50,9 +52,7 @@ export function PromptInput({
           <SendIcon className="size-4" />
         </Button>
       </div>
-      <p className="text-[10px] text-muted-foreground mt-1">
-        Enter to send · Shift+Enter for newline
-      </p>
+      <p className="text-[10px] text-muted-foreground mt-1">{t("interviewerChat.enterHint")}</p>
     </div>
   );
 }

@@ -3,6 +3,7 @@
 // server emits the closing line + judge call when turnCount hits maxTurns.
 
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "@server/routers/_app";
 import { Conversation } from "@/components/chat/Conversation";
@@ -16,6 +17,7 @@ type ExerciseOutput = inferRouterOutputs<AppRouter>["exercises"]["get"];
 type Scenario = Extract<ExerciseOutput, { type: "interviewer-chat" }>;
 
 export function InterviewerChatExercise({ exercise }: { exercise: Scenario }) {
+  const { t } = useTranslation();
   const chat = useInterviewerChat();
 
   useEffect(() => {
@@ -27,11 +29,14 @@ export function InterviewerChatExercise({ exercise }: { exercise: Scenario }) {
     <div className="rounded-xl border border-border bg-card overflow-hidden flex flex-col h-[70vh]">
       <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-card">
         <div className="text-sm text-muted-foreground line-clamp-1">
-          <span className="text-muted-foreground/60 mr-1">Persona:</span>
+          <span className="text-muted-foreground/60 mr-1">{t("interviewerChat.personaLabel")}</span>
           {exercise.persona.slice(0, 80)}…
         </div>
         <div className="text-xs text-muted-foreground font-mono">
-          turn {chat.candidateCount} / {chat.maxTurns}
+          {t("interviewerChat.turnCounter", {
+            current: chat.candidateCount,
+            total: chat.maxTurns,
+          })}
         </div>
       </div>
 
@@ -45,12 +50,14 @@ export function InterviewerChatExercise({ exercise }: { exercise: Scenario }) {
 
         {chat.eval && (
           <div className="pt-2">
-            <Reasoning score={chat.eval.score} title="Interview evaluation">
+            <Reasoning score={chat.eval.score} title={t("interviewerChat.evalTitle")}>
               <p className="italic text-muted-foreground">{chat.eval.feedback}</p>
 
               {chat.eval.covered.length > 0 && (
                 <div>
-                  <p className="text-xs uppercase tracking-wider text-chart-2 mb-1">Covered</p>
+                  <p className="text-xs uppercase tracking-wider text-chart-2 mb-1">
+                    {t("interviewerChat.covered")}
+                  </p>
                   <ul className="list-disc list-inside text-sm">
                     {chat.eval.covered.map((c) => (
                       <li key={c}>{c}</li>
@@ -61,7 +68,9 @@ export function InterviewerChatExercise({ exercise }: { exercise: Scenario }) {
 
               {chat.eval.missed.length > 0 && (
                 <div>
-                  <p className="text-xs uppercase tracking-wider text-chart-3 mb-1">Missed</p>
+                  <p className="text-xs uppercase tracking-wider text-chart-3 mb-1">
+                    {t("interviewerChat.missed")}
+                  </p>
                   <ul className="list-disc list-inside text-sm">
                     {chat.eval.missed.map((m) => (
                       <li key={m}>{m}</li>
@@ -78,7 +87,7 @@ export function InterviewerChatExercise({ exercise }: { exercise: Scenario }) {
         <PromptInput
           disabled={chat.isSending || chat.isStarting}
           onSubmit={(v) => chat.send(v)}
-          placeholder="Answer the interviewer…"
+          placeholder={t("interviewerChat.placeholder")}
         />
       )}
 

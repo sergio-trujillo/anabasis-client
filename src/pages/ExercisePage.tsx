@@ -8,6 +8,7 @@ import { McqExercise } from "@/components/exercise/McqExercise";
 import { OpenPromptExercise } from "@/components/exercise/OpenPromptExercise";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Skeleton } from "@/components/ui/skeleton";
+import { bilingual } from "@/lib/i18n";
 import { trpc } from "@/lib/trpc";
 
 export function ExercisePage() {
@@ -29,7 +30,7 @@ export function ExercisePage() {
 
         {data && (
           <>
-            <h1 className="text-2xl font-bold font-heading mb-6">{data.title.en}</h1>
+            <h1 className="text-2xl font-bold font-heading mb-6">{bilingual(data.title)}</h1>
             {data.type === "mcq" && <McqExercise exercise={data} />}
             {data.type === "code" && <CodeExercise exercise={data} />}
             {data.type === "open-prompt" && <OpenPromptExercise exercise={data} />}
