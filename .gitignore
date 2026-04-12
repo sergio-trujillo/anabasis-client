@@ -1,0 +1,19 @@
+# deps
+node_modules/
+
+# build
+dist/
+dist-ssr/
+*.tsbuildinfo
+
+# runtime
+.env
+.env.local
+.env.*.local
+*.log
+
+# os / editor
+.DS_Store
+.vscode/
+.idea/
+*.swp
