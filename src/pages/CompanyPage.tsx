@@ -1,10 +1,12 @@
 // Company landing — shows the active 4 F1 sample exercises (one per type).
 // F2 will replace this with a loop roadmap + countdown header.
 
+import { ClockIcon, ShuffleIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { bilingual } from "@/lib/i18n";
@@ -43,6 +45,22 @@ export function CompanyPage() {
             <p className="text-sm text-muted-foreground mt-1">
               {companyQuery.data.company.tagline}
             </p>
+            {companyQuery.data.company.status === "active" && (
+              <div className="flex flex-wrap gap-2 mt-5">
+                <Button asChild variant="default">
+                  <Link to={`/${companySlug}/mock-gca`}>
+                    <ClockIcon className="size-4" />
+                    Mock GCA · 70 min
+                  </Link>
+                </Button>
+                <Button asChild variant="secondary">
+                  <Link to={`/${companySlug}/practice`}>
+                    <ShuffleIcon className="size-4" />
+                    {t("nav.practice")}
+                  </Link>
+                </Button>
+              </div>
+            )}
           </header>
         )}
 
