@@ -8,8 +8,9 @@
   <img alt="shadcn/ui" src="https://img.shields.io/badge/shadcn%2Fui-base--mira-black" />
   <img alt="tRPC" src="https://img.shields.io/badge/tRPC-11-2596BE?logo=trpc&logoColor=white" />
   <img alt="Monaco" src="https://img.shields.io/badge/Monaco-Editor-0078D4" />
-  <img alt="Phase" src="https://img.shields.io/badge/Phase-F1%20scaffolding-yellow" />
+  <img alt="Phase" src="https://img.shields.io/badge/Phase-F3-yellow" />
   <img alt="Part of" src="https://img.shields.io/badge/Part%20of-Anabasis-black" />
+  <img alt="License" src="https://img.shields.io/badge/License-Proprietary-red" />
 </p>
 
 > Frontend for **Anabasis** — local-first, company-specific interview prep. Company catalog, countdown-to-interview header, mixed exercises, interviewer chat UI, mock loop runner.
@@ -100,4 +101,4 @@ npm run dev           # Vite on :5174 (offset +1 from Praxema's :5173)
 
 ## License
 
-TBD. See parent workspace `README.md`.
+**Proprietary.** Single-author personal project, not open-sourced. No public `LICENSE` file. See the workspace `STATUS.md` decision D19.
