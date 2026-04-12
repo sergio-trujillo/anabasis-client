@@ -14,12 +14,12 @@
 import { ClockIcon, FlagIcon, RotateCcwIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router";
+import { CodeEditor } from "@/components/CodeEditor";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
 import { bilingual } from "@/lib/i18n";
 import { trpc } from "@/lib/trpc";
 
@@ -340,12 +340,7 @@ function ProblemBoard({
           </Button>
         </CardHeader>
         <CardContent>
-          <Textarea
-            value={code}
-            onChange={(e) => onCodeChange(e.target.value)}
-            spellCheck={false}
-            className="min-h-[280px] font-mono text-[13px] resize-none"
-          />
+          <CodeEditor value={code} onChange={onCodeChange} height={320} />
           <div className="flex justify-end mt-3">
             <Button onClick={onRun} disabled={running}>
               {running ? "Running…" : "Run tests"}

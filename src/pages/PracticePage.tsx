@@ -3,7 +3,7 @@
 // Three-panel layout inspired by Praxema's problem page, adapted for
 // interview-prep semantics:
 //   - Left  : problem statement (bilingual)
-//   - Center: plain Textarea editor (Monaco comes in F3)
+//   - Center: Monaco editor (lazy-loaded via CodeEditor wrapper)
 //   - Right : JUnit test results + output
 //
 // "Next problem" button shuffles to another random code exercise.
@@ -15,12 +15,12 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "@server/routers/_app";
+import { CodeEditor } from "@/components/CodeEditor";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
 import { bilingual } from "@/lib/i18n";
 import { trpc } from "@/lib/trpc";
 
@@ -144,12 +144,7 @@ function Board({ exercise }: { exercise: Code }) {
           </Button>
         </CardHeader>
         <CardContent>
-          <Textarea
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            spellCheck={false}
-            className="min-h-[280px] font-mono text-[13px] resize-none"
-          />
+          <CodeEditor value={code} onChange={setCode} height={320} />
           <div className="flex justify-end mt-3">
             <Button
               onClick={() =>

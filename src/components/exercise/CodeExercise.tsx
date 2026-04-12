@@ -1,16 +1,16 @@
-// Code exercise — javac + JUnit via the runner router. Uses shadcn Textarea
-// + Button + Card. Monaco swap is F2.
+// Code exercise — javac + JUnit via the runner router. Monaco editor
+// (lazy-loaded) + Button + Card.
 
 import { useState } from "react";
 import { CheckIcon, XIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "@server/routers/_app";
+import { CodeEditor } from "@/components/CodeEditor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { bilingual } from "@/lib/i18n";
 import { trpc } from "@/lib/trpc";
 
@@ -31,12 +31,7 @@ export function CodeExercise({ exercise }: { exercise: Code }) {
 
       <div className="space-y-2">
         <Label>{t("code.label")}</Label>
-        <Textarea
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          spellCheck={false}
-          className="min-h-[260px] font-mono text-[13px]"
-        />
+        <CodeEditor value={code} onChange={setCode} height={320} />
       </div>
 
       <Button
