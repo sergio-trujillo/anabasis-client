@@ -10,7 +10,19 @@
 //   - trpc.companies.get({ slug }) → { company, loop }
 //   - loop.phases[] → list of { id, name, description, sections[] }
 
-import { ClockIcon, ShuffleIcon, ChevronRightIcon } from 'lucide-react'
+import {
+  BookOpenIcon,
+  BotIcon,
+  BracesIcon,
+  BriefcaseIcon,
+  ChevronRightIcon,
+  ClockIcon,
+  FileCode2Icon,
+  MessageSquareIcon,
+  ShuffleIcon,
+  TimerIcon,
+  UsersIcon,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 import { Fade } from '@/components/animate-ui/primitives/effects/fade'
@@ -150,39 +162,119 @@ export function CompanyPage() {
   )
 }
 
+type Section = { id: string; name: string; kind: string }
 type Phase = {
   id: string
   name: string
   description: string
-  sections: Array<{ id: string; name: string; kind: string }>
+  sections: Section[]
+}
+
+// Visual language per section kind — icon + accent tailwind class.
+// The 'kind' field in loop.json is the authoritative taxonomy.
+function iconForKind(kind: string) {
+  switch (kind) {
+    case 'code':
+      return FileCode2Icon
+    case 'code+defense':
+      return BracesIcon
+    case 'timed':
+    case 'mock-loop':
+      return TimerIcon
+    case 'lesson+drills':
+      return BookOpenIcon
+    case 'interviewer-chat':
+      return BotIcon
+    case 'behavioral':
+      return UsersIcon
+    case 'business-case':
+      return BriefcaseIcon
+    default:
+      return MessageSquareIcon
+  }
+}
+
+function kindLabel(kind: string): string {
+  switch (kind) {
+    case 'code':
+      return 'Coding'
+    case 'code+defense':
+      return 'Coding + defense'
+    case 'timed':
+      return 'Timed exam'
+    case 'mock-loop':
+      return 'Mock loop'
+    case 'lesson+drills':
+      return 'Lesson + drills'
+    case 'interviewer-chat':
+      return 'Interviewer chat'
+    case 'behavioral':
+      return 'Behavioral'
+    case 'business-case':
+      return 'Business case'
+    default:
+      return kind
+  }
+}
+
+function hrefForSection(companySlug: string, section: Section): string {
+  if (section.id === 'gca-mock') return `/${companySlug}/mock-gca`
+  if (section.id === 'power-day-mock') return `/${companySlug}/mock-power-day`
+  return `/${companySlug}/section/${section.id}`
 }
 
 function PhaseCard({ companySlug, phase }: { companySlug: string; phase: Phase }) {
   return (
     <MagicCard className="p-6 h-full">
-      <header className="mb-4">
-        <h3 className="font-heading text-lg font-semibold">{phase.name}</h3>
+      <header className="mb-5 pb-4 border-b border-border/60">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="inline-flex size-1.5 rounded-full bg-primary" />
+          <h3 className="font-heading text-base font-semibold tracking-tight">
+            {phase.name}
+          </h3>
+        </div>
         {phase.description && (
-          <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+          <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
             {phase.description}
           </p>
         )}
       </header>
-      <ul className="space-y-1.5">
-        {phase.sections.map((section) => (
-          <li key={section.id}>
-            <Link
-              to={`/${companySlug}`}
-              className="group flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm hover:bg-muted transition-colors"
-            >
-              <span className="flex-1 truncate">{section.name}</span>
-              <Badge variant="outline" className="text-xs">
-                {section.kind}
-              </Badge>
-              <ChevronRightIcon className="size-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-            </Link>
-          </li>
-        ))}
+      <ul className="space-y-1">
+        {phase.sections.map((section) => {
+          const Icon = iconForKind(section.kind)
+          const isMock = section.id.endsWith('-mock')
+          return (
+            <li key={section.id}>
+              <Link
+                to={hrefForSection(companySlug, section)}
+                className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-muted transition-colors border border-transparent hover:border-border"
+              >
+                <span
+                  className={
+                    'flex size-8 items-center justify-center rounded-md ring-1 ring-border/60 ' +
+                    (isMock
+                      ? 'bg-primary/10 text-primary'
+                      : 'bg-muted/40 text-muted-foreground group-hover:text-foreground')
+                  }
+                >
+                  <Icon className="size-4" />
+                </span>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium truncate">{section.name}</div>
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground/80">
+                    {kindLabel(section.kind)}
+                  </div>
+                </div>
+                {isMock ? (
+                  <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-0">
+                    Timed
+                  </Badge>
+                ) : null}
+                <ChevronRightIcon className="size-4 text-muted-foreground/60 group-hover:text-foreground group-hover:translate-x-0.5 transition-all" />
+              </Link>
+            </li>
+          )
+        })}
       </ul>
     </MagicCard>
   )

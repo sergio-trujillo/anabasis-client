@@ -168,16 +168,33 @@ function CompanyMenuItem({
                 {phase.name}
               </div>
               <ul className="space-y-0.5">
-                {phase.sections.map((section) => (
-                  <li key={section.id}>
-                    <Link
-                      to={`/${company.slug}`}
-                      className="block pl-5 pr-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded-md truncate"
-                    >
-                      {section.name}
-                    </Link>
-                  </li>
-                ))}
+                {phase.sections.map((section) => {
+                  // Mock sections have their own timed routes; everything
+                  // else goes through the section page which either redirects
+                  // or lists exercises.
+                  const href =
+                    section.id === 'gca-mock'
+                      ? `/${company.slug}/mock-gca`
+                      : section.id === 'power-day-mock'
+                        ? `/${company.slug}/mock-power-day`
+                        : `/${company.slug}/section/${section.id}`
+                  const isActive = currentPath === href
+                  return (
+                    <li key={section.id}>
+                      <Link
+                        to={href}
+                        className={
+                          'block pl-5 pr-2 py-1 text-xs rounded-md truncate transition-colors ' +
+                          (isActive
+                            ? 'bg-muted text-foreground'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-muted')
+                        }
+                      >
+                        {section.name}
+                      </Link>
+                    </li>
+                  )
+                })}
               </ul>
             </SidebarMenuSubItem>
           ))}
