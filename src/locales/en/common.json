@@ -321,7 +321,60 @@
         }
       ],
       "valuesLink": "Deep-dive the 4 values in Power Day Overview",
-      "pipelineLink": "Deep-dive the GCA in GCA Overview"
+      "pipelineLink": "Deep-dive the GCA in GCA Overview",
+      "panelIntroHeader": "Capital One works in pods",
+      "panelIntroBody": "Capital One organizes engineering into small cross-functional teams called pods (sometimes squads). A typical pod is ~4 engineers of mixed levels. Power Day panels usually mirror this shape — so in your 4 back-to-back rounds, you're effectively meeting a pod. Exact composition varies team to team; the grid below is the MOST common mix, not a rule.",
+      "panelDisclaimer": "Composition varies by org and role. Capital One doesn't publish a fixed Power Day panel template — what's below is the pattern reported most often by candidates and backed by the pod-model Capital One uses internally.",
+      "panelHeader": "The four panelists you're most likely to meet",
+      "panel": [
+        {
+          "title": "Lead Software Engineer",
+          "body": "The architectural voice on the panel. Usually runs your system-design round, or jumps in on depth during coding.",
+          "level": "Lead SWE · 8+ years · sometimes Principal / Senior Lead",
+          "probes": "Long-term tradeoffs, scale boundaries, failure modes, where the system breaks at 10× load.",
+          "tip": "They're not scoring brilliance. They're scoring whether you name the cost of a decision out loud."
+        },
+        {
+          "title": "Senior Associate SWE · coding",
+          "body": "Pod member who'd review your PRs daily if you joined. Usually drives the first coding round.",
+          "level": "Senior Associate SWE · 2–5 years",
+          "probes": "Correctness, edge cases, clean reasoning, how you NARRATE while you type.",
+          "tip": "They've watched 10 candidates code this week. Silent thinking reads as 'I don't know'. Keep narrating."
+        },
+        {
+          "title": "Senior SWE · behavioral / cross-pod",
+          "body": "Often pulled from a different pod for an outside-perspective check. Runs the behavioral or the values-focused round.",
+          "level": "Senior SWE · 5–8 years",
+          "probes": "STAR structure, 'I' vs 'we', specific numbers, values-aligned examples (Excellence / DTRT / RFI / ST).",
+          "tip": "This is the panelist who catches generic answers fastest. Every story needs a named teammate, a number, and a verbatim line you actually said."
+        },
+        {
+          "title": "Associate SWE (often TDP)",
+          "body": "A Technology Development Program associate — new grad in an 18-month, 2-rotation program. Often observes coding + asks job-fit questions.",
+          "level": "Associate SWE · 0–2 years · 18-month TDP rotation",
+          "probes": "Culture fit, how you talk about mentoring, how you'd pair-program, your motivation for Capital One specifically.",
+          "tip": "The Associate is the panelist you'll actually work WITH. How you treat them in the room is a signal the panel absolutely shares in the debrief."
+        }
+      ],
+      "ladderHeader": "The engineering ladder you'll hear named",
+      "ladderSub": "IC track. The manager track runs in parallel. Titles and YOE bands below are roughly what's reported on Levels.fyi and internal Capital One postings; your mileage varies.",
+      "ladder": [
+        { "category": "Associate SWE", "signal": "0–2 years · TDP entry level · 18-month rotational program, 2 rotations on different teams" },
+        { "category": "Senior Associate SWE", "signal": "2–5 years · primary coding panelist role, heavy pod contributor" },
+        { "category": "Senior SWE / Principal Associate", "signal": "5–8 years · technical depth, cross-pod influence" },
+        { "category": "Lead SWE", "signal": "8+ years · tech leadership across multiple teams, system-design panelist" },
+        { "category": "Senior Lead SWE", "signal": "IC-heavy senior role, often owns a domain or platform" },
+        { "category": "Distinguished / Senior Distinguished", "signal": "IC-only; rare; company-wide technical influence" }
+      ],
+      "vocabHeader": "Vocabulary that signals fluency",
+      "vocabSub": "Capital One engineers drop these terms in normal conversation. Using them (correctly, not as buzzwords) signals you've done your homework and that your background fits.",
+      "vocab": [
+        { "category": "pod · squad", "products": "Used interchangeably", "why": "A small cross-functional team (~4 engineers + PM + sometimes designer). Say 'on my last pod' to describe your team." },
+        { "category": "well-managed", "products": "Internal Capital One phrase", "why": "Load-bearing term on job postings. Means 'built with quality, risk, and compliance thought through up front'. Using it in sys-design signals you understand regulatory context." },
+        { "category": "Community of Practice (CoP)", "products": "Cross-team horizontal groups", "why": "Their analog to chapters / guilds. Example: a Frontend CoP. Mention CoPs if asked about learning + mentorship." },
+        { "category": "cloud-native", "products": "Post-2020 AWS migration identity", "why": "Capital One ran an all-in AWS migration and shut down data centers. They describe themselves as cloud-native. Don't propose on-prem solutions in sys-design." },
+        { "category": "tech-first", "products": "Brand framing", "why": "The narrative that Capital One is a tech company that happens to be a bank. Reference it in 'why Capital One' without parroting it." }
+      ]
     }
   },
   "overviewChapters": {
@@ -352,12 +405,16 @@
         "title": "02 · What makes Capital One distinctive",
         "blurb": "The banking lenses: regulation, money-consistency, the 4 values, and their JVM-heavy stack."
       },
+      "panel": {
+        "title": "03 · The panel you'll face",
+        "blurb": "Who's in the room: the pod model, the 4 typical panelist roles, Capital One's engineering ladder, and the vocabulary that signals fluency."
+      },
       "training": {
-        "title": "03 · Your training plan",
+        "title": "04 · Your training plan",
         "blurb": "Three tracks: Mock Power Day, Mock GCA, and Random Practice. Pick one and go."
       },
       "loop": {
-        "title": "04 · The full loop",
+        "title": "05 · The full loop",
         "blurb": "Every phase and section of Capital One's loop, browsable by tab."
       }
     },
@@ -382,16 +439,20 @@
         "title": "04 · The 4 values",
         "blurb": "How Capital One actually probes Excellence, DTRT, Respect for Individuals, and Succeed Together."
       },
+      "language": {
+        "title": "05 · How to say it",
+        "blurb": "The 'don't say this, say that' patterns that separate strong loops from mid ones. Hedging, absolutes, 'we' vs 'I', false precision, defensiveness."
+      },
       "glossary": {
-        "title": "05 · Enterprise architecture glossary",
+        "title": "06 · Enterprise architecture glossary",
         "blurb": "Category-before-product for sys-design rounds. Twelve categories of infrastructure decoded."
       },
       "antiPatterns": {
-        "title": "06 · Anti-patterns",
+        "title": "07 · Anti-patterns",
         "blurb": "The four mistakes that cost otherwise strong candidates a loop, and what to say instead."
       },
       "prep": {
-        "title": "07 · Preparation timeline",
+        "title": "08 · Preparation timeline",
         "blurb": "A week-before / day-before / hour-before / during-the-day schedule."
       }
     },
@@ -412,12 +473,16 @@
         "title": "03 · Pattern fingerprints",
         "blurb": "Ten algorithmic patterns to recognize on sight. The fingerprint is what lets you pick the approach in 90 seconds."
       },
+      "narration": {
+        "title": "04 · Narration playbook",
+        "blurb": "Five scripts for the moments you're on screen with a human-graded coding round — restate, approach, code, get stuck, finish."
+      },
       "skip": {
-        "title": "04 · The skip-and-return rule",
+        "title": "05 · The skip-and-return rule",
         "blurb": "When a problem stalls, the pacing move that saves your score — and how to come back to it."
       },
       "antiPatterns": {
-        "title": "05 · Anti-patterns",
+        "title": "06 · Anti-patterns",
         "blurb": "Coding-before-naming, premature optimization, and ignoring constraints. The three silent killers."
       }
     }
@@ -438,7 +503,12 @@
     "fix": "Say this instead",
     "definition": "What it is",
     "whyMatters": "Why Capital One cares",
-    "inPractice": "In practice"
+    "inPractice": "In practice",
+    "level": "Level",
+    "probes": "Probes for",
+    "tip": "How to read them",
+    "script": "Script",
+    "moment": "Moment"
   },
   "sectionOverview": {
     "gca": {
@@ -495,6 +565,45 @@
         { "category": "Monotonic stack", "signal": "Next greater / smaller element, largest rectangle" },
         { "category": "Greedy by end-time", "signal": "Non-overlapping intervals, meeting rooms" },
         { "category": "1D DP", "signal": "House-robber, climbing-stairs, coin-change, LIS" }
+      ],
+      "narrationHeader": "Narration playbook — five scripts for the moments that matter",
+      "narrationSub": "The GCA itself is solo and timed, but the coding rounds on Power Day are human-graded. How you NARRATE while you code is half the score. These are the five moments where most candidates lose points, with a concrete script for each.",
+      "narration": [
+        {
+          "title": "When you start the problem",
+          "body": "Restate the problem in your own words. Confirm the edge cases out loud before you type anything.",
+          "pattern": "Say: 'So the input is [X], the output is [Y], and the tricky piece I see is [Z]. Edge cases I'd watch — empty input, single element, all duplicates, max size. Does that match how you'd frame it?'",
+          "pacing": "30–45 seconds.",
+          "trap": "Jumping to code without restating. A 30-second misunderstanding costs the entire round — and you can't recover from a wrong algorithm on the correct problem."
+        },
+        {
+          "title": "When you're choosing an approach",
+          "body": "Name the PATTERN before you write a line. State your complexity target explicitly.",
+          "pattern": "Say: 'This has the fingerprint of a sliding window — longest contiguous subarray with [condition]. That's O(n) time. I can do O(1) space if I avoid a hashmap; O(k) if I need one.' Then glance at the interviewer for a nod before typing.",
+          "pacing": "60–90 seconds before you touch the keyboard.",
+          "trap": "Writing code and backing into the pattern later. You'll over-code, under-name, and the interviewer won't be able to follow you."
+        },
+        {
+          "title": "When you're actively coding",
+          "body": "Narrate ONLY the non-obvious lines. Stay silent on boilerplate. Use the contrast as signal.",
+          "pattern": "Silent for 'for (int i = 0; i < n; i++)'. Narrate the actual logic: 'Here I'm shrinking the window when the count exceeds k. That maintains the invariant that at most k distinct characters are inside [left, right].' The silence on boilerplate + narration on logic tells them WHAT TO FOCUS ON.",
+          "pacing": "Ongoing, but don't slow yourself down narrating every variable.",
+          "trap": "Two failure modes. Silent for 5 minutes → they can't score your thinking. Narrating every line → you sound anxious and waste time."
+        },
+        {
+          "title": "When you're stuck",
+          "body": "Narrate your stuck-ness. Don't sit silent. Give the interviewer a hook so they CAN help you.",
+          "pattern": "Say: 'I'm second-guessing my loop invariant. Let me trace through [input = [1,2,3,2,1]]. If I'm at i=2 and the window is [0..2]... hmm, when I hit the duplicate at i=3, do I shrink from the left or reset? Let me think.' If still stuck after 2 minutes: 'Would it help if I walked through the example I had in mind? I want to make sure the invariant is the part I'm confused about, not the approach.'",
+          "pacing": "Cap stuck-silence at 60 seconds. After that, narrate. After 2–3 minutes, ask for a nudge.",
+          "trap": "Silent panic. The interviewer CAN'T help what they can't see. They'd rather nudge a candidate who's thinking out loud than watch someone go quiet."
+        },
+        {
+          "title": "When you finish",
+          "body": "Walk through 2–3 test cases explicitly. State complexity. Flag one optimization you'd do with more time.",
+          "pattern": "Say: 'Let me trace through test 1 — [walk it]. Test 2 — [walk it]. Edge case — empty input — early return. Time complexity is O(n log n), dominated by the sort. Space is O(n) for the map. If n is huge, we could swap the sort for a heap for O(n) average. Want me to walk through that?' End with a question that invites continuation.",
+          "pacing": "90 seconds to 2 minutes.",
+          "trap": "Saying 'I'm done!' and looking at the interviewer. Make the closing a formal walk-through — it's the last impression of the round."
+        }
       ],
       "skipHeader": "The skip-and-return rule",
       "skip": [
@@ -607,6 +716,50 @@
           "signal": "Names teammates. Shows a capability that belongs to the team, not to you. Proactive unblocking signals.",
           "antiSignal": "Team success with no named teammates. Martyr framing on drudge work.",
           "petPeeve": "'We shipped it' without saying who did what — generic team language."
+        }
+      ],
+      "languageHeader": "How to say it — don't do this, do this",
+      "languageSub": "Most candidates know the material. The ones who get hired also know HOW to say it. These are the eight language patterns that separate strong Power Day loops from middling ones. Treat these like the category-vs-product rule: the content is the same, the framing is what they're scoring.",
+      "language": [
+        {
+          "bad": "'I guess it would work.' / 'I think so, maybe.'",
+          "why": "Hedging without context signals low conviction. Interviewers can't tell if you know the answer but are modest, or don't know and are guessing. Both read the same way — and the worse reading wins.",
+          "fix": "'Based on what you've told me, yes — it would work. My assumption is [X]. I'd verify [Y] before committing.' Give them your conviction AND the specific assumption that could falsify it."
+        },
+        {
+          "bad": "'Kafka is the best choice for events.'",
+          "why": "Absolutes don't exist in system design. Even when the answer IS Kafka, stating it as universal truth signals cargo-cult thinking. Every interviewer at Capital One was trained to push back on absolutes, so you'll be challenged anyway.",
+          "fix": "'For this throughput + replay requirement, Kafka fits. If we didn't need replay and the fan-out was simpler, RabbitMQ would be a lighter option.' Name the conditions under which your choice changes."
+        },
+        {
+          "bad": "'I'm not great at system design.' / 'I haven't done much of that.'",
+          "why": "Self-deprecation in front of a hiring panel reads as either false modesty (manipulative) or a genuine warning (disqualifying). Neither helps. The panel will have read this line before and they'll mark you down on it.",
+          "fix": "'I have less hands-on experience with [X]. My mental model is [Y]. I'd reach for [Z] and verify with [W]. What am I missing?' State where you are, state how you'd reason forward, invite the correction."
+        },
+        {
+          "bad": "'Our service got significantly faster.' / 'We saw a big improvement.'",
+          "why": "'Significantly' and 'big' are unscoreable. The interviewer has to write specific outcomes on your feedback form. You're making that harder.",
+          "fix": "'p99 latency dropped from 800 ms to 120 ms — about 85% off the tail, measured over a week of production traffic.' Specific number, specific metric, specific window. Bank interviewers especially reward numerical precision."
+        },
+        {
+          "bad": "'We shipped the payment retry service.' / 'Our team built the dashboard.'",
+          "why": "In behavioral, 'we' language masks your specific contribution. Capital One explicitly trains interviewers to dig for individual ownership. Vague 'we' triggers a follow-up that eats your clock.",
+          "fix": "'The team shipped it over a quarter. I owned the retry policy and circuit-breaker logic — about 40% of the code. Marta led the database-failover piece; she and I paired on the idempotency key design.' Name teammates. Name your slice. Give ownership a number."
+        },
+        {
+          "bad": "'Maybe I'd use Porter's, or 3Cs, or an issue tree. They'd all work.'",
+          "why": "Listing frameworks without committing signals you don't know when each applies. The interviewer can list frameworks — they wanted you to PICK one and justify it.",
+          "fix": "'I'll use the profit tree because the question is P&L-shaped. If the root cause turns out to be competitive, I'd pivot to Porter's at that point.' Pick in 30 seconds, defend the choice, name the condition under which you'd switch."
+        },
+        {
+          "bad": "'The market is $127,430,200.'",
+          "why": "That level of precision implies research you couldn't have done in a 30-minute case. Panelists will treat the false precision as confidence you haven't earned and attack your weakest assumption.",
+          "fix": "'Somewhere between $100M and $150M, most sensitive to the customer-acquisition assumption I made at $45 per customer. If CAC is actually $80, we drop below $75M.' Name the range. Name the sensitivity. Show you know what your assumption is worth."
+        },
+        {
+          "bad": "'But I already explained that.'",
+          "why": "Repeating your answer when challenged reads as defensiveness. The interviewer is probing, not confused — they want you to defend or update, not restate.",
+          "fix": "'Let me try a different angle. If we assume [alternative], then [consequence]. I still prefer my original choice because [reason], but I'd change my mind if [condition] were true.' Treat pushback as an invitation to reason, not a threat."
         }
       ],
       "glossaryHeader": "Enterprise architecture glossary — category first, product second",

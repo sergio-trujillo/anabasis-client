@@ -19,6 +19,7 @@ import {
   OverviewFingerprints,
   OverviewGlossary,
   OverviewGrid,
+  OverviewPanelCards,
   OverviewPrepTimeline,
   OverviewRoundsTabs,
   OverviewSkipList,
@@ -122,6 +123,60 @@ function ChapterContent({
     if (slug === 'distinctive') {
       return <CompanyDistinctiveSection companySlug={companySlug} />
     }
+    if (slug === 'panel') {
+      const panel = tArray<{
+        title: string
+        body: string
+        level: string
+        probes: string
+        tip: string
+      }>(t, 'companyOverview.capitalOne.panel')
+      const ladder = tArray<{ category: string; signal: string }>(
+        t,
+        'companyOverview.capitalOne.ladder'
+      )
+      const vocab = tArray<{ category: string; products: string; why: string }>(
+        t,
+        'companyOverview.capitalOne.vocab'
+      )
+      return (
+        <div className="space-y-8">
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-3xl">
+            {t('companyOverview.capitalOne.panelIntroBody')}
+          </p>
+          <OverviewPanelCards
+            header={t('companyOverview.capitalOne.panelHeader')}
+            sub={t('companyOverview.capitalOne.panelDisclaimer')}
+            items={panel}
+            labels={{
+              level: t('overviewLabels.level', { defaultValue: 'Level' }),
+              probes: t('overviewLabels.probes', { defaultValue: 'Probes for' }),
+              tip: t('overviewLabels.tip', {
+                defaultValue: 'How to read them',
+              }),
+            }}
+          />
+          <OverviewFingerprints
+            header={t('companyOverview.capitalOne.ladderHeader')}
+            rows={ladder}
+            columns={{
+              category: t('overviewLabels.level', { defaultValue: 'Level' }),
+              signal: t('overviewLabels.signal', { defaultValue: 'Signal' }),
+            }}
+          />
+          <OverviewGlossary
+            header={t('companyOverview.capitalOne.vocabHeader')}
+            sub={t('companyOverview.capitalOne.vocabSub')}
+            rows={vocab}
+            columns={{
+              category: t('overviewLabels.category', { defaultValue: 'Term' }),
+              products: t('overviewLabels.products', { defaultValue: 'Where it comes up' }),
+              why: t('overviewLabels.why', { defaultValue: 'What it means' }),
+            }}
+          />
+        </div>
+      )
+    }
     if (slug === 'training') {
       return <CompanyTrainingSection companySlug={companySlug} />
     }
@@ -194,6 +249,20 @@ function ChapterContent({
             antiSignal: labels.antiSignal,
             petPeeve: labels.petPeeve,
           }}
+        />
+      )
+    }
+    if (slug === 'language') {
+      const items = tArray<{ bad: string; why: string; fix: string }>(
+        t,
+        'sectionOverview.powerDay.language'
+      )
+      return (
+        <OverviewAntiPatternsAccordion
+          header={t('sectionOverview.powerDay.languageHeader')}
+          sub={t('sectionOverview.powerDay.languageSub')}
+          items={items}
+          labels={{ bad: labels.bad, why: labels.whyCosts, fix: labels.fix }}
         />
       )
     }
@@ -270,6 +339,21 @@ function ChapterContent({
           items={modulesWithWeight}
           labels={{
             pattern: labels.pattern,
+            pacing: labels.pacing,
+            trap: labels.trap,
+          }}
+        />
+      )
+    }
+    if (slug === 'narration') {
+      const items = tArray<DeepItem>(t, 'sectionOverview.gca.narration')
+      return (
+        <OverviewDeepCards
+          header={t('sectionOverview.gca.narrationHeader')}
+          sub={t('sectionOverview.gca.narrationSub')}
+          items={items}
+          labels={{
+            pattern: t('overviewLabels.script', { defaultValue: 'Script' }),
             pacing: labels.pacing,
             trap: labels.trap,
           }}

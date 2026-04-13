@@ -11,6 +11,7 @@ export type ChapterSlug =
   // company
   | 'journey'
   | 'distinctive'
+  | 'panel'
   | 'training'
   | 'loop'
   // power-day
@@ -18,6 +19,7 @@ export type ChapterSlug =
   | 'concepts'
   | 'rounds'
   | 'values'
+  | 'language'
   | 'glossary'
   | 'anti-patterns'
   | 'prep'
@@ -25,6 +27,7 @@ export type ChapterSlug =
   | 'scoring'
   | 'modules'
   | 'patterns'
+  | 'narration'
   | 'skip'
   | 'gca-anti-patterns'
 
@@ -47,6 +50,12 @@ export const COMPANY_CHAPTERS: Chapter[] = [
     titleKey: 'overviewChapters.company.distinctive.title',
     blurbKey: 'overviewChapters.company.distinctive.blurb',
     readMinutes: 3,
+  },
+  {
+    slug: 'panel',
+    titleKey: 'overviewChapters.company.panel.title',
+    blurbKey: 'overviewChapters.company.panel.blurb',
+    readMinutes: 5,
   },
   {
     slug: 'training',
@@ -88,6 +97,12 @@ export const POWER_DAY_CHAPTERS: Chapter[] = [
     readMinutes: 5,
   },
   {
+    slug: 'language',
+    titleKey: 'overviewChapters.powerDay.language.title',
+    blurbKey: 'overviewChapters.powerDay.language.blurb',
+    readMinutes: 6,
+  },
+  {
     slug: 'glossary',
     titleKey: 'overviewChapters.powerDay.glossary.title',
     blurbKey: 'overviewChapters.powerDay.glossary.blurb',
@@ -124,6 +139,12 @@ export const GCA_CHAPTERS: Chapter[] = [
     slug: 'patterns',
     titleKey: 'overviewChapters.gca.patterns.title',
     blurbKey: 'overviewChapters.gca.patterns.blurb',
+    readMinutes: 4,
+  },
+  {
+    slug: 'narration',
+    titleKey: 'overviewChapters.gca.narration.title',
+    blurbKey: 'overviewChapters.gca.narration.blurb',
     readMinutes: 4,
   },
   {

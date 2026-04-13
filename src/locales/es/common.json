@@ -321,7 +321,60 @@
         }
       ],
       "valuesLink": "Profundiza en los 4 valores en el Overview de Power Day",
-      "pipelineLink": "Profundiza en el GCA en el Overview de GCA"
+      "pipelineLink": "Profundiza en el GCA en el Overview de GCA",
+      "panelIntroHeader": "Capital One trabaja en pods",
+      "panelIntroBody": "Capital One organiza engineering en equipos pequeños multidisciplinarios llamados pods (a veces squads). Un pod típico son ~4 ingenieros de niveles mixtos. Los paneles de Power Day normalmente reflejan esa forma — así que en tus 4 rondas consecutivas estás efectivamente conociendo a un pod. La composición exacta varía equipo a equipo; la tabla de abajo es la mezcla MÁS común reportada por candidatos, no una regla.",
+      "panelDisclaimer": "La composición varía por organización y rol. Capital One no publica una plantilla fija del panel — lo que sigue es el patrón reportado con más frecuencia por candidatos, respaldado por el modelo de pods que Capital One usa internamente.",
+      "panelHeader": "Los cuatro panelistas que es más probable que conozcas",
+      "panel": [
+        {
+          "title": "Lead Software Engineer",
+          "body": "La voz arquitectónica del panel. Normalmente lleva la ronda de system design, o entra a profundizar durante coding.",
+          "level": "Lead SWE · 8+ años · a veces Principal / Senior Lead",
+          "probes": "Tradeoffs de largo plazo, límites de escala, modos de falla, por dónde revienta el sistema a 10× la carga.",
+          "tip": "No están puntuando brillantez. Están puntuando si nombras EN VOZ ALTA el costo de una decisión."
+        },
+        {
+          "title": "Senior Associate SWE · coding",
+          "body": "Miembro del pod que revisaría tus PRs a diario si te unes. Suele manejar la primera ronda de código.",
+          "level": "Senior Associate SWE · 2–5 años",
+          "probes": "Correctitud, edge cases, razonamiento limpio, cómo NARRAS mientras tecleas.",
+          "tip": "Han visto a 10 candidatos codear esta semana. El pensamiento silencioso se lee como 'no sé'. Sigue narrando."
+        },
+        {
+          "title": "Senior SWE · behavioral / cross-pod",
+          "body": "Muchas veces lo jalan de un pod distinto para una perspectiva externa. Lleva la ronda behavioral o la centrada en valores.",
+          "level": "Senior SWE · 5–8 años",
+          "probes": "Estructura STAR, 'yo' vs 'nosotros', números específicos, ejemplos alineados a valores (Excellence / DTRT / RFI / ST).",
+          "tip": "Este es el panelista que detecta las respuestas genéricas más rápido. Cada historia necesita un compañero nombrado, un número, y una frase textual que de verdad dijiste."
+        },
+        {
+          "title": "Associate SWE (a menudo TDP)",
+          "body": "Un associate del Technology Development Program — recién graduado en un programa rotacional de 18 meses y 2 rotaciones. Suele observar durante coding + hace preguntas de job fit.",
+          "level": "Associate SWE · 0–2 años · rotación TDP de 18 meses",
+          "probes": "Fit cultural, cómo hablas de mentoring, cómo harías pair-programming, tu motivación específica por Capital One.",
+          "tip": "El Associate es el panelista con quien realmente vas a TRABAJAR. Cómo lo tratas en la sala es señal que el panel absolutamente comparte en el debrief."
+        }
+      ],
+      "ladderHeader": "La escalera de engineering que vas a escuchar nombrar",
+      "ladderSub": "Track IC. El track de manager corre en paralelo. Los títulos y rangos de años abajo son aproximadamente lo que aparece en Levels.fyi y las postulaciones internas de Capital One; puede variar.",
+      "ladder": [
+        { "category": "Associate SWE", "signal": "0–2 años · nivel de entrada del TDP · programa rotacional de 18 meses, 2 rotaciones en equipos diferentes" },
+        { "category": "Senior Associate SWE", "signal": "2–5 años · rol principal de panelista de coding, contribuidor fuerte en el pod" },
+        { "category": "Senior SWE / Principal Associate", "signal": "5–8 años · profundidad técnica, influencia cross-pod" },
+        { "category": "Lead SWE", "signal": "8+ años · liderazgo técnico en varios equipos, panelista de system design" },
+        { "category": "Senior Lead SWE", "signal": "Rol senior IC-heavy, suele ser dueño de un dominio o plataforma" },
+        { "category": "Distinguished / Senior Distinguished", "signal": "Solo IC; raro; influencia técnica a nivel empresa" }
+      ],
+      "vocabHeader": "Vocabulario que señala fluidez",
+      "vocabSub": "Los engineers de Capital One usan estos términos en conversación normal. Usarlos (correctamente, no como buzzwords) señala que hiciste la tarea y que tu background encaja.",
+      "vocab": [
+        { "category": "pod · squad", "products": "Intercambiables", "why": "Un equipo pequeño multidisciplinario (~4 engineers + PM + a veces diseñador). Di 'en mi último pod' para describir tu equipo." },
+        { "category": "well-managed", "products": "Frase interna de Capital One", "why": "Término cargado en postulaciones. Significa 'construido con calidad, riesgo y compliance pensados desde el inicio'. Usarlo en sys-design señala que entiendes el contexto regulatorio." },
+        { "category": "Community of Practice (CoP)", "products": "Grupos horizontales cross-team", "why": "Su análogo a chapters / guilds. Ejemplo: una Frontend CoP. Menciona CoPs si te preguntan por aprendizaje + mentorship." },
+        { "category": "cloud-native", "products": "Identidad post-2020 de migración a AWS", "why": "Capital One hizo una migración all-in a AWS y cerró data centers. Se describen como cloud-native. No propongas soluciones on-prem en sys-design." },
+        { "category": "tech-first", "products": "Framing de marca", "why": "La narrativa de que Capital One es una compañía de tecnología que casualmente es un banco. Refiérete a esto en 'por qué Capital One' sin repetirlo como loro." }
+      ]
     }
   },
   "overviewChapters": {
@@ -352,12 +405,16 @@
         "title": "02 · Qué hace distintivo a Capital One",
         "blurb": "Las lentes bancarias: regulación, consistencia del dinero, los 4 valores, y su stack JVM-heavy."
       },
+      "panel": {
+        "title": "03 · El panel que vas a enfrentar",
+        "blurb": "Quién está en la sala: el modelo de pods, los 4 roles típicos del panel, la escalera de engineering de Capital One, y el vocabulario que señala fluidez."
+      },
       "training": {
-        "title": "03 · Tu plan de entrenamiento",
+        "title": "04 · Tu plan de entrenamiento",
         "blurb": "Tres tracks: Mock Power Day, Mock GCA, y Práctica Aleatoria. Elige uno y arranca."
       },
       "loop": {
-        "title": "04 · El loop completo",
+        "title": "05 · El loop completo",
         "blurb": "Cada fase y sección del loop de Capital One, navegable por tab."
       }
     },
@@ -382,16 +439,20 @@
         "title": "04 · Los 4 valores",
         "blurb": "Cómo Capital One indaga de verdad Excellence, DTRT, Respect for Individuals y Succeed Together."
       },
+      "language": {
+        "title": "05 · Cómo decirlo",
+        "blurb": "Los patrones 'no digas esto, di esto' que separan un Power Day fuerte de uno promedio. Hedging, absolutos, 'nosotros' vs 'yo', falsa precisión, defensividad."
+      },
       "glossary": {
-        "title": "05 · Glosario de arquitectura enterprise",
+        "title": "06 · Glosario de arquitectura enterprise",
         "blurb": "Categoría-antes-que-producto para rondas de sys-design. Doce categorías de infraestructura decodificadas."
       },
       "antiPatterns": {
-        "title": "06 · Anti-patrones",
+        "title": "07 · Anti-patrones",
         "blurb": "Los cuatro errores que cuestan el loop a candidatos por lo demás fuertes, y qué decir en su lugar."
       },
       "prep": {
-        "title": "07 · Timeline de preparación",
+        "title": "08 · Timeline de preparación",
         "blurb": "Agenda semana-antes / día-antes / hora-antes / durante-el-día."
       }
     },
@@ -412,12 +473,16 @@
         "title": "03 · Huellas de patrón",
         "blurb": "Diez patrones algorítmicos para reconocer de vista. La huella es lo que te deja elegir el enfoque en 90 segundos."
       },
+      "narration": {
+        "title": "04 · Playbook de narración",
+        "blurb": "Cinco scripts para los momentos clave en una ronda de código con humano observando — replantear, elegir enfoque, codear, atorarte, cerrar."
+      },
       "skip": {
-        "title": "04 · La regla de saltar-y-volver",
+        "title": "05 · La regla de saltar-y-volver",
         "blurb": "Cuando un problema se atora, el movimiento de pacing que salva tu puntaje — y cómo regresar."
       },
       "antiPatterns": {
-        "title": "05 · Anti-patrones",
+        "title": "06 · Anti-patrones",
         "blurb": "Teclear-antes-de-nombrar, optimización prematura, e ignorar constraints. Los tres asesinos silenciosos."
       }
     }
@@ -438,7 +503,12 @@
     "fix": "Di esto",
     "definition": "Qué es",
     "whyMatters": "Por qué Capital One lo evalúa",
-    "inPractice": "En la práctica"
+    "inPractice": "En la práctica",
+    "level": "Nivel",
+    "probes": "Qué indagan",
+    "tip": "Cómo leerlos",
+    "script": "Guion",
+    "moment": "Momento"
   },
   "sectionOverview": {
     "gca": {
@@ -495,6 +565,45 @@
         { "category": "Pila monótona", "signal": "Siguiente mayor / menor, mayor rectángulo" },
         { "category": "Greedy por tiempo-fin", "signal": "Intervalos sin solapar, meeting rooms" },
         { "category": "DP 1D", "signal": "House-robber, escaleras, coin-change, LIS" }
+      ],
+      "narrationHeader": "Playbook de narración — cinco scripts para los momentos que importan",
+      "narrationSub": "El GCA en sí es solitario y cronometrado, pero las rondas de código en Power Day las evalúa un humano. Cómo NARRAS mientras codeas es la mitad del puntaje. Estos son los cinco momentos donde la mayoría de los candidatos pierde puntos, con un script concreto para cada uno.",
+      "narration": [
+        {
+          "title": "Cuando empiezas el problema",
+          "body": "Replantea el problema con tus propias palabras. Confirma los edge cases EN VOZ ALTA antes de teclear nada.",
+          "pattern": "Di: 'Entonces el input es [X], el output es [Y], y la pieza complicada que veo es [Z]. Edge cases que cuidaría — input vacío, un solo elemento, todos duplicados, tamaño máximo. ¿Concuerda con cómo lo planteas tú?'",
+          "pacing": "30–45 segundos.",
+          "trap": "Saltar al código sin replantear. Un malentendido de 30 segundos cuesta la ronda entera — y no te recuperas de un algoritmo incorrecto sobre el problema correcto."
+        },
+        {
+          "title": "Cuando eliges el enfoque",
+          "body": "Nombra el PATRÓN antes de escribir una línea. Declara tu complejidad objetivo explícitamente.",
+          "pattern": "Di: 'Esto tiene la huella de sliding window — subarreglo contiguo más largo con [condición]. Eso es O(n) tiempo. Puedo hacer O(1) espacio si evito un hashmap; O(k) si lo necesito.' Luego mira al entrevistador esperando una señal antes de teclear.",
+          "pacing": "60–90 segundos antes de tocar el teclado.",
+          "trap": "Escribir código y luego retroceder al patrón. Vas a sobre-codear, sub-nombrar, y el entrevistador no podrá seguirte."
+        },
+        {
+          "title": "Cuando estás codeando activamente",
+          "body": "Narra SÓLO las líneas no-obvias. Silencio en el boilerplate. Usa el contraste como señal.",
+          "pattern": "Silencio en 'for (int i = 0; i < n; i++)'. Narra la lógica real: 'Aquí estoy encogiendo la ventana cuando la cuenta excede k. Eso mantiene el invariante de que hay a lo más k caracteres distintos dentro de [left, right].' El silencio en boilerplate + la narración en lógica les dice EN QUÉ ENFOCARSE.",
+          "pacing": "Continuo, pero no te bajes el ritmo narrando cada variable.",
+          "trap": "Dos modos de falla. Silencio por 5 minutos → no pueden puntuar tu pensamiento. Narrar cada línea → suenas ansioso y pierdes tiempo."
+        },
+        {
+          "title": "Cuando te atoras",
+          "body": "Narra tu atoramiento. No te quedes callado. Dale al entrevistador un gancho para PODER ayudarte.",
+          "pattern": "Di: 'Estoy dudando de mi invariante del loop. Déjame trazar con [input = [1,2,3,2,1]]. Si estoy en i=2 y la ventana es [0..2]... mmm, cuando pego con el duplicado en i=3, ¿encojo por la izquierda o reseteo? Déjame pensar.' Si sigues atorado después de 2 minutos: '¿Ayudaría que te muestre el ejemplo que tenía en mente? Quiero asegurarme de que el invariante es la parte confusa, no el enfoque.'",
+          "pacing": "Tope de silencio atorado: 60 segundos. Después narra. Después de 2–3 minutos, pide un empujón.",
+          "trap": "Pánico silencioso. El entrevistador NO PUEDE ayudar lo que no ve. Prefieren empujar a un candidato que piensa en voz alta que ver a alguien quedarse mudo."
+        },
+        {
+          "title": "Cuando terminas",
+          "body": "Camina por 2–3 test cases explícitamente. Declara complejidad. Marca una optimización que harías con más tiempo.",
+          "pattern": "Di: 'Déjame trazar el test 1 — [camínalo]. Test 2 — [camínalo]. Edge case — input vacío — early return. Complejidad temporal O(n log n), dominada por el sort. Espacio O(n) por el map. Si n es gigante, podríamos cambiar el sort por un heap para O(n) promedio. ¿Quieres que camine por eso?' Cierra con una pregunta que invite a continuar.",
+          "pacing": "90 segundos a 2 minutos.",
+          "trap": "Decir '¡listo!' y mirar al entrevistador. Haz del cierre una caminata formal — es la última impresión de la ronda."
+        }
       ],
       "skipHeader": "La regla de saltar-y-volver",
       "skip": [
@@ -607,6 +716,50 @@
           "signal": "Nombra compañeros. Muestra una capacidad que pertenece al equipo, no a ti. Señales de desbloqueo proactivo.",
           "antiSignal": "Éxito de equipo sin compañeros nombrados. Framing de mártir en trabajo pesado.",
           "petPeeve": "'Lo sacamos' sin decir quién hizo qué — lenguaje genérico de equipo."
+        }
+      ],
+      "languageHeader": "Cómo decirlo — no digas esto, di esto",
+      "languageSub": "La mayoría de los candidatos conocen el material. Los que contratan también saben CÓMO decirlo. Estos son los ocho patrones de lenguaje que separan los loops fuertes de Power Day de los mediocres. Trátalo como la regla categoría-vs-producto: el contenido es el mismo, el framing es lo que puntúan.",
+      "language": [
+        {
+          "bad": "'Supongo que funcionaría.' / 'Creo que sí, tal vez.'",
+          "why": "Hedging sin contexto señala baja convicción. Los entrevistadores no pueden distinguir si sabes la respuesta pero eres modesto, o si no sabes y estás adivinando. Ambas cosas se leen igual — y la lectura peor es la que gana.",
+          "fix": "'Con base en lo que me has dicho, sí — funcionaría. Mi supuesto es [X]. Verificaría [Y] antes de comprometerme.' Dales tu convicción Y el supuesto específico que podría falsificarla."
+        },
+        {
+          "bad": "'Kafka es la mejor opción para eventos.'",
+          "why": "Los absolutos no existen en system design. Incluso cuando la respuesta ES Kafka, declararlo como verdad universal señala pensamiento cargo-cult. Cada entrevistador en Capital One está entrenado para empujar contra absolutos, así que te van a retar de todas formas.",
+          "fix": "'Para este throughput + requisito de replay, Kafka encaja. Si no necesitáramos replay y el fan-out fuera más simple, RabbitMQ sería una opción más ligera.' Nombra las condiciones bajo las cuales cambiaría tu elección."
+        },
+        {
+          "bad": "'No soy muy bueno con system design.' / 'No he hecho mucho de eso.'",
+          "why": "La auto-desvalorización frente a un panel de contratación se lee como falsa modestia (manipuladora) o como advertencia genuina (descalificante). Ninguna ayuda. El panel ya escuchó esta frase antes y te van a bajar por ella.",
+          "fix": "'Tengo menos experiencia hands-on con [X]. Mi modelo mental es [Y]. Iría por [Z] y verificaría con [W]. ¿Qué me falta?' Di dónde estás, di cómo razonarías hacia adelante, invita la corrección."
+        },
+        {
+          "bad": "'Nuestro servicio se volvió significativamente más rápido.' / 'Vimos una gran mejora.'",
+          "why": "'Significativamente' y 'grande' no son puntuables. El entrevistador tiene que escribir resultados específicos en tu feedback. Se lo estás haciendo más difícil.",
+          "fix": "'La latencia p99 bajó de 800 ms a 120 ms — alrededor de 85% menos en el tail, medido sobre una semana de tráfico en producción.' Número específico, métrica específica, ventana específica. Los entrevistadores de banca premian especialmente la precisión numérica."
+        },
+        {
+          "bad": "'Lanzamos el servicio de reintentos de pagos.' / 'Nuestro equipo construyó el dashboard.'",
+          "why": "En behavioral, el 'nosotros' oculta tu contribución específica. Capital One explícitamente entrena a los entrevistadores para escarbar por ownership individual. Un 'nosotros' vago dispara un follow-up que se come tu reloj.",
+          "fix": "'El equipo lo lanzó en un trimestre. Yo fui dueño de la política de reintentos y la lógica del circuit-breaker — alrededor del 40% del código. Marta lideró la pieza de database-failover; ella y yo hicimos pair en el diseño de la idempotency key.' Nombra compañeros. Nombra tu rebanada. Dale un número al ownership."
+        },
+        {
+          "bad": "'Tal vez usaría Porter, o 3Cs, o un árbol de issues. Todos funcionarían.'",
+          "why": "Listar frameworks sin comprometerte señala que no sabes cuándo aplica cada uno. El entrevistador puede listar frameworks — querían que ELIGIERAS uno y lo justificaras.",
+          "fix": "'Uso el árbol de utilidad porque la pregunta tiene forma de P&L. Si la causa raíz termina siendo competitiva, pivoto a Porter en ese momento.' Elige en 30 segundos, defiende la elección, nombra la condición bajo la cual cambiarías."
+        },
+        {
+          "bad": "'El mercado es $127,430,200.'",
+          "why": "Ese nivel de precisión implica investigación que no pudiste hacer en un case de 30 minutos. Los panelistas van a tratar la falsa precisión como confianza no ganada y atacarán tu supuesto más débil.",
+          "fix": "'Entre $100M y $150M, más sensible al supuesto de costo de adquisición que puse en $45 por cliente. Si el CAC es en realidad $80, caemos abajo de $75M.' Nombra el rango. Nombra la sensibilidad. Muestra que sabes cuánto vale tu supuesto."
+        },
+        {
+          "bad": "'Pero ya lo expliqué.'",
+          "why": "Repetir tu respuesta cuando te retan se lee como defensividad. El entrevistador está indagando, no confundido — quiere que defiendas o actualices, no que repitas.",
+          "fix": "'Déjame intentarlo desde otro ángulo. Si asumimos [alternativa], entonces [consecuencia]. Sigo prefiriendo mi elección original porque [razón], pero cambiaría de opinión si [condición] fuera verdad.' Trata el pushback como invitación a razonar, no como amenaza."
         }
       ],
       "glossaryHeader": "Glosario de arquitectura enterprise — primero la categoría, después el producto",
