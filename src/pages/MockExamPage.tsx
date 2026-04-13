@@ -11,9 +11,11 @@
 // credit is real GCA behavior but deferred — v1 ships all-or-nothing per
 // problem. Final score = sum of awarded weights (max 1000).
 
-import { ClockIcon, FlagIcon } from "lucide-react";
+import { ClockIcon, FlagIcon, TimerIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router";
+import { Fade } from "@/components/animate-ui/primitives/effects/fade";
+import { GradientText } from "@/components/animate-ui/primitives/texts/gradient";
 import { CodeProblemLayout } from "@/components/problem/CodeProblemLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,19 +40,19 @@ export function MockExamPage() {
 
   if (examQuery.isPending) {
     return (
-      <>
+      <div className="flex-1 overflow-y-auto">
         <div className="px-6 py-6 max-w-7xl mx-auto space-y-4">
           <Skeleton className="h-12 w-80" />
           <Skeleton className="h-96 rounded-lg" />
         </div>
-      </>
+      </div>
     );
   }
 
   const data = examQuery.data as ExamData | undefined;
   if (!data || data.problems.length === 0) {
     return (
-      <>
+      <div className="flex-1 overflow-y-auto">
         <div className="px-6 py-6 max-w-7xl mx-auto">
           <Card>
             <CardContent className="p-8 text-center text-muted-foreground">
@@ -58,7 +60,7 @@ export function MockExamPage() {
             </CardContent>
           </Card>
         </div>
-      </>
+      </div>
     );
   }
 
@@ -151,24 +153,31 @@ function Runner({ exam }: { exam: ExamData }) {
   const active = exam.problems[activeSlot];
 
   return (
-    <>
-      <div className="px-6 py-6 max-w-7xl mx-auto w-full space-y-4">
-        <ExamHeader
-          remainingSec={remainingSec}
-          locked={locked}
-          onFinish={() => setFinished(true)}
-        />
+    <div className="flex h-[calc(100vh-3.5rem)] flex-col overflow-hidden">
+      {/* Constrained header area — timer + slot strip */}
+      <div className="shrink-0 border-b bg-background/80 backdrop-blur">
+        <div className="mx-auto w-full max-w-7xl space-y-3 p-2">
+          <ExamHeader
+            remainingSec={remainingSec}
+            locked={locked}
+            onFinish={() => setFinished(true)}
+          />
+          <SlotStrip
+            problems={exam.problems}
+            results={results}
+            activeSlot={activeSlot}
+            onSelect={setActiveSlot}
+            locked={locked}
+          />
+        </div>
+      </div>
 
-        <SlotStrip
-          problems={exam.problems}
-          results={results}
-          activeSlot={activeSlot}
-          onSelect={setActiveSlot}
-          locked={locked}
-        />
-
+      {/* Full-viewport problem area — no max-width, no padding */}
+      <div className="min-h-0 flex-1">
         {locked ? (
-          <FinalScore exam={exam} results={results} score={score} />
+          <div className="mx-auto w-full max-w-7xl px-6 py-6">
+            <FinalScore exam={exam} results={results} score={score} />
+          </div>
         ) : (
           <ProblemBoard
             problem={active}
@@ -198,7 +207,7 @@ function Runner({ exam }: { exam: ExamData }) {
           />
         )}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -221,32 +230,48 @@ function ExamHeader({
   const timedOut = remainingSec === 0;
 
   return (
-    <header className="flex items-center justify-between gap-4">
-      <div>
-        <h1 className="text-2xl font-bold font-heading">Mock GCA</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          4 problems · 70 minutes · weights 100/200/300/400
-        </p>
-      </div>
-      <div className="flex items-center gap-3">
-        <div
-          className={`flex items-center gap-2 rounded-md px-3 py-2 font-mono text-lg tabular-nums ${
-            timedOut
-              ? "bg-destructive/10 text-destructive"
-              : urgent
-                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                : "bg-muted text-foreground"
-          }`}
-        >
-          <ClockIcon className="size-4" />
-          {mm}:{ss}
+    <Fade>
+      <header className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-border">
+            <TimerIcon className="size-5" />
+          </span>
+          <div className="min-w-0">
+            <h1 className="text-xl font-bold font-heading tracking-tight truncate">
+              <GradientText
+                text="Mock GCA"
+                gradient="linear-gradient(90deg, var(--primary) 0%, var(--chart-2) 50%, var(--primary) 100%)"
+              />
+            </h1>
+            <p className="text-xs text-muted-foreground mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+              <span>CodeSignal-style assessment</span>
+              <span className="text-border">·</span>
+              <span>4 problems · 70 min</span>
+              <span className="text-border">·</span>
+              <span className="font-mono">100 / 200 / 300 / 400 pts</span>
+            </p>
+          </div>
         </div>
-        <Button variant="destructive" onClick={onFinish} disabled={locked}>
-          <FlagIcon className="size-4" />
-          Finish
-        </Button>
-      </div>
-    </header>
+        <div className="flex items-center gap-3 shrink-0">
+          <div
+            className={`flex items-center gap-2 rounded-md px-3 py-2 font-mono text-lg tabular-nums ring-1 ring-inset transition-colors ${
+              timedOut
+                ? "bg-destructive/10 text-destructive ring-destructive/20"
+                : urgent
+                  ? "bg-amber-500/10 text-amber-600 ring-amber-500/20 dark:text-amber-400 animate-pulse"
+                  : "bg-muted text-foreground ring-border"
+            }`}
+          >
+            <ClockIcon className="size-4" />
+            {mm}:{ss}
+          </div>
+          <Button variant="destructive" onClick={onFinish} disabled={locked}>
+            <FlagIcon className="size-4" />
+            Finish
+          </Button>
+        </div>
+      </header>
+    </Fade>
   );
 }
 

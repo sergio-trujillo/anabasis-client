@@ -3,6 +3,7 @@
 //   ✅ /:companySlug                  → CompanyPage        (Fase 5a)
 //   ✅ /:companySlug/practice         → PracticePage       (Fase 5b)
 //   ✅ /:companySlug/exercise/:id     → ExercisePage       (Fase 5b)
+//   ✅ /:companySlug/section/:id      → SectionPage        (Fase 6)
 //   ✅ /:companySlug/mock-gca         → MockExamPage       (Fase 5c)
 //   ✅ /:companySlug/mock-power-day   → MockPowerDayPage   (Fase 5c)
 
@@ -14,6 +15,7 @@ import { MockExamPage } from '@/pages/MockExamPage'
 import { MockPowerDayPage } from '@/pages/MockPowerDayPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { PracticePage } from '@/pages/PracticePage'
+import { SectionPage } from '@/pages/SectionPage'
 import { RouteErrorBoundary } from '@/components/RouteErrorBoundary'
 
 export function AppRoutes() {
@@ -25,6 +27,7 @@ export function AppRoutes() {
       <Route path="/:companySlug/mock-gca" element={<RouteErrorBoundary><MockExamPage /></RouteErrorBoundary>} />
       <Route path="/:companySlug/mock-power-day" element={<RouteErrorBoundary><MockPowerDayPage /></RouteErrorBoundary>} />
       <Route path="/:companySlug/exercise/:exerciseId" element={<RouteErrorBoundary><ExercisePage /></RouteErrorBoundary>} />
+      <Route path="/:companySlug/section/:sectionId" element={<RouteErrorBoundary><SectionPage /></RouteErrorBoundary>} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )

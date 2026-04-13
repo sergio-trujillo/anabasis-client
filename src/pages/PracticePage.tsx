@@ -44,46 +44,54 @@ export function PracticePage() {
   }
 
   return (
-    <>
-      <div className="px-6 py-6 max-w-7xl mx-auto w-full space-y-6">
-        <Fade>
-          <header className="flex items-start justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold font-heading">{t('practice.title')}</h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                {t('practice.subtitle')}
-              </p>
-            </div>
-            <Button
-              variant="secondary"
-              onClick={() => {
-                const next = pickRandom(codePool, currentId ?? undefined)
-                if (next) setCurrentId(next.id)
-              }}
-              disabled={codePool.length <= 1}
-            >
-              <ShuffleIcon className="size-4" />
-              {t('practice.nextProblem')}
-            </Button>
-          </header>
-        </Fade>
+    <div className="flex h-[calc(100vh-3.5rem)] flex-col overflow-hidden">
+      {/* Constrained header */}
+      <div className="shrink-0 border-b bg-background/80 backdrop-blur">
+        <div className="mx-auto w-full max-w-7xl p-2">
+          <Fade>
+            <header className="flex items-start justify-between gap-4">
+              <div>
+                <h1 className="text-xl font-bold font-heading">{t('practice.title')}</h1>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {t('practice.subtitle')}
+                </p>
+              </div>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  const next = pickRandom(codePool, currentId ?? undefined)
+                  if (next) setCurrentId(next.id)
+                }}
+                disabled={codePool.length <= 1}
+              >
+                <ShuffleIcon className="size-4" />
+                {t('practice.nextProblem')}
+              </Button>
+            </header>
+          </Fade>
+        </div>
+      </div>
 
+      {/* Full-viewport body */}
+      <div className="min-h-0 flex-1">
         {exercisesQuery.isPending && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="px-6 py-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Skeleton className="h-96 rounded-lg" />
             <Skeleton className="h-96 rounded-lg" />
           </div>
         )}
 
         {exercisesQuery.data && codePool.length === 0 && (
-          <MagicCard className="p-8 text-center text-muted-foreground">
-            {t('practice.emptyPool')}
-          </MagicCard>
+          <div className="px-6 py-6 max-w-7xl mx-auto">
+            <MagicCard className="p-8 text-center text-muted-foreground">
+              {t('practice.emptyPool')}
+            </MagicCard>
+          </div>
         )}
 
         {current && <PracticeBoard key={current.id} exercise={current} />}
       </div>
-    </>
+    </div>
   )
 }
 

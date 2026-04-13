@@ -11,9 +11,11 @@
 // gating in v1. Timer informs but doesn't block; the user can finish early.
 // Reload resets (OD-5 — no persistence in v1).
 
-import { ClockIcon, FlagIcon } from "lucide-react";
+import { ClockIcon, FlagIcon, TimerIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
+import { Fade } from "@/components/animate-ui/primitives/effects/fade";
+import { GradientText } from "@/components/animate-ui/primitives/texts/gradient";
 import { CodeExercise } from "@/components/exercise/CodeExercise";
 import { InterviewerChatExercise } from "@/components/exercise/InterviewerChatExercise";
 import { OpenPromptExercise } from "@/components/exercise/OpenPromptExercise";
@@ -29,19 +31,19 @@ export function MockPowerDayPage() {
 
   if (examQuery.isPending) {
     return (
-      <>
+      <div className="flex-1 overflow-y-auto">
         <div className="px-6 py-6 max-w-6xl mx-auto space-y-4">
           <Skeleton className="h-12 w-80" />
           <Skeleton className="h-96 rounded-lg" />
         </div>
-      </>
+      </div>
     );
   }
 
   const data = examQuery.data as ExamData | undefined;
   if (!data || data.rounds.length === 0) {
     return (
-      <>
+      <div className="flex-1 overflow-y-auto">
         <div className="px-6 py-6 max-w-6xl mx-auto">
           <Card>
             <CardContent className="p-8 text-center text-muted-foreground">
@@ -49,7 +51,7 @@ export function MockPowerDayPage() {
             </CardContent>
           </Card>
         </div>
-      </>
+      </div>
     );
   }
 
@@ -109,27 +111,34 @@ function Runner({ exam }: { exam: ExamData }) {
   }
 
   return (
-    <>
-      <div className="px-6 py-6 max-w-6xl mx-auto w-full space-y-4">
-        <Header
-          remainingSec={remainingSec}
-          totalSeconds={totalSeconds}
-          locked={locked}
-          onFinish={() => setFinished(true)}
-        />
+    <div className="flex h-[calc(100vh-3.5rem)] flex-col overflow-hidden">
+      {/* Constrained header area — timer + round strip */}
+      <div className="shrink-0 border-b bg-background/80 backdrop-blur">
+        <div className="mx-auto w-full max-w-7xl space-y-3 p-2">
+          <Header
+            remainingSec={remainingSec}
+            totalSeconds={totalSeconds}
+            locked={locked}
+            onFinish={() => setFinished(true)}
+          />
+          <RoundStrip
+            rounds={exam.rounds}
+            completedRounds={completedRounds}
+            activeRound={activeRound}
+            onSelect={(n) => !locked && setActiveRound(n)}
+            locked={locked}
+          />
+        </div>
+      </div>
 
-        <RoundStrip
-          rounds={exam.rounds}
-          completedRounds={completedRounds}
-          activeRound={activeRound}
-          onSelect={(n) => !locked && setActiveRound(n)}
-          locked={locked}
-        />
-
+      {/* Full-width body */}
+      <div className="min-h-0 flex-1 overflow-y-auto">
         {locked ? (
-          <FinalSummary exam={exam} completedRounds={completedRounds} elapsedSec={elapsedSec} />
+          <div className="mx-auto w-full max-w-7xl px-6 py-6">
+            <FinalSummary exam={exam} completedRounds={completedRounds} elapsedSec={elapsedSec} />
+          </div>
         ) : (
-          <div className="space-y-4">
+          <div className="mx-auto w-full max-w-7xl px-6 py-6 space-y-4">
             <RoundHeader round={active} />
             <RoundBody round={active} />
             <div className="flex justify-end gap-2">
@@ -154,7 +163,7 @@ function Runner({ exam }: { exam: ExamData }) {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -181,32 +190,48 @@ function Header({
   const timedOut = remainingSec === 0;
 
   return (
-    <header className="flex items-center justify-between gap-4">
-      <div>
-        <h1 className="text-2xl font-bold font-heading">Mock Power Day</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          4 rounds · {totalMin} minutes total · Capital One virtual onsite simulation
-        </p>
-      </div>
-      <div className="flex items-center gap-3">
-        <div
-          className={`flex items-center gap-2 rounded-md px-3 py-2 font-mono text-lg tabular-nums ${
-            timedOut
-              ? "bg-destructive/10 text-destructive"
-              : urgent
-                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                : "bg-muted text-foreground"
-          }`}
-        >
-          <ClockIcon className="size-4" />
-          {hh}:{mm}:{ss}
+    <Fade>
+      <header className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-border">
+            <TimerIcon className="size-5" />
+          </span>
+          <div className="min-w-0">
+            <h1 className="text-xl font-bold font-heading tracking-tight truncate">
+              <GradientText
+                text="Mock Power Day"
+                gradient="linear-gradient(90deg, var(--primary) 0%, var(--chart-2) 50%, var(--primary) 100%)"
+              />
+            </h1>
+            <p className="text-xs text-muted-foreground mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+              <span>Capital One virtual onsite simulation</span>
+              <span className="text-border">·</span>
+              <span>4 rounds · {totalMin} min</span>
+              <span className="text-border">·</span>
+              <span className="font-mono">coding / sys-design / behavioral / case</span>
+            </p>
+          </div>
         </div>
-        <Button variant="destructive" onClick={onFinish} disabled={locked}>
-          <FlagIcon className="size-4" />
-          Finish
-        </Button>
-      </div>
-    </header>
+        <div className="flex items-center gap-3 shrink-0">
+          <div
+            className={`flex items-center gap-2 rounded-md px-3 py-2 font-mono text-lg tabular-nums ring-1 ring-inset transition-colors ${
+              timedOut
+                ? "bg-destructive/10 text-destructive ring-destructive/20"
+                : urgent
+                  ? "bg-amber-500/10 text-amber-600 ring-amber-500/20 dark:text-amber-400 animate-pulse"
+                  : "bg-muted text-foreground ring-border"
+            }`}
+          >
+            <ClockIcon className="size-4" />
+            {hh}:{mm}:{ss}
+          </div>
+          <Button variant="destructive" onClick={onFinish} disabled={locked}>
+            <FlagIcon className="size-4" />
+            Finish
+          </Button>
+        </div>
+      </header>
+    </Fade>
   );
 }
 
@@ -227,8 +252,11 @@ function RoundStrip({
   onSelect: (n: number) => void;
   locked: boolean;
 }) {
+  const kindLabel = (k: Round["kind"]) =>
+    k === "coding" ? "code" : k === "behavioral-or-sysdesign" ? "chat" : "case";
+
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+    <div className="grid grid-cols-4 gap-2">
       {rounds.map((r, i) => {
         const isActive = i === activeRound;
         const done = completedRounds.has(i);
@@ -250,9 +278,16 @@ function RoundStrip({
               <span className="text-xs uppercase tracking-wider text-muted-foreground">
                 Round {i + 1}
               </span>
-              {done && <span className="text-xs text-emerald-600 dark:text-emerald-400">✓</span>}
+              <Badge variant="outline" className="text-[10px] h-4 px-1.5">
+                {kindLabel(r.kind)}
+              </Badge>
             </div>
-            <div className="mt-1 text-sm font-medium truncate">{r.name}</div>
+            <div className="mt-1 flex items-center gap-2">
+              <span className="text-sm font-medium truncate flex-1">{r.name}</span>
+              {done && (
+                <span className="text-xs text-emerald-600 dark:text-emerald-400">✓</span>
+              )}
+            </div>
           </button>
         );
       })}

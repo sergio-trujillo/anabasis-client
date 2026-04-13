@@ -23,7 +23,7 @@ export function CatalogPage() {
   const { data, isPending, error } = trpc.companies.list.useQuery()
 
   return (
-    <>
+    <div className="flex-1 overflow-y-auto">
       <div className="relative min-h-[calc(100vh-3.5rem)]">
         <AnimatedGridPattern
           numSquares={30}
@@ -123,6 +123,6 @@ export function CatalogPage() {
           )}
         </div>
       </div>
-    </>
+    </div>
   )
 }

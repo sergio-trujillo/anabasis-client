@@ -42,7 +42,7 @@ export function CompanyPage() {
 
   if (companyQuery.isPending) {
     return (
-      <>
+      <div className="flex-1 overflow-y-auto">
         <div className="px-6 py-10 max-w-5xl mx-auto w-full space-y-4">
           <Skeleton className="h-10 w-80" />
           <Skeleton className="h-4 w-96" />
@@ -52,19 +52,19 @@ export function CompanyPage() {
             ))}
           </div>
         </div>
-      </>
+      </div>
     )
   }
 
   if (companyQuery.error || !companyQuery.data) {
     return (
-      <>
+      <div className="flex-1 overflow-y-auto">
         <div className="px-6 py-10 max-w-5xl mx-auto">
           <p className="text-destructive">
             {companyQuery.error?.message ?? 'Company not found'}
           </p>
         </div>
-      </>
+      </div>
     )
   }
 
@@ -92,7 +92,7 @@ export function CompanyPage() {
   const isActive = company.status === 'active'
 
   return (
-    <>
+    <div className="flex-1 overflow-y-auto">
       <div className="px-6 py-10 max-w-5xl mx-auto w-full space-y-8">
         <Fade>
           <header className="relative overflow-hidden rounded-xl p-8">
@@ -158,7 +158,7 @@ export function CompanyPage() {
           </section>
         )}
       </div>
-    </>
+    </div>
   )
 }
 
