@@ -57,8 +57,6 @@ export function MagicCard(props: MagicCardProps) {
     children,
     className,
     gradientSize = 200,
-    gradientColor = "#262626",
-    gradientOpacity = 0.8,
     gradientFrom = "#9E7AFF",
     gradientTo = "#FE8BBB",
     mode = "gradient",
@@ -72,6 +70,24 @@ export function MagicCard(props: MagicCardProps) {
   const glowOpacity = isOrbMode(props) ? (props.glowOpacity ?? 0.9) : 0.9
   const { theme } = useTheme()
   const isDarkTheme = THEMES[theme].mode === "dark"
+
+  // Theme-aware defaults for the gradient-mode hover glow.
+  //   Dark theme → a subtle white glow (brightens the area under the cursor).
+  //   Light theme → a subtle primary-tinted glow that does NOT darken the card.
+  // The previous defaults ("#262626" @ 0.8 opacity) painted light-theme cards
+  // almost-black on hover, which is the bug the user reported.
+  const gradientColor =
+    !isOrbMode(props) && props.gradientColor !== undefined
+      ? props.gradientColor
+      : isDarkTheme
+        ? "#ffffff"
+        : "#d8d8d8"
+  const gradientOpacity =
+    !isOrbMode(props) && props.gradientOpacity !== undefined
+      ? props.gradientOpacity
+      : isDarkTheme
+        ? 0.08
+        : 0.35
 
   const mouseX = useMotionValue(-gradientSize)
   const mouseY = useMotionValue(-gradientSize)
