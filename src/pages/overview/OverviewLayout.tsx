@@ -1,20 +1,15 @@
 // Docs-style shell for /:companySlug/overview/:topic and its :page children.
 //
-// Layout:
-//   ┌─ sticky top CTA bar (Practice / Mock GCA / Mock Power Day) ─┐
-//   │ ────────────────────────────────────────────────────────── │
-//   │ [Chapters nav]   │   <Outlet />                              │
-//   │                  │   ---                                     │
-//   │                  │   Prev / Next                             │
-//   └────────────────────────────────────────────────────────────┘
-//
-// Mobile: the chapters nav collapses into a Sheet triggered from the CTA bar.
+// Layout (top → bottom):
+//   1. CtaBar            — sticky top-0, "Inicia un mock…" + 3 action buttons
+//   2. ChapterStrip      — sticky below CtaBar, horizontal scrollable pills
+//   3. <Outlet />        — full-width content
+//   4. PrevNextNav       — rendered inside each page
 
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
   ClockIcon,
-  MenuIcon,
   ShuffleIcon,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -22,15 +17,11 @@ import { Link, NavLink, Outlet, useParams } from 'react-router'
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern'
 import { Badge } from '@/components/ui/badge'
 import { buttonVariants } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
+  ScrollArea,
+  ScrollBar,
+} from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import {
   chaptersFor,
@@ -39,13 +30,11 @@ import {
 } from './chapters'
 
 export function OverviewLayout() {
-  const { companySlug = '', topic = 'power-day' } = useParams()
-  const { page } = useParams()
+  const { companySlug = '', topic = 'power-day', page } = useParams()
   const safeTopic = (topic === 'gca' || topic === 'power-day'
     ? topic
     : 'power-day') as OverviewTopic
   const chapters = chaptersFor(safeTopic)
-  const { t } = useTranslation()
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -57,82 +46,28 @@ export function OverviewLayout() {
           className="absolute inset-0 -z-10 [mask-image:radial-gradient(700px_circle_at_top,white,transparent)]"
         />
 
-        <CtaBar
-          companySlug={companySlug}
+        <CtaBar companySlug={companySlug} />
+        <ChapterStrip
           chapters={chapters}
+          baseTo={`/${companySlug}/overview/${safeTopic}`}
           currentPage={page}
-          topic={safeTopic}
         />
 
         <div className="relative p-2 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6 pt-4">
-            <aside className="hidden lg:block">
-              <div className="sticky top-28 max-h-[calc(100vh-8rem)]">
-                <h3 className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-3 px-2">
-                  {t('overviewChapters.actions.chapters')}
-                </h3>
-                <ScrollArea className="h-full pr-3">
-                  <ChapterNav
-                    chapters={chapters}
-                    baseTo={`/${companySlug}/overview/${safeTopic}`}
-                    currentPage={page}
-                  />
-                </ScrollArea>
-              </div>
-            </aside>
-
-            <main className="min-w-0 space-y-6 pb-12">
-              <Outlet />
-            </main>
-          </div>
+          <main className="min-w-0 space-y-6 pb-12 pt-4">
+            <Outlet />
+          </main>
         </div>
       </div>
     </div>
   )
 }
 
-function CtaBar({
-  companySlug,
-  chapters,
-  currentPage,
-  topic,
-}: {
-  companySlug: string
-  chapters: Chapter[]
-  currentPage: string | undefined
-  topic: OverviewTopic
-}) {
+function CtaBar({ companySlug }: { companySlug: string }) {
   const { t } = useTranslation()
   return (
-    <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b border-border/60">
+    <div className="sticky top-0 z-20 bg-background/85 backdrop-blur-sm border-b border-border/60">
       <div className="p-2 w-full flex items-center gap-2 flex-wrap">
-        {/* Mobile-only chapters trigger */}
-        <Sheet>
-          <SheetTrigger
-            className={cn(
-              buttonVariants({ variant: 'outline', size: 'sm' }),
-              'lg:hidden gap-1.5'
-            )}
-          >
-            <MenuIcon data-icon="inline-start" />
-            {t('overviewChapters.actions.chapters')}
-          </SheetTrigger>
-          <SheetContent side="left" className="w-72">
-            <SheetHeader>
-              <SheetTitle>
-                {t('overviewChapters.actions.chapters')}
-              </SheetTitle>
-            </SheetHeader>
-            <div className="p-2">
-              <ChapterNav
-                chapters={chapters}
-                baseTo={`/${companySlug}/overview/${topic}`}
-                currentPage={currentPage}
-              />
-            </div>
-          </SheetContent>
-        </Sheet>
-
         <div className="hidden sm:block text-xs text-muted-foreground mr-auto px-2">
           {t('overviewChapters.actions.launchMock')}
         </div>
@@ -163,7 +98,7 @@ function CtaBar({
   )
 }
 
-function ChapterNav({
+function ChapterStrip({
   chapters,
   baseTo,
   currentPage,
@@ -174,47 +109,87 @@ function ChapterNav({
 }) {
   const { t } = useTranslation()
   return (
-    <nav className="flex flex-col gap-0.5">
-      <NavLink
-        to={baseTo}
-        end
-        className={({ isActive }) =>
-          cn(
-            'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
-            isActive && !currentPage
-              ? 'bg-primary/10 text-primary font-medium'
-              : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-          )
-        }
-      >
-        <span className="font-mono text-[10px] opacity-50 tabular-nums">
-          00
+    <div className="sticky top-[52px] z-10 bg-background/85 backdrop-blur-sm border-b border-border/60">
+      <div className="p-2 w-full flex items-center gap-2">
+        <span className="hidden sm:inline-flex shrink-0 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-2">
+          {t('overviewChapters.actions.chapters')}
         </span>
-        <span className="truncate">
-          {t('overviewChapters.actions.startHere')}
-        </span>
-      </NavLink>
-      {chapters.map((c) => (
-        <NavLink
-          key={c.slug}
-          to={`${baseTo}/${c.slug}`}
-          className={({ isActive }) =>
-            cn(
-              'flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors',
-              isActive
-                ? 'bg-primary/10 text-primary font-medium'
-                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-            )
-          }
-        >
-          <span className="truncate flex-1">{t(c.titleKey)}</span>
-          <Badge variant="outline" className="shrink-0 text-[9px] h-4 px-1.5 font-normal">
-            {c.readMinutes}m
-          </Badge>
-        </NavLink>
-      ))}
-    </nav>
+        <ScrollArea className="min-w-0 flex-1">
+          <nav className="flex items-center gap-1.5 py-0.5">
+            <ChapterPill
+              to={baseTo}
+              exact
+              label={t('overviewChapters.actions.startHere')}
+              index="00"
+              minutes={null}
+            />
+            {chapters.map((c, i) => (
+              <ChapterPill
+                key={c.slug}
+                to={`${baseTo}/${c.slug}`}
+                exact={false}
+                label={stripIndex(t(c.titleKey))}
+                index={String(i + 1).padStart(2, '0')}
+                minutes={c.readMinutes}
+              />
+            ))}
+          </nav>
+          <ScrollBar orientation="horizontal" className="h-1.5" />
+        </ScrollArea>
+      </div>
+    </div>
   )
+}
+
+function ChapterPill({
+  to,
+  exact,
+  label,
+  index,
+  minutes,
+}: {
+  to: string
+  exact: boolean
+  label: string
+  index: string
+  minutes: number | null
+}) {
+  return (
+    <NavLink
+      to={to}
+      end={exact}
+      className={({ isActive }) =>
+        cn(
+          'group shrink-0 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
+          isActive
+            ? 'bg-primary text-primary-foreground border-primary'
+            : 'border-border/60 bg-background/40 text-muted-foreground hover:text-foreground hover:border-border hover:bg-muted/60'
+        )
+      }
+    >
+      <span className="font-mono text-[10px] tabular-nums opacity-60 group-aria-[current=page]:opacity-100">
+        {index}
+      </span>
+      <span className="truncate max-w-[200px]">{label}</span>
+      {minutes !== null && (
+        <Badge
+          variant="outline"
+          className="h-4 px-1 text-[9px] font-normal border-current/30 bg-transparent"
+        >
+          {minutes}m
+        </Badge>
+      )}
+    </NavLink>
+  )
+}
+
+/**
+ * The chapter titles in i18n already include a leading "01 · " for the
+ * chapter listing. The pill shows its own index badge, so strip the
+ * duplicate prefix from the label.
+ */
+function stripIndex(raw: string): string {
+  return raw.replace(/^\s*\d+\s*[·•·]\s*/, '').trim()
 }
 
 export function PrevNextNav({
@@ -227,7 +202,6 @@ export function PrevNextNav({
   baseTo: string
 }) {
   const { t } = useTranslation()
-  // Landing page (no currentSlug) → only Next
   const idx =
     currentSlug === undefined
       ? -1
@@ -304,4 +278,4 @@ function PrevNextCard({
   )
 }
 
-export { Separator } // re-export so sub-pages can separate blocks consistently
+export { Separator }

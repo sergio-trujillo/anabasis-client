@@ -8,7 +8,7 @@
 
 import { Link, useLocation, useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { BookOpenIcon, BuildingIcon, LockIcon } from 'lucide-react'
+import { BookOpenIcon, BuildingIcon, LockIcon, MountainSnowIcon } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -48,6 +48,7 @@ type Company = {
 export function AppSidebar() {
   const { t } = useTranslation()
   const location = useLocation()
+  const navigate = useNavigate()
   const companiesQuery = trpc.companies.list.useQuery()
   const companies = (companiesQuery.data as Company[] | undefined) ?? []
   const active = companies.filter((c) => c.status === 'active')
@@ -56,10 +57,27 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-1.5">
-          <span className="text-base font-bold tracking-tight font-heading">Anabasis</span>
-          <span className="text-[11px] text-muted-foreground">ἀνάβασις</span>
-        </div>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              size="lg"
+              tooltip="Anabasis · ἀνάβασις"
+              onClick={() => navigate('/')}
+            >
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg border bg-sidebar-accent text-sidebar-accent-foreground">
+                <MountainSnowIcon className="size-4" />
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-heading font-semibold">
+                  Anabasis
+                </span>
+                <span className="truncate text-xs text-muted-foreground">
+                  ἀνάβασις · the ascent
+                </span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
 
       <SidebarContent>
@@ -85,7 +103,7 @@ export function AppSidebar() {
               <SidebarMenu>
                 {comingSoon.map((c) => (
                   <SidebarMenuItem key={c.slug}>
-                    <SidebarMenuButton disabled>
+                    <SidebarMenuButton disabled tooltip={`${c.name} · coming soon`}>
                       <LockIcon className="size-3.5" />
                       <span className="text-muted-foreground">{c.name}</span>
                     </SidebarMenuButton>
@@ -122,6 +140,7 @@ function CompanyMenuItem({
       <SidebarMenuButton
         onClick={() => navigate(`/${company.slug}`)}
         isActive={currentPath === `/${company.slug}` || currentPath.startsWith(`/${company.slug}/`)}
+        tooltip={company.name}
       >
         <BuildingIcon className="size-4" />
         <span>{company.name}</span>
