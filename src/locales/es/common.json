@@ -1,0 +1,277 @@
+{
+  "brand": {
+    "name": "Anabasis",
+    "subtitle": "ἀνάβασις · el ascenso",
+    "tagline": "Preparación de entrevistas específica por empresa, una campaña a la vez."
+  },
+  "nav": {
+    "activeCampaigns": "Campañas activas",
+    "comingSoon": "Próximamente",
+    "overview": "Resumen",
+    "practice": "Práctica aleatoria",
+    "mockExam": "Simulacro de examen",
+    "back": "Volver",
+    "backToCatalog": "Volver al catálogo"
+  },
+  "catalog": {
+    "title": "Anabasis",
+    "chooseCampaign": "Elige una campaña",
+    "loading": "Cargando catálogo…",
+    "errorLoading": "Error al cargar catálogo",
+    "active": "activa",
+    "soon": "pronto",
+    "locked": "bloqueada"
+  },
+  "company": {
+    "loading": "Cargando…",
+    "samplesHeader": "Ejercicios de muestra — uno de cada tipo"
+  },
+  "exercise": {
+    "loading": "Cargando ejercicio…",
+    "types": {
+      "mcq": "Opción múltiple",
+      "code": "Código",
+      "open-prompt": "Respuesta abierta",
+      "interviewer-chat": "Chat con entrevistador"
+    }
+  },
+  "mcq": {
+    "submit": "Enviar",
+    "checking": "Verificando…",
+    "correct": "Correcto",
+    "incorrect": "Casi, pero no",
+    "tryAgain": "Intentar de nuevo"
+  },
+  "code": {
+    "label": "Solution.java",
+    "run": "Ejecutar pruebas",
+    "running": "Compilando javac + JUnit…",
+    "pass": "PASÓ",
+    "fail": "FALLÓ",
+    "testsSummary": "{{passed}}/{{total}} pruebas · {{ms}} ms",
+    "nextProblem": "Siguiente problema"
+  },
+  "openPrompt": {
+    "question": "Pregunta",
+    "placeholder": "Tu respuesta… usa STAR (Situación, Tarea, Acción, Resultado) e incluye números.",
+    "submit": "Enviar para evaluación",
+    "evaluating": "El juez está leyendo (~15 s)…",
+    "strongAnswer": "Respuesta sólida",
+    "roomToTighten": "Hay espacio para ajustar",
+    "hits": "Aciertos",
+    "misses": "Faltó cubrir",
+    "warnings": "Advertencias"
+  },
+  "interviewerChat": {
+    "personaLabel": "Entrevistadora:",
+    "turnCounter": "turno {{current}} / {{total}}",
+    "placeholder": "Responde a la entrevistadora…",
+    "evalTitle": "Evaluación de la entrevista",
+    "covered": "Cubierto",
+    "missed": "Faltó",
+    "send": "Enviar",
+    "enterHint": "Enter para enviar · Shift+Enter para nueva línea"
+  },
+  "theme": {
+    "toggleTooltip": "Cambiar tema (D)"
+  },
+  "language": {
+    "tooltip": "Cambiar idioma",
+    "en": "English",
+    "es": "Español"
+  },
+  "loader": {
+    "interviewerTyping": "La entrevistadora está escribiendo…"
+  },
+  "practice": {
+    "title": "Práctica aleatoria",
+    "subtitle": "Un problema al azar de Capital One. Resuelve, corre, siguiente.",
+    "problemLabel": "Problema",
+    "editorLabel": "Tu código",
+    "resultsLabel": "Resultados",
+    "emptyPool": "Aún no hay problemas de código en el pool.",
+    "noResultsYet": "Corre las pruebas para ver los resultados.",
+    "nextProblem": "Siguiente problema",
+    "resetCode": "Restablecer código"
+  },
+  "footer": {
+    "phase": "F2 · Capital One"
+  },
+  "animation": {
+    "growthTitle": "Cómo crecen las complejidades al aumentar n",
+    "growthDesc": "Presiona Play para ver cómo O(1) se mantiene plano mientras O(n²) y O(2ⁿ) explotan. Por eso importa Big O."
+  },
+  "celebration": {
+    "levelUp": "¡Subiste de nivel!",
+    "continue": "Seguir programando"
+  },
+  "dashboard": {
+    "greeting": "Buenos días",
+    "greetingAfternoon": "Buenas tardes",
+    "greetingEvening": "Buenas noches",
+    "dailyActivity": "Actividad diaria",
+    "solvedOverTime": "Problemas resueltos en el tiempo",
+    "last3months": "Últimos 3 meses",
+    "last30days": "Últimos 30 días",
+    "last7days": "Últimos 7 días",
+    "xpToNext": "{{xp}} XP para el siguiente nivel",
+    "maxLevel": "Nivel máximo alcanzado",
+    "dayStreak": "días de racha",
+    "day1Subtitle": "¡Elige un track y resuelve tu primer problema!",
+    "day1Activity": "Resuelve problemas para llenar tu gráfica de actividad",
+    "day1Badges": "Sin medallas aún",
+    "day1BadgesDesc": "Resuelve problemas, construye rachas y sube de nivel para desbloquear medallas"
+  },
+  "editor": {
+    "format": "Formatear"
+  },
+  "help": {
+    "streak": "Racha diaria: resuelve problemas en días consecutivos para mantenerla",
+    "xp": "Puntos de experiencia: gana XP resolviendo problemas (100 fácil, 200 medio, 350 difícil)",
+    "level": "Tu nivel. Gana XP para subir de nivel — hay 10 niveles de Principiante a Leyenda",
+    "visualize": "Ve cómo se ejecuta el algoritmo paso a paso",
+    "contributionGraph": "Las celdas verdes muestran días que resolviste problemas. Más oscuro = más problemas",
+    "progress": "Problemas resueltos del total en este track",
+    "locked": "Completa el patrón anterior para desbloquear este",
+    "minimap": "Mostrar un minimapa en el editor para navegar el código rápidamente",
+    "outputLayout": "Abajo: más espacio horizontal. Derecha: ver código y resultados lado a lado",
+    "progLang": "El lenguaje usado para los retos de código. Más lenguajes próximamente",
+    "runVsSubmit": "Ejecutar prueba tu código localmente. Enviar evalúa y otorga XP",
+    "badges": "Gana medallas resolviendo problemas, construyendo rachas y subiendo de nivel"
+  },
+  "icon": {
+    "complete": "Completado",
+    "active": "En progreso",
+    "pending": "No iniciado",
+    "locked": "Bloqueado — completa los prerequisitos primero"
+  },
+  "lesson": {
+    "tab": {
+      "lesson": "Lección",
+      "animation": "Animación",
+      "problems": "Problemas"
+    },
+    "completed": "Lección completada",
+    "goToProblems": "Entendido, ir a problemas",
+    "animationPlaceholder": "Animación del Algoritmo"
+  },
+  "notFound": {
+    "title": "Pagina no encontrada",
+    "description": "La pagina que buscas no existe o fue movida.",
+    "goHome": "Volver al Dashboard"
+  },
+  "onboarding": {
+    "welcome": "Bienvenido a Praxema",
+    "welcomeDesc": "Tu campo de entrenamiento personal para entrevistas FAANG. Practica patrones, sigue tu progreso y sube de nivel.",
+    "getStarted": "Empezar",
+    "pickTracks": "¿Qué quieres practicar?",
+    "pickTracksDesc": "Elige los tracks en los que quieres enfocarte. Puedes cambiarlo cuando quieras.",
+    "ready": "¡Todo listo!",
+    "readyDesc": "Empieza con una lección para aprender el patrón, luego resuelve problemas para crear memoria muscular. De aquí pa'l FAANG.",
+    "yourPath": "Tu camino",
+    "start": "Empezar a practicar"
+  },
+  "output": {
+    "running": "Ejecutando pruebas...",
+    "idle": "Ejecuta o Envía para ver resultados",
+    "compilationError": "Error de Compilación",
+    "allPassed": "Todas las pruebas pasaron",
+    "testsFailed_one": "{{count}} prueba falló",
+    "testsFailed_other": "{{count}} pruebas fallaron",
+    "passed": "pasaron",
+    "expected": "Esperado",
+    "actual": "Actual"
+  },
+  "problem": {
+    "run": "Ejecutar",
+    "submit": "Enviar",
+    "reset": "Reiniciar",
+    "description": "Descripción",
+    "solution": "Solución",
+    "hints": "Pistas",
+    "visualize": "Visualizar",
+    "solveFirst": "Resuelve el problema primero, o revela si estás atorado.",
+    "reveal": "Revelar solución",
+    "vizPlaceholder": "Visualización próximamente"
+  },
+  "problems": {
+    "search": "Buscar problemas...",
+    "allSections": "Todos los algoritmos",
+    "problems": "problemas",
+    "of": "de",
+    "noResults": "Ningún problema coincide con tus filtros.",
+    "rowsPerPage": "Filas",
+    "page": "Página",
+    "title": "Título",
+    "difficulty": "Dificultad",
+    "section": "Sección",
+    "tags": "Etiquetas"
+  },
+  "search": {
+    "placeholder": "Buscar tracks, patrones, páginas...",
+    "empty": "Sin resultados.",
+    "navigation": "Navegación",
+    "progress": "Progreso",
+    "problems": "Problemas"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "programmingLanguage": "Lenguaje de Programación",
+    "language": "Idioma",
+    "fontSize": "Tamaño de fuente",
+    "fontFamily": "Familia de fuente",
+    "theme": "Tema",
+    "minimap": "Minimapa",
+    "timeout": "Timeout de ejecución",
+    "memory": "Límite de memoria",
+    "editor": "Editor",
+    "general": "General",
+    "execution": "Ejecución",
+    "layout": "Posición del output",
+    "layoutBottom": "Abajo",
+    "layoutRight": "Derecha"
+  },
+  "sidebar": {
+    "progress": "Progreso",
+    "patterns": "Patrones"
+  },
+  "solution": {
+    "answersTitle": "Respuestas y explicaciones"
+  },
+  "tooltip": {
+    "format": "Formatear código",
+    "reset": "Reiniciar al código inicial",
+    "run": "Ejecutar contra test cases",
+    "submit": "Enviar solución",
+    "pause": "Pausar",
+    "resume": "Reanudar",
+    "resetTimer": "Reiniciar timer",
+    "startTimer": "Iniciar timer de entrevista",
+    "streak": "Racha diaria",
+    "xp": "Puntos de experiencia",
+    "settings": "Ajustes",
+    "search": "Buscar (⌘K)",
+    "commandPalette": "Presiona ⌘K para buscar"
+  },
+  "track": {
+    "learningPath": "Ordenados por ruta de aprendizaje — empieza desde arriba"
+  },
+  "viz": {
+    "snippetTitle": "¿Cuántas operaciones ejecuta cada fragmento?"
+  },
+  "common": {
+    "streak": "Racha",
+    "xp": "XP",
+    "solved": "Resueltos",
+    "today": "Hoy",
+    "tracks": "Tracks",
+    "badges": "Medallas",
+    "activity": "Actividad",
+    "problemsSolved": "problemas resueltos",
+    "problemSolved": "problema resuelto",
+    "level": "Nivel",
+    "lvl": "Nv",
+    "back": "Atrás",
+    "continue": "Continuar"
+  }
+}

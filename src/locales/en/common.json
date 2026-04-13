@@ -1,0 +1,277 @@
+{
+  "brand": {
+    "name": "Anabasis",
+    "subtitle": "ἀνάβασις · the ascent",
+    "tagline": "Company-specific interview prep, one campaign at a time."
+  },
+  "nav": {
+    "activeCampaigns": "Active campaigns",
+    "comingSoon": "Coming soon",
+    "overview": "Overview",
+    "practice": "Random practice",
+    "mockExam": "Mock exam",
+    "back": "Back",
+    "backToCatalog": "Back to catalog"
+  },
+  "catalog": {
+    "title": "Anabasis",
+    "chooseCampaign": "Choose a campaign",
+    "loading": "Loading catalog…",
+    "errorLoading": "Error loading catalog",
+    "active": "active",
+    "soon": "soon",
+    "locked": "locked"
+  },
+  "company": {
+    "loading": "Loading…",
+    "samplesHeader": "F1 sample exercises — one of each type"
+  },
+  "exercise": {
+    "loading": "Loading exercise…",
+    "types": {
+      "mcq": "MCQ",
+      "code": "Code",
+      "open-prompt": "Open Prompt",
+      "interviewer-chat": "Interviewer Chat"
+    }
+  },
+  "mcq": {
+    "submit": "Submit",
+    "checking": "Checking…",
+    "correct": "Correct",
+    "incorrect": "Not quite",
+    "tryAgain": "Try again"
+  },
+  "code": {
+    "label": "Solution.java",
+    "run": "Run tests",
+    "running": "Compiling javac + JUnit…",
+    "pass": "PASS",
+    "fail": "FAIL",
+    "testsSummary": "{{passed}}/{{total}} tests · {{ms}} ms",
+    "nextProblem": "Next problem"
+  },
+  "openPrompt": {
+    "question": "Question",
+    "placeholder": "Your answer… use STAR (Situation, Task, Action, Result) and include numbers.",
+    "submit": "Submit for evaluation",
+    "evaluating": "Judge is reading (~15 s)…",
+    "strongAnswer": "Strong answer",
+    "roomToTighten": "Room to tighten up",
+    "hits": "Hits",
+    "misses": "Missed",
+    "warnings": "Warnings"
+  },
+  "interviewerChat": {
+    "personaLabel": "Persona:",
+    "turnCounter": "turn {{current}} / {{total}}",
+    "placeholder": "Answer the interviewer…",
+    "evalTitle": "Interview evaluation",
+    "covered": "Covered",
+    "missed": "Missed",
+    "send": "Send",
+    "enterHint": "Enter to send · Shift+Enter for newline"
+  },
+  "theme": {
+    "toggleTooltip": "Toggle theme (D)"
+  },
+  "language": {
+    "tooltip": "Change language",
+    "en": "English",
+    "es": "Español"
+  },
+  "loader": {
+    "interviewerTyping": "Interviewer is typing…"
+  },
+  "practice": {
+    "title": "Random practice",
+    "subtitle": "A random Capital One problem. Solve, run, next.",
+    "problemLabel": "Problem",
+    "editorLabel": "Your code",
+    "resultsLabel": "Results",
+    "emptyPool": "No code problems in the pool yet.",
+    "noResultsYet": "Run the tests to see results.",
+    "nextProblem": "Next problem",
+    "resetCode": "Reset code"
+  },
+  "footer": {
+    "phase": "F2 · Capital One"
+  },
+  "animation": {
+    "growthTitle": "How complexities grow as n increases",
+    "growthDesc": "Press Play to see how O(1) stays flat while O(n²) and O(2ⁿ) explode. This is why Big O matters."
+  },
+  "celebration": {
+    "levelUp": "Level Up!",
+    "continue": "Continue coding"
+  },
+  "dashboard": {
+    "greeting": "Good morning",
+    "greetingAfternoon": "Good afternoon",
+    "greetingEvening": "Good evening",
+    "dailyActivity": "Daily Activity",
+    "solvedOverTime": "Problems solved over time",
+    "last3months": "Last 3 months",
+    "last30days": "Last 30 days",
+    "last7days": "Last 7 days",
+    "xpToNext": "{{xp}} XP to next level",
+    "maxLevel": "Max level reached",
+    "dayStreak": "day streak",
+    "day1Subtitle": "Pick a track and solve your first problem!",
+    "day1Activity": "Solve problems to fill your activity graph",
+    "day1Badges": "No badges yet",
+    "day1BadgesDesc": "Solve problems, build streaks, and level up to unlock badges"
+  },
+  "editor": {
+    "format": "Format"
+  },
+  "help": {
+    "streak": "Daily streak: solve problems on consecutive days to keep it going",
+    "xp": "Experience Points: earn XP by solving problems (100 easy, 200 medium, 350 hard)",
+    "level": "Your level. Earn XP to level up — there are 10 levels from Beginner to Legend",
+    "visualize": "Watch the algorithm execute step by step",
+    "contributionGraph": "Green cells show days you solved problems. Darker = more problems",
+    "progress": "Problems solved out of total in this track",
+    "locked": "Complete the previous pattern to unlock this one",
+    "minimap": "Show a minimap in the editor for quick code navigation",
+    "outputLayout": "Bottom: more horizontal space. Right: see code and output side by side",
+    "progLang": "The language used for coding challenges. More languages coming soon",
+    "runVsSubmit": "Run tests your code locally. Submit evaluates and awards XP",
+    "badges": "Earn badges by solving problems, building streaks, and leveling up"
+  },
+  "icon": {
+    "complete": "Completed",
+    "active": "In progress",
+    "pending": "Not started",
+    "locked": "Locked — complete prerequisites first"
+  },
+  "lesson": {
+    "tab": {
+      "lesson": "Lesson",
+      "animation": "Animation",
+      "problems": "Problems"
+    },
+    "completed": "Lesson completed",
+    "goToProblems": "Understood, go to problems",
+    "animationPlaceholder": "Algorithm Animation"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "goHome": "Back to Dashboard"
+  },
+  "onboarding": {
+    "welcome": "Welcome to Praxema",
+    "welcomeDesc": "Your personal training ground for FAANG interviews. Practice patterns, track your progress, and level up your skills.",
+    "getStarted": "Let's go",
+    "pickTracks": "What do you want to practice?",
+    "pickTracksDesc": "Pick the tracks you want to focus on. You can change this anytime.",
+    "ready": "You're all set!",
+    "readyDesc": "Start with a lesson to learn the pattern, then solve problems to build muscle memory. De aquí pa'l FAANG.",
+    "yourPath": "Your path",
+    "start": "Start practicing"
+  },
+  "output": {
+    "running": "Running tests...",
+    "idle": "Run or Submit to see results",
+    "compilationError": "Compilation Error",
+    "allPassed": "All tests passed",
+    "testsFailed_one": "{{count}} test failed",
+    "testsFailed_other": "{{count}} tests failed",
+    "passed": "passed",
+    "expected": "Expected",
+    "actual": "Actual"
+  },
+  "problem": {
+    "run": "Run",
+    "submit": "Submit",
+    "reset": "Reset",
+    "description": "Description",
+    "solution": "Solution",
+    "hints": "Hints",
+    "visualize": "Visualize",
+    "solveFirst": "Solve the problem first, or reveal if you're stuck.",
+    "reveal": "Reveal solution",
+    "vizPlaceholder": "Visualization coming soon"
+  },
+  "problems": {
+    "search": "Search problems...",
+    "allSections": "All algorithms",
+    "problems": "problems",
+    "of": "of",
+    "noResults": "No problems match your filters.",
+    "rowsPerPage": "Rows",
+    "page": "Page",
+    "title": "Title",
+    "difficulty": "Difficulty",
+    "section": "Section",
+    "tags": "Tags"
+  },
+  "search": {
+    "placeholder": "Search tracks, patterns, pages...",
+    "empty": "No results found.",
+    "navigation": "Navigation",
+    "progress": "Progress",
+    "problems": "Problems"
+  },
+  "settings": {
+    "title": "Settings",
+    "programmingLanguage": "Programming Language",
+    "language": "Language",
+    "fontSize": "Font size",
+    "fontFamily": "Font family",
+    "theme": "Theme",
+    "minimap": "Minimap",
+    "timeout": "Execution timeout",
+    "memory": "Memory limit",
+    "editor": "Editor",
+    "general": "General",
+    "execution": "Execution",
+    "layout": "Output layout",
+    "layoutBottom": "Bottom",
+    "layoutRight": "Right"
+  },
+  "sidebar": {
+    "progress": "Progress",
+    "patterns": "Patterns"
+  },
+  "solution": {
+    "answersTitle": "Answers & Explanations"
+  },
+  "tooltip": {
+    "format": "Format code",
+    "reset": "Reset to starter code",
+    "run": "Run against test cases",
+    "submit": "Submit solution",
+    "pause": "Pause",
+    "resume": "Resume",
+    "resetTimer": "Reset timer",
+    "startTimer": "Start interview timer",
+    "streak": "Daily streak",
+    "xp": "Experience points",
+    "settings": "Settings",
+    "search": "Search (⌘K)",
+    "commandPalette": "Press ⌘K to search"
+  },
+  "track": {
+    "learningPath": "Ordered by learning path — start from the top"
+  },
+  "viz": {
+    "snippetTitle": "How many operations does each snippet perform?"
+  },
+  "common": {
+    "streak": "Streak",
+    "xp": "XP",
+    "solved": "Solved",
+    "today": "Today",
+    "tracks": "Tracks",
+    "badges": "Badges",
+    "activity": "Activity",
+    "problemsSolved": "problems solved",
+    "problemSolved": "problem solved",
+    "level": "Level",
+    "lvl": "Lvl",
+    "back": "Back",
+    "continue": "Continue"
+  }
+}
