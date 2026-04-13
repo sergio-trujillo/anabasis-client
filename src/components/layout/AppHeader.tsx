@@ -118,7 +118,9 @@ function buildBreadcrumbs(pathname: string) {
           ? 'Power Day Overview'
           : topicSlug === 'gca'
             ? 'GCA Overview'
-            : formatSlug(topicSlug)
+            : topicSlug === 'company'
+              ? 'Company Overview'
+              : formatSlug(topicSlug)
       segments.push({
         label: topicLabel,
         path: `/${companySlug}/overview/${topicSlug}`,

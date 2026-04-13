@@ -7,9 +7,11 @@ import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 import { Fade } from '@/components/animate-ui/primitives/effects/fade'
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient'
+import { CompanyHero } from '@/pages/CompanyPage'
 import { Badge } from '@/components/ui/badge'
 import { BorderBeam } from '@/components/ui/border-beam'
 import { MagicCard } from '@/components/ui/magic-card'
+import { trpc } from '@/lib/trpc'
 import {
   chaptersFor,
   type OverviewTopic,
@@ -21,7 +23,9 @@ import { PrevNextNav } from './OverviewLayout'
 export function OverviewLandingPage() {
   const { companySlug = '', topic = 'power-day' } = useParams()
   const safeTopic: OverviewTopic =
-    topic === 'gca' || topic === 'power-day' ? topic : 'power-day'
+    topic === 'gca' || topic === 'power-day' || topic === 'company'
+      ? topic
+      : 'power-day'
   const chapters = chaptersFor(safeTopic)
   const { t } = useTranslation()
   const baseTo = `/${companySlug}/overview/${safeTopic}`
@@ -29,26 +33,30 @@ export function OverviewLandingPage() {
   return (
     <>
       <Fade>
-        <section className="relative overflow-hidden rounded-xl">
-          <MagicCard className="relative p-8 md:p-10 space-y-4">
-            <BorderBeam size={200} duration={12} />
-            <Badge variant="outline" className="gap-1.5 rounded-full">
-              <BookOpenIcon data-icon="inline-start" />
-              <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
-                {t('overviewChapters.actions.chapters')} · {chapters.length}
-              </span>
-            </Badge>
-            <h1 className="text-3xl md:text-4xl font-bold font-heading tracking-tight leading-tight max-w-3xl">
-              <GradientText
-                text={t(topicTitleKey(safeTopic))}
-                gradient="linear-gradient(90deg, var(--primary) 0%, var(--chart-2) 50%, var(--chart-4) 100%)"
-              />
-            </h1>
-            <p className="text-base text-muted-foreground leading-relaxed max-w-2xl">
-              {t(topicBlurbKey(safeTopic))}
-            </p>
-          </MagicCard>
-        </section>
+        {safeTopic === 'company' ? (
+          <CompanyLandingHero companySlug={companySlug} />
+        ) : (
+          <section className="relative overflow-hidden rounded-xl">
+            <MagicCard className="relative p-8 md:p-10 space-y-4">
+              <BorderBeam size={200} duration={12} />
+              <Badge variant="outline" className="gap-1.5 rounded-full">
+                <BookOpenIcon data-icon="inline-start" />
+                <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                  {t('overviewChapters.actions.chapters')} · {chapters.length}
+                </span>
+              </Badge>
+              <h1 className="text-3xl md:text-4xl font-bold font-heading tracking-tight leading-tight max-w-3xl">
+                <GradientText
+                  text={t(topicTitleKey(safeTopic))}
+                  gradient="linear-gradient(90deg, var(--primary) 0%, var(--chart-2) 50%, var(--chart-4) 100%)"
+                />
+              </h1>
+              <p className="text-base text-muted-foreground leading-relaxed max-w-2xl">
+                {t(topicBlurbKey(safeTopic))}
+              </p>
+            </MagicCard>
+          </section>
+        )}
       </Fade>
 
       <Fade delay={0.1}>
@@ -99,5 +107,27 @@ export function OverviewLandingPage() {
 
       <PrevNextNav chapters={chapters} currentSlug={undefined} baseTo={baseTo} />
     </>
+  )
+}
+
+function CompanyLandingHero({ companySlug }: { companySlug: string }) {
+  const companyQuery = trpc.companies.get.useQuery({ slug: companySlug })
+  const data = companyQuery.data as
+    | {
+        company: {
+          slug: string
+          name: string
+          status: 'active' | 'coming-soon'
+          tagline: string
+          accentColor?: string
+        }
+      }
+    | undefined
+  if (!data) return null
+  return (
+    <CompanyHero
+      company={data.company}
+      isActive={data.company.status === 'active'}
+    />
   )
 }

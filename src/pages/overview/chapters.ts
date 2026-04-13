@@ -8,6 +8,11 @@
 // `readMinutes` is a rough estimate used for the "N min read" badge.
 
 export type ChapterSlug =
+  // company
+  | 'journey'
+  | 'distinctive'
+  | 'training'
+  | 'loop'
   // power-day
   | 'timeline'
   | 'concepts'
@@ -29,6 +34,33 @@ export type Chapter = {
   blurbKey: string
   readMinutes: number
 }
+
+export const COMPANY_CHAPTERS: Chapter[] = [
+  {
+    slug: 'journey',
+    titleKey: 'overviewChapters.company.journey.title',
+    blurbKey: 'overviewChapters.company.journey.blurb',
+    readMinutes: 4,
+  },
+  {
+    slug: 'distinctive',
+    titleKey: 'overviewChapters.company.distinctive.title',
+    blurbKey: 'overviewChapters.company.distinctive.blurb',
+    readMinutes: 3,
+  },
+  {
+    slug: 'training',
+    titleKey: 'overviewChapters.company.training.title',
+    blurbKey: 'overviewChapters.company.training.blurb',
+    readMinutes: 2,
+  },
+  {
+    slug: 'loop',
+    titleKey: 'overviewChapters.company.loop.title',
+    blurbKey: 'overviewChapters.company.loop.blurb',
+    readMinutes: 5,
+  },
+]
 
 export const POWER_DAY_CHAPTERS: Chapter[] = [
   {
@@ -108,20 +140,37 @@ export const GCA_CHAPTERS: Chapter[] = [
   },
 ]
 
-export type OverviewTopic = 'power-day' | 'gca'
+export type OverviewTopic = 'company' | 'power-day' | 'gca'
 
 export function chaptersFor(topic: OverviewTopic): Chapter[] {
-  return topic === 'power-day' ? POWER_DAY_CHAPTERS : GCA_CHAPTERS
+  switch (topic) {
+    case 'company':
+      return COMPANY_CHAPTERS
+    case 'power-day':
+      return POWER_DAY_CHAPTERS
+    case 'gca':
+      return GCA_CHAPTERS
+  }
 }
 
 export function topicTitleKey(topic: OverviewTopic): string {
-  return topic === 'power-day'
-    ? 'overviewChapters.powerDay.topic.title'
-    : 'overviewChapters.gca.topic.title'
+  switch (topic) {
+    case 'company':
+      return 'overviewChapters.company.topic.title'
+    case 'power-day':
+      return 'overviewChapters.powerDay.topic.title'
+    case 'gca':
+      return 'overviewChapters.gca.topic.title'
+  }
 }
 
 export function topicBlurbKey(topic: OverviewTopic): string {
-  return topic === 'power-day'
-    ? 'overviewChapters.powerDay.topic.blurb'
-    : 'overviewChapters.gca.topic.blurb'
+  switch (topic) {
+    case 'company':
+      return 'overviewChapters.company.topic.blurb'
+    case 'power-day':
+      return 'overviewChapters.powerDay.topic.blurb'
+    case 'gca':
+      return 'overviewChapters.gca.topic.blurb'
+  }
 }

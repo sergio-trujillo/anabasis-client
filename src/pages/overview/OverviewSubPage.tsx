@@ -6,6 +6,12 @@ import { Navigate, useParams } from 'react-router'
 import { Fade } from '@/components/animate-ui/primitives/effects/fade'
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import {
+  CompanyDistinctiveSection,
+  CompanyJourneySection,
+  CompanyLoopSection,
+  CompanyTrainingSection,
+} from '@/pages/CompanyPage'
+import {
   type DeepItem,
   OverviewAntiPatternsAccordion,
   OverviewConceptsTabs,
@@ -31,7 +37,9 @@ import { PrevNextNav } from './OverviewLayout'
 export function OverviewSubPage() {
   const { companySlug = '', topic = 'power-day', page } = useParams()
   const safeTopic: OverviewTopic =
-    topic === 'gca' || topic === 'power-day' ? topic : 'power-day'
+    topic === 'gca' || topic === 'power-day' || topic === 'company'
+      ? topic
+      : 'power-day'
   const chapters = chaptersFor(safeTopic)
   const baseTo = `/${companySlug}/overview/${safeTopic}`
 
@@ -61,7 +69,11 @@ export function OverviewSubPage() {
 
       <Fade delay={0.08}>
         <div>
-          <ChapterContent topic={safeTopic} slug={current.slug} />
+          <ChapterContent
+            topic={safeTopic}
+            slug={current.slug}
+            companySlug={companySlug}
+          />
         </div>
       </Fade>
 
@@ -73,9 +85,11 @@ export function OverviewSubPage() {
 function ChapterContent({
   topic,
   slug,
+  companySlug,
 }: {
   topic: OverviewTopic
   slug: ChapterSlug
+  companySlug: string
 }) {
   const { t } = useTranslation()
 
@@ -100,6 +114,22 @@ function ChapterContent({
   }
 
   // ── Power Day chapters ────────────────────────────────────────────
+  // ── Company (Capital One) chapters ────────────────────────────────
+  if (topic === 'company') {
+    if (slug === 'journey') {
+      return <CompanyJourneySection companySlug={companySlug} />
+    }
+    if (slug === 'distinctive') {
+      return <CompanyDistinctiveSection companySlug={companySlug} />
+    }
+    if (slug === 'training') {
+      return <CompanyTrainingSection companySlug={companySlug} />
+    }
+    if (slug === 'loop') {
+      return <CompanyLoopSection companySlug={companySlug} />
+    }
+  }
+
   if (topic === 'power-day') {
     if (slug === 'timeline') {
       const items = tArray<{ time: string; label: string; note: string }>(

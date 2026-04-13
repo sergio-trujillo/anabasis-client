@@ -339,6 +339,28 @@
       "startHere": "Comienza aquí",
       "continueReading": "Continuar lectura"
     },
+    "company": {
+      "topic": {
+        "title": "Overview de Capital One",
+        "blurb": "Cuatro capítulos que cubren el proceso de entrevista end-to-end en Capital One — cómo está estructurado el loop, qué los hace distintivos, cómo entrenar, y el desglose completo de secciones."
+      },
+      "journey": {
+        "title": "01 · Tu recorrido",
+        "blurb": "Cuatro etapas de la aplicación a la oferta: llamada con reclutador, screen GCA, onsite Power Day, oferta."
+      },
+      "distinctive": {
+        "title": "02 · Qué hace distintivo a Capital One",
+        "blurb": "Las lentes bancarias: regulación, consistencia del dinero, los 4 valores, y su stack JVM-heavy."
+      },
+      "training": {
+        "title": "03 · Tu plan de entrenamiento",
+        "blurb": "Tres tracks: Mock Power Day, Mock GCA, y Práctica Aleatoria. Elige uno y arranca."
+      },
+      "loop": {
+        "title": "04 · El loop completo",
+        "blurb": "Cada fase y sección del loop de Capital One, navegable por tab."
+      }
+    },
     "powerDay": {
       "topic": {
         "title": "Power Day — Capital One Virtual Onsite",

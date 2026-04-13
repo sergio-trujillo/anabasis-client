@@ -31,7 +31,7 @@ import {
 
 export function OverviewLayout() {
   const { companySlug = '', topic = 'power-day', page } = useParams()
-  const safeTopic = (topic === 'gca' || topic === 'power-day'
+  const safeTopic = (topic === 'gca' || topic === 'power-day' || topic === 'company'
     ? topic
     : 'power-day') as OverviewTopic
   const chapters = chaptersFor(safeTopic)
