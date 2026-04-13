@@ -11,10 +11,10 @@
 // credit is real GCA behavior but deferred — v1 ships all-or-nothing per
 // problem. Final score = sum of awarded weights (max 1000).
 
-import { ClockIcon, FlagIcon, RotateCcwIcon } from "lucide-react";
+import { ClockIcon, FlagIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router";
-import { CodeEditor } from "@/components/editor/CodeEditor";
+import { CodeProblemLayout } from "@/components/problem/CodeProblemLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -314,7 +314,8 @@ function SlotStrip({
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// ProblemBoard — 3-panel layout (statement / editor / results)
+// ProblemBoard — Praxema-style resizable 2-column layout
+// (statement | editor + output). Delegates to CodeProblemLayout.
 // ─────────────────────────────────────────────────────────────────────────
 
 function ProblemBoard({
@@ -335,98 +336,22 @@ function ProblemBoard({
   result: RunResult | null;
 }) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <Card className="lg:row-span-2 min-h-[300px]">
-        <CardHeader>
-          <div className="flex items-start justify-between gap-2">
-            <CardTitle className="text-base font-heading">
-              {bilingual(problem.exercise.title)}
-            </CardTitle>
-            <Badge variant="outline">{problem.exercise.difficulty}</Badge>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-wrap">
-            {bilingual(problem.exercise.statement)}
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="lg:col-span-2">
-        <CardHeader className="flex flex-row items-center justify-between gap-2 pb-3">
-          <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground font-normal">
-            Solution.java
-          </CardTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onReset}
-            disabled={code === problem.exercise.starterCode}
-          >
-            <RotateCcwIcon className="size-3.5" />
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[320px] rounded-md overflow-hidden border">
-            <CodeEditor value={code} onChange={onCodeChange} />
-          </div>
-          <div className="flex justify-end mt-3">
-            <Button onClick={onRun} disabled={running}>
-              {running ? "Running…" : "Run tests"}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="lg:col-span-2">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-xs uppercase tracking-wider text-muted-foreground font-normal">
-            Results
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {!result && !running && (
-            <p className="text-sm text-muted-foreground">
-              Run your solution to see test results.
-            </p>
-          )}
-          {result && (
-            <>
-              <div className="flex items-center gap-3">
-                <Badge variant={result.success ? "default" : "destructive"}>
-                  {result.success ? "PASS" : "FAIL"}
-                </Badge>
-                <span className="text-sm text-muted-foreground">
-                  {result.passedTests}/{result.totalTests} tests · {result.timeMs}ms
-                </span>
-              </div>
-              {result.compilationError && (
-                <pre className="text-xs text-destructive whitespace-pre-wrap bg-muted rounded p-3 overflow-x-auto font-mono">
-                  {result.compilationError}
-                </pre>
-              )}
-              {result.testResults.length > 0 && (
-                <ul className="space-y-1">
-                  {result.testResults.map((r, i) => (
-                    <li key={`${r.name}-${i}`} className="text-xs flex items-start gap-2">
-                      <span className="font-mono">
-                        {r.status === "passed" ? "✓" : "✗"}
-                      </span>
-                      <span className="flex-1">
-                        <code className="font-mono">{r.displayName || r.name}</code>
-                        {r.message && (
-                          <div className="text-destructive mt-0.5">{r.message}</div>
-                        )}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+    <CodeProblemLayout
+      title={problem.exercise.title}
+      statement={problem.exercise.statement}
+      difficulty={problem.exercise.difficulty}
+      code={code}
+      onCodeChange={onCodeChange}
+      onRun={onRun}
+      isRunning={running}
+      onReset={onReset}
+      result={result}
+      rightSlot={
+        <Badge variant="outline" className="text-xs">
+          {problem.weight} pts
+        </Badge>
+      }
+    />
   );
 }
 
