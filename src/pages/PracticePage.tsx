@@ -47,7 +47,7 @@ export function PracticePage() {
     <div className="flex h-[calc(100vh-3.5rem)] flex-col overflow-hidden">
       {/* Constrained header */}
       <div className="shrink-0 border-b bg-background/80 backdrop-blur">
-        <div className="mx-auto w-full max-w-7xl p-2">
+        <div className="w-full p-2">
           <Fade>
             <header className="flex items-start justify-between gap-4">
               <div>
@@ -75,14 +75,14 @@ export function PracticePage() {
       {/* Full-viewport body */}
       <div className="min-h-0 flex-1">
         {exercisesQuery.isPending && (
-          <div className="px-6 py-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="p-2 w-full grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Skeleton className="h-96 rounded-lg" />
             <Skeleton className="h-96 rounded-lg" />
           </div>
         )}
 
         {exercisesQuery.data && codePool.length === 0 && (
-          <div className="px-6 py-6 max-w-7xl mx-auto">
+          <div className="p-2 w-full">
             <MagicCard className="p-8 text-center text-muted-foreground">
               {t('practice.emptyPool')}
             </MagicCard>

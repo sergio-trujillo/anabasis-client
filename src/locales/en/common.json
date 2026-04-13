@@ -20,7 +20,21 @@
     "errorLoading": "Error loading catalog",
     "active": "active",
     "soon": "soon",
-    "locked": "locked"
+    "locked": "locked",
+    "heroKicker": "ἀνάβασις · the ascent",
+    "heroHeadline": "One campaign. One company. One interview.",
+    "heroSubtitle": "Pick a campaign. Drill the loop, simulate the day, ship ready.",
+    "statsActive": "Active campaigns",
+    "statsSoon": "Coming soon",
+    "statsTotal": "Campaigns tracked",
+    "featured": "Featured campaign",
+    "featuredEyebrow": "Now running",
+    "launchCampaign": "Launch campaign",
+    "quickLaunch": "Quick launch",
+    "mockGca": "Mock GCA · 70 min",
+    "mockPowerDay": "Mock Power Day · 3 hr",
+    "comingSoonHeader": "Next in the pipeline",
+    "lockedHint": "Unlocks after Capital One ships"
   },
   "company": {
     "loading": "Loading…",

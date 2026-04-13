@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 import { Fade } from '@/components/animate-ui/primitives/effects/fade'
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient'
+import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern'
 import { Badge } from '@/components/ui/badge'
 import { BorderBeam } from '@/components/ui/border-beam'
 import { buttonVariants } from '@/components/ui/button'
@@ -43,7 +44,7 @@ export function CompanyPage() {
   if (companyQuery.isPending) {
     return (
       <div className="flex-1 overflow-y-auto">
-        <div className="px-6 py-10 max-w-5xl mx-auto w-full space-y-4">
+        <div className="p-2 w-full space-y-4">
           <Skeleton className="h-10 w-80" />
           <Skeleton className="h-4 w-96" />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
@@ -59,7 +60,7 @@ export function CompanyPage() {
   if (companyQuery.error || !companyQuery.data) {
     return (
       <div className="flex-1 overflow-y-auto">
-        <div className="px-6 py-10 max-w-5xl mx-auto">
+        <div className="p-2 w-full">
           <p className="text-destructive">
             {companyQuery.error?.message ?? 'Company not found'}
           </p>
@@ -93,8 +94,15 @@ export function CompanyPage() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="px-6 py-10 max-w-5xl mx-auto w-full space-y-8">
-        <Fade>
+      <div className="relative min-h-[calc(100vh-3.5rem)]">
+        <AnimatedGridPattern
+          numSquares={36}
+          maxOpacity={0.06}
+          duration={3}
+          className="absolute inset-0 -z-10 [mask-image:radial-gradient(700px_circle_at_top,white,transparent)]"
+        />
+        <div className="relative p-2 w-full space-y-6">
+          <Fade>
           <header className="relative overflow-hidden rounded-xl p-8">
             {isActive && (
               <BorderBeam
@@ -157,6 +165,7 @@ export function CompanyPage() {
             </div>
           </section>
         )}
+        </div>
       </div>
     </div>
   )

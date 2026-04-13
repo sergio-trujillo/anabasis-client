@@ -167,7 +167,7 @@ export function ExercisesDataTable({ companySlug, exercises }: Props) {
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    initialState: { pagination: { pageSize: 15 } },
+    initialState: { pagination: { pageSize: 10 } },
     globalFilterFn: (row, _id, filterValue: string) => {
       const needle = filterValue.toLowerCase()
       const title = bilingual(row.original.title).toLowerCase()

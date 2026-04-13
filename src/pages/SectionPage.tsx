@@ -23,6 +23,7 @@ import {
 import { Fade } from '@/components/animate-ui/primitives/effects/fade'
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient'
 import { ExercisesDataTable } from '@/components/problem/ExercisesDataTable'
+import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern'
 import { Badge } from '@/components/ui/badge'
 import { MagicCard } from '@/components/ui/magic-card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -133,7 +134,14 @@ export function SectionPage() {
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="p-2  mx-auto w-full space-y-4">
+      <div className="relative min-h-[calc(100vh-3.5rem)]">
+        <AnimatedGridPattern
+          numSquares={36}
+          maxOpacity={0.06}
+          duration={3}
+          className="absolute inset-0 -z-10 [mask-image:radial-gradient(700px_circle_at_top,white,transparent)]"
+        />
+        <div className="relative p-2 w-full space-y-4">
       {isPending && (
         <div className="space-y-4">
           <Skeleton className="h-10 w-80" />
@@ -209,6 +217,7 @@ export function SectionPage() {
           )}
         </>
       )}
+        </div>
       </div>
     </div>
   )

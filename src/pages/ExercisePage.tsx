@@ -42,7 +42,7 @@ export function ExercisePage() {
 
   if (isPending) {
     return (
-      <div className="px-6 py-8 max-w-4xl mx-auto w-full space-y-4">
+      <div className="p-2 w-full space-y-4">
         <Skeleton className="h-8 w-72" />
         <Skeleton className="h-32 w-full" />
         <Skeleton className="h-64 w-full" />
@@ -52,7 +52,7 @@ export function ExercisePage() {
 
   if (error) {
     return (
-      <div className="px-6 py-8 max-w-4xl mx-auto w-full">
+      <div className="p-2 w-full">
         <p className="text-destructive">{error.message}</p>
       </div>
     )
@@ -89,7 +89,7 @@ export function ExercisePage() {
   }
 
   return (
-    <div className="px-6 py-8 max-w-4xl mx-auto w-full">
+    <div className="p-2 w-full">
       <Fade>
         <MagicCard className="p-8">
           <h1 className="text-2xl font-bold font-heading mb-6">{bilingual(data.title)}</h1>

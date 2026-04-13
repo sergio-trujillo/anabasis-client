@@ -12,7 +12,9 @@ import { CatalogPage } from '@/pages/CatalogPage'
 import { CompanyPage } from '@/pages/CompanyPage'
 import { ExercisePage } from '@/pages/ExercisePage'
 import { MockExamPage } from '@/pages/MockExamPage'
+import { MockExamRunnerPage } from '@/pages/MockExamRunnerPage'
 import { MockPowerDayPage } from '@/pages/MockPowerDayPage'
+import { MockPowerDayRunnerPage } from '@/pages/MockPowerDayRunnerPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { PracticePage } from '@/pages/PracticePage'
 import { SectionPage } from '@/pages/SectionPage'
@@ -25,7 +27,9 @@ export function AppRoutes() {
       <Route path="/:companySlug" element={<RouteErrorBoundary><CompanyPage /></RouteErrorBoundary>} />
       <Route path="/:companySlug/practice" element={<RouteErrorBoundary><PracticePage /></RouteErrorBoundary>} />
       <Route path="/:companySlug/mock-gca" element={<RouteErrorBoundary><MockExamPage /></RouteErrorBoundary>} />
+      <Route path="/:companySlug/mock-gca/:mockId" element={<RouteErrorBoundary><MockExamRunnerPage /></RouteErrorBoundary>} />
       <Route path="/:companySlug/mock-power-day" element={<RouteErrorBoundary><MockPowerDayPage /></RouteErrorBoundary>} />
+      <Route path="/:companySlug/mock-power-day/:mockId" element={<RouteErrorBoundary><MockPowerDayRunnerPage /></RouteErrorBoundary>} />
       <Route path="/:companySlug/exercise/:exerciseId" element={<RouteErrorBoundary><ExercisePage /></RouteErrorBoundary>} />
       <Route path="/:companySlug/section/:sectionId" element={<RouteErrorBoundary><SectionPage /></RouteErrorBoundary>} />
       <Route path="*" element={<NotFoundPage />} />

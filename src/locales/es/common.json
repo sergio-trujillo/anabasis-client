@@ -20,7 +20,21 @@
     "errorLoading": "Error al cargar catálogo",
     "active": "activa",
     "soon": "pronto",
-    "locked": "bloqueada"
+    "locked": "bloqueada",
+    "heroKicker": "ἀνάβασις · el ascenso",
+    "heroHeadline": "Una campaña. Una empresa. Una entrevista.",
+    "heroSubtitle": "Elige una campaña. Entrena el loop, simula el día, llega listo.",
+    "statsActive": "Campañas activas",
+    "statsSoon": "Próximamente",
+    "statsTotal": "Campañas seguidas",
+    "featured": "Campaña destacada",
+    "featuredEyebrow": "En curso",
+    "launchCampaign": "Lanzar campaña",
+    "quickLaunch": "Lanzamiento rápido",
+    "mockGca": "Mock GCA · 70 min",
+    "mockPowerDay": "Mock Power Day · 3 hr",
+    "comingSoonHeader": "Próximas en camino",
+    "lockedHint": "Se desbloquea al cerrar Capital One"
   },
   "company": {
     "loading": "Cargando…",

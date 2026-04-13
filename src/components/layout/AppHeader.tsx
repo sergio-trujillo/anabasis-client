@@ -86,9 +86,31 @@ function buildBreadcrumbs(pathname: string) {
     if (parts[1] === 'practice') {
       segments.push({ label: 'Practice', path: `/${companySlug}/practice`, isLast: true })
     } else if (parts[1] === 'mock-gca') {
-      segments.push({ label: 'Mock GCA', path: `/${companySlug}/mock-gca`, isLast: true })
+      segments.push({
+        label: 'Mock GCA',
+        path: `/${companySlug}/mock-gca`,
+        isLast: !parts[2],
+      })
+      if (parts[2]) {
+        segments.push({
+          label: formatSlug(parts[2]),
+          path: `/${companySlug}/mock-gca/${parts[2]}`,
+          isLast: true,
+        })
+      }
     } else if (parts[1] === 'mock-power-day') {
-      segments.push({ label: 'Mock Power Day', path: `/${companySlug}/mock-power-day`, isLast: true })
+      segments.push({
+        label: 'Mock Power Day',
+        path: `/${companySlug}/mock-power-day`,
+        isLast: !parts[2],
+      })
+      if (parts[2]) {
+        segments.push({
+          label: formatSlug(parts[2]),
+          path: `/${companySlug}/mock-power-day/${parts[2]}`,
+          isLast: true,
+        })
+      }
     } else if (parts[1] === 'exercise' && parts[2]) {
       segments.push({
         label: 'Exercise',
