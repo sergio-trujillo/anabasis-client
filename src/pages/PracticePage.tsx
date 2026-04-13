@@ -10,7 +10,6 @@ import type { inferRouterOutputs } from '@trpc/server'
 import type { AppRouter } from '@server/routers/_app'
 import { Fade } from '@/components/animate-ui/primitives/effects/fade'
 import { CodeEditor } from '@/components/editor/CodeEditor'
-import { AppLayout } from '@/components/layout/AppLayout'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { MagicCard } from '@/components/ui/magic-card'
@@ -47,7 +46,7 @@ export function PracticePage() {
   }
 
   return (
-    <AppLayout>
+    <>
       <div className="px-6 py-6 max-w-7xl mx-auto w-full space-y-6">
         <Fade>
           <header className="flex items-start justify-between gap-4">
@@ -86,7 +85,7 @@ export function PracticePage() {
 
         {current && <PracticeBoard key={current.id} exercise={current} />}
       </div>
-    </AppLayout>
+    </>
   )
 }
 

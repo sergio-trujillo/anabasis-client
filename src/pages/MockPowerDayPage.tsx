@@ -17,7 +17,6 @@ import { useParams } from "react-router";
 import { CodeExercise } from "@/components/exercise/CodeExercise";
 import { InterviewerChatExercise } from "@/components/exercise/InterviewerChatExercise";
 import { OpenPromptExercise } from "@/components/exercise/OpenPromptExercise";
-import { AppLayout } from "@/components/layout/AppLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,19 +29,19 @@ export function MockPowerDayPage() {
 
   if (examQuery.isPending) {
     return (
-      <AppLayout>
+      <>
         <div className="px-6 py-6 max-w-6xl mx-auto space-y-4">
           <Skeleton className="h-12 w-80" />
           <Skeleton className="h-96 rounded-lg" />
         </div>
-      </AppLayout>
+      </>
     );
   }
 
   const data = examQuery.data as ExamData | undefined;
   if (!data || data.rounds.length === 0) {
     return (
-      <AppLayout>
+      <>
         <div className="px-6 py-6 max-w-6xl mx-auto">
           <Card>
             <CardContent className="p-8 text-center text-muted-foreground">
@@ -50,7 +49,7 @@ export function MockPowerDayPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </>
     );
   }
 
@@ -110,7 +109,7 @@ function Runner({ exam }: { exam: ExamData }) {
   }
 
   return (
-    <AppLayout>
+    <>
       <div className="px-6 py-6 max-w-6xl mx-auto w-full space-y-4">
         <Header
           remainingSec={remainingSec}
@@ -155,7 +154,7 @@ function Runner({ exam }: { exam: ExamData }) {
           </div>
         )}
       </div>
-    </AppLayout>
+    </>
   );
 }
 

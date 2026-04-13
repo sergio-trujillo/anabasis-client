@@ -9,7 +9,6 @@
 import { LockIcon, ArrowRightIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { AppLayout } from '@/components/layout/AppLayout'
 import { Fade } from '@/components/animate-ui/primitives/effects/fade'
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient'
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern'
@@ -24,7 +23,7 @@ export function CatalogPage() {
   const { data, isPending, error } = trpc.companies.list.useQuery()
 
   return (
-    <AppLayout>
+    <>
       <div className="relative min-h-[calc(100vh-3.5rem)]">
         <AnimatedGridPattern
           numSquares={30}
@@ -124,6 +123,6 @@ export function CatalogPage() {
           )}
         </div>
       </div>
-    </AppLayout>
+    </>
   )
 }

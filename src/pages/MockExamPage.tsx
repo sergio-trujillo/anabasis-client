@@ -15,7 +15,6 @@ import { ClockIcon, FlagIcon, RotateCcwIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { CodeEditor } from "@/components/editor/CodeEditor";
-import { AppLayout } from "@/components/layout/AppLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,19 +38,19 @@ export function MockExamPage() {
 
   if (examQuery.isPending) {
     return (
-      <AppLayout>
+      <>
         <div className="px-6 py-6 max-w-7xl mx-auto space-y-4">
           <Skeleton className="h-12 w-80" />
           <Skeleton className="h-96 rounded-lg" />
         </div>
-      </AppLayout>
+      </>
     );
   }
 
   const data = examQuery.data as ExamData | undefined;
   if (!data || data.problems.length === 0) {
     return (
-      <AppLayout>
+      <>
         <div className="px-6 py-6 max-w-7xl mx-auto">
           <Card>
             <CardContent className="p-8 text-center text-muted-foreground">
@@ -59,7 +58,7 @@ export function MockExamPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </>
     );
   }
 
@@ -152,7 +151,7 @@ function Runner({ exam }: { exam: ExamData }) {
   const active = exam.problems[activeSlot];
 
   return (
-    <AppLayout>
+    <>
       <div className="px-6 py-6 max-w-7xl mx-auto w-full space-y-4">
         <ExamHeader
           remainingSec={remainingSec}
@@ -199,7 +198,7 @@ function Runner({ exam }: { exam: ExamData }) {
           />
         )}
       </div>
-    </AppLayout>
+    </>
   );
 }
 

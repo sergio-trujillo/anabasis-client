@@ -13,7 +13,6 @@ import { CodeExercise } from '@/components/exercise/CodeExercise'
 import { InterviewerChatExercise } from '@/components/exercise/InterviewerChatExercise'
 import { McqExercise } from '@/components/exercise/McqExercise'
 import { OpenPromptExercise } from '@/components/exercise/OpenPromptExercise'
-import { AppLayout } from '@/components/layout/AppLayout'
 import { MagicCard } from '@/components/ui/magic-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { bilingual } from '@/lib/i18n'
@@ -24,7 +23,7 @@ export function ExercisePage() {
   const { data, isPending, error } = trpc.exercises.get.useQuery({ id: exerciseId })
 
   return (
-    <AppLayout>
+    <>
       <div className="px-6 py-8 max-w-4xl mx-auto w-full">
         {isPending && (
           <div className="space-y-4">
@@ -48,6 +47,6 @@ export function ExercisePage() {
           </Fade>
         )}
       </div>
-    </AppLayout>
+    </>
   )
 }

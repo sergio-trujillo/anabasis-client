@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
 import { Fade } from '@/components/animate-ui/primitives/effects/fade'
 import { GradientText } from '@/components/animate-ui/primitives/texts/gradient'
-import { AppLayout } from '@/components/layout/AppLayout'
 import { Badge } from '@/components/ui/badge'
 import { BorderBeam } from '@/components/ui/border-beam'
 import { buttonVariants } from '@/components/ui/button'
@@ -31,7 +30,7 @@ export function CompanyPage() {
 
   if (companyQuery.isPending) {
     return (
-      <AppLayout>
+      <>
         <div className="px-6 py-10 max-w-5xl mx-auto w-full space-y-4">
           <Skeleton className="h-10 w-80" />
           <Skeleton className="h-4 w-96" />
@@ -41,19 +40,19 @@ export function CompanyPage() {
             ))}
           </div>
         </div>
-      </AppLayout>
+      </>
     )
   }
 
   if (companyQuery.error || !companyQuery.data) {
     return (
-      <AppLayout>
+      <>
         <div className="px-6 py-10 max-w-5xl mx-auto">
           <p className="text-destructive">
             {companyQuery.error?.message ?? 'Company not found'}
           </p>
         </div>
-      </AppLayout>
+      </>
     )
   }
 
@@ -81,7 +80,7 @@ export function CompanyPage() {
   const isActive = company.status === 'active'
 
   return (
-    <AppLayout>
+    <>
       <div className="px-6 py-10 max-w-5xl mx-auto w-full space-y-8">
         <Fade>
           <header className="relative overflow-hidden rounded-xl p-8">
@@ -147,7 +146,7 @@ export function CompanyPage() {
           </section>
         )}
       </div>
-    </AppLayout>
+    </>
   )
 }
 
