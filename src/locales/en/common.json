@@ -245,9 +245,460 @@
     "layoutBottom": "Bottom",
     "layoutRight": "Right"
   },
+  "companyOverview": {
+    "capitalOne": {
+      "journeyHeader": "Your journey at Capital One",
+      "journeySub": "Four stages from application to offer. Each stage filters hard — show up ready.",
+      "journey": [
+        {
+          "step": "Recruiter Call",
+          "duration": "~30 min",
+          "what": "Initial screen with a technical recruiter. High-level: background, role interest, salary expectations, timeline. Non-technical.",
+          "evaluated": "Culture fit at a surface level, motivation, whether your background maps to an open req."
+        },
+        {
+          "step": "GCA · Online Assessment",
+          "duration": "70 min",
+          "what": "Timed CodeSignal screen. Four problems of increasing weight (100 / 200 / 300 / 400). You run tests locally; only the final submit counts.",
+          "evaluated": "Correctness, pattern recognition, and pacing. Published pass threshold is ~600; aim for 800+ for a safe signal."
+        },
+        {
+          "step": "Power Day · Virtual Onsite",
+          "duration": "~3 hours",
+          "what": "Four back-to-back rounds (~45 min each) with breaks: Coding, Coding + Job Fit, System Design OR Behavioral, Business Case.",
+          "evaluated": "Technical depth, communication, structured reasoning, and fit against the 4 Capital One values across every round."
+        },
+        {
+          "step": "Offer + Negotiation",
+          "duration": "~1 week",
+          "what": "Debrief happens same-week. If you pass, recruiter returns with a verbal offer, then a written packet.",
+          "evaluated": "Nothing technical. At this stage it's compensation negotiation and start-date alignment."
+        }
+      ],
+      "distinctiveHeader": "What makes Capital One distinctive",
+      "distinctiveSub": "Prep that works for FAANG won't cover this. These are the lenses Capital One interviewers use.",
+      "distinctive": [
+        {
+          "title": "A bank, not a social network",
+          "body": "Capital One regulates itself like a bank because it is one. Every system design must answer: is this PCI-in-scope? What's the audit trail? How do we prove we did the right thing to a regulator? Interviewers probe for this reflex."
+        },
+        {
+          "title": "Money demands strong consistency",
+          "body": "You cannot eventually-consistency your way through a ledger. Expect probing on transactions, idempotency, exactly-once processing, and when strong consistency is worth the latency cost. Saying 'Cassandra' for a transfer pipeline is an instant red flag."
+        },
+        {
+          "title": "The 4 values are the behavioral spine",
+          "body": "Excellence, Do The Right Thing, Respect for Individuals, Succeed Together. Every behavioral prompt maps to one of these. Rehearsing STAR stories with each value in mind is non-negotiable prep."
+        },
+        {
+          "title": "JVM-heavy enterprise stack",
+          "body": "Java is the dominant backend language; AWS is the cloud. Microservices, Kafka for eventing, Postgres/Aurora, observability via Datadog. You won't be tested on brand names, but familiarity with the shape helps you speak their dialect."
+        }
+      ],
+      "planHeader": "Your training plan",
+      "planSub": "Three tracks. Pick one — come back for the others. The mocks are where real preparation happens.",
+      "plan": [
+        {
+          "title": "Mock Power Day",
+          "subtitle": "3-hour virtual onsite simulator",
+          "body": "The full 4-round loop end-to-end: two coding rounds, a system-design-or-behavioral coin flip, and a business case. Rubrics live, judge feedback at the end. Run this twice before your real Power Day.",
+          "to": "mock-power-day",
+          "cta": "Start Mock Power Day"
+        },
+        {
+          "title": "Mock GCA",
+          "subtitle": "70-minute CodeSignal-style screen",
+          "body": "Four problems sampled from the GCA pool weighted 100/200/300/400. Timed. All-or-nothing scoring. 10 curated scenarios from warmup to boss-mix.",
+          "to": "mock-gca",
+          "cta": "Start Mock GCA"
+        },
+        {
+          "title": "Random Practice",
+          "subtitle": "One problem at a time, untimed",
+          "body": "Pull a random code exercise from Capital One's pool. Solve, run, next. Great for warming up before a mock or filling 20-minute slots during the week.",
+          "to": "practice",
+          "cta": "Start random practice"
+        }
+      ],
+      "valuesLink": "Deep-dive the 4 values in Power Day Overview",
+      "pipelineLink": "Deep-dive the GCA in GCA Overview"
+    }
+  },
+  "overviewChapters": {
+    "actions": {
+      "practice": "Random practice",
+      "mockGca": "Mock GCA · 70 min",
+      "mockPowerDay": "Mock Power Day · 3 hr",
+      "backToCompany": "Back to Capital One",
+      "chapters": "Chapters",
+      "openChapterNav": "Open chapters",
+      "previous": "Previous",
+      "next": "Next",
+      "readMinutes": "{{count}} min read",
+      "launchMock": "Launch a mock when you're ready",
+      "startHere": "Start here",
+      "continueReading": "Continue reading"
+    },
+    "powerDay": {
+      "topic": {
+        "title": "Power Day — Capital One Virtual Onsite",
+        "blurb": "Seven chapters that prep you for the 3-hour, 4-round virtual onsite. Read in order or jump to what you need."
+      },
+      "timeline": {
+        "title": "01 · The day at a glance",
+        "blurb": "A clock-by-clock view of all four rounds and the breaks between them."
+      },
+      "concepts": {
+        "title": "02 · Key concepts",
+        "blurb": "The seven terms that unlock the rest of the overview — tradeoffs, STAR, frameworks, and more."
+      },
+      "rounds": {
+        "title": "03 · The 4 rounds",
+        "blurb": "Per-round deep-dive: what they evaluate, common pitfalls, and how to pace each one."
+      },
+      "values": {
+        "title": "04 · The 4 values",
+        "blurb": "How Capital One actually probes Excellence, DTRT, Respect for Individuals, and Succeed Together."
+      },
+      "glossary": {
+        "title": "05 · Enterprise architecture glossary",
+        "blurb": "Category-before-product for sys-design rounds. Twelve categories of infrastructure decoded."
+      },
+      "antiPatterns": {
+        "title": "06 · Anti-patterns",
+        "blurb": "The four mistakes that cost otherwise strong candidates a loop, and what to say instead."
+      },
+      "prep": {
+        "title": "07 · Preparation timeline",
+        "blurb": "A week-before / day-before / hour-before / during-the-day schedule."
+      }
+    },
+    "gca": {
+      "topic": {
+        "title": "GCA — General Coding Assessment",
+        "blurb": "Five chapters on how to crack the 70-minute CodeSignal screen Capital One uses to filter coding rounds."
+      },
+      "scoring": {
+        "title": "01 · How scoring actually works",
+        "blurb": "Max 1000. All-or-nothing per problem. Hidden tests grade. Know this before you start."
+      },
+      "modules": {
+        "title": "02 · The 4 modules",
+        "blurb": "Module-by-module: what's tested, the representative pattern, pacing, and the #1 trap."
+      },
+      "patterns": {
+        "title": "03 · Pattern fingerprints",
+        "blurb": "Ten algorithmic patterns to recognize on sight. The fingerprint is what lets you pick the approach in 90 seconds."
+      },
+      "skip": {
+        "title": "04 · The skip-and-return rule",
+        "blurb": "When a problem stalls, the pacing move that saves your score — and how to come back to it."
+      },
+      "antiPatterns": {
+        "title": "05 · Anti-patterns",
+        "blurb": "Coding-before-naming, premature optimization, and ignoring constraints. The three silent killers."
+      }
+    }
+  },
+  "overviewLabels": {
+    "pattern": "Pattern",
+    "pacing": "Pacing",
+    "trap": "Trap",
+    "evaluated": "What they evaluate",
+    "pitfalls": "Common pitfalls",
+    "signal": "Signal",
+    "antiSignal": "Anti-signal",
+    "petPeeve": "Pet peeve",
+    "category": "Category",
+    "products": "Products",
+    "why": "Why it exists",
+    "bad": "Anti-pattern",
+    "fix": "Say this instead",
+    "definition": "What it is",
+    "whyMatters": "Why Capital One cares",
+    "inPractice": "In practice"
+  },
+  "sectionOverview": {
+    "gca": {
+      "kicker": "CodeSignal General Coding Assessment",
+      "title": "GCA · 70 minutes, 4 problems, 1000 points",
+      "summary": "A timed coding screen Capital One uses early in the loop. Four problems of increasing weight. All-or-nothing scoring per problem.",
+      "scoringHeader": "How scoring actually works",
+      "scoring": [
+        { "title": "Max score: 1000", "body": "Weights add up: 100 + 200 + 300 + 400. Capital One's published threshold is ~600, but stretch for 800+." },
+        { "title": "All-or-nothing per problem", "body": "Pass all tests = full weight. One hidden edge-case fail = zero. Correctness is king." },
+        { "title": "Hidden tests do the grading", "body": "Sample tests are a sanity check. The grader hammers with large inputs and nasty edges." },
+        { "title": "One submission, no penalty for waiting", "body": "You can run your code as many times as you want. Only the last submit at timeout is graded." }
+      ],
+      "modulesHeader": "The 4 modules — what's tested, how to attack",
+      "modulesDeep": [
+        {
+          "title": "Module 1 — Warmup",
+          "body": "Arrays, strings, basic loops. Worth 100. Pass this fast to save time.",
+          "pattern": "Usually a simple linear scan or character-by-character transform.",
+          "pacing": "~8 min. If you're at 12 and still stuck, something is off — reread the statement.",
+          "trap": "Off-by-one on string indices. Always sanity-check with length 0 and 1."
+        },
+        {
+          "title": "Module 2 — Data Manipulation",
+          "body": "Hashmaps, sorting, prefix sums, sliding windows. Worth 200.",
+          "pattern": "Hashmap for dedup/count, or sort + two pointers.",
+          "pacing": "~15 min. Have the fingerprint in your head before you type.",
+          "trap": "O(n²) inner loops passing samples but timing out on graders."
+        },
+        {
+          "title": "Module 3 — Implementation",
+          "body": "Grid BFS/DFS, state machines, event replay, stack/queue patterns. Worth 300.",
+          "pattern": "2D grid as implicit graph, or monotonic stack, or event-fold over a stream.",
+          "pacing": "~20 min. Draw the example on paper first — grid bugs are the #1 time sink.",
+          "trap": "Visited set mutated inside recursion without a reset. Forgot direction vectors for diagonal cases."
+        },
+        {
+          "title": "Module 4 — Algorithm Patterns",
+          "body": "Binary search, greedy, graph shortest-path, 1D DP. Worth 400.",
+          "pattern": "Binary-search-on-answer, greedy-by-end, Dijkstra, or DP[i] = f(DP[i-1]).",
+          "pacing": "~25 min. Spend the first 3 minutes identifying the pattern — don't write a line until you've named it.",
+          "trap": "Greedy that's locally right but globally wrong. DP recurrence missing the base case."
+        }
+      ],
+      "fingerprintsHeader": "Pattern fingerprints to memorize",
+      "fingerprints": [
+        { "category": "Sliding window", "signal": "Longest/shortest contiguous subarray satisfying X" },
+        { "category": "Two pointers", "signal": "Sorted array, pair-sum, or in-place compaction" },
+        { "category": "Prefix sum", "signal": "Range queries, subarray-sum-equals-k" },
+        { "category": "Hashmap counting", "signal": "Anagrams, pair-diff, first-non-repeating" },
+        { "category": "BFS on grid", "signal": "Shortest path in an unweighted grid / min-steps" },
+        { "category": "DFS + backtracking", "signal": "Generate all subsets / permutations / paths" },
+        { "category": "Binary search on answer", "signal": "Minimize max or maximize min under a monotonic check" },
+        { "category": "Monotonic stack", "signal": "Next greater / smaller element, largest rectangle" },
+        { "category": "Greedy by end-time", "signal": "Non-overlapping intervals, meeting rooms" },
+        { "category": "1D DP", "signal": "House-robber, climbing-stairs, coin-change, LIS" }
+      ],
+      "skipHeader": "The skip-and-return rule",
+      "skip": [
+        "Set a per-module budget BEFORE you start coding.",
+        "If you're 5 min past the budget with no working idea, skip. The clock is your enemy, not your ego.",
+        "Write a one-line TODO of your best guess before skipping — you'll pick up faster on return.",
+        "Come back to skipped problems in reverse order (hardest remaining first) once easier ones pass."
+      ],
+      "antiPatternsHeader": "Anti-patterns we see most",
+      "antiPatterns": [
+        { "bad": "Coding before naming the pattern.", "why": "You end up writing O(n²) when O(n log n) was required, and debug for 15 minutes.", "fix": "Spend 90 seconds identifying the fingerprint. Say it out loud in your head: 'This is sliding window.'" },
+        { "bad": "Optimizing too early.", "why": "You can't optimize what you haven't made correct. Brute force that passes samples gives partial confidence.", "fix": "Correct brute force → test → optimize. Only skip brute force if the input size makes it impossible." },
+        { "bad": "Ignoring the constraints section.", "why": "n ≤ 10^5 vs n ≤ 10^3 is the difference between O(n log n) required and O(n²) acceptable.", "fix": "Read constraints FIRST. They tell you which pattern is eligible." }
+      ],
+      "tipsHeader": "Final pacing tips",
+      "tip1": "Budget roughly 10 / 15 / 20 / 25 minutes per module.",
+      "tip2": "If a problem stalls > 5 min past its budget, skip and return.",
+      "tip3": "Read all 4 statements at minute zero so the subconscious can cook.",
+      "tip4": "Correctness > speed. Partial passes score zero — verify edges.",
+      "ctaStart": "Start a Mock GCA",
+      "ctaPractice": "Random practice first"
+    },
+    "powerDay": {
+      "kicker": "Capital One · Virtual Onsite",
+      "title": "Power Day · 3 hours, 4 rounds",
+      "summary": "The full onsite loop. Four ~45-minute rounds back-to-back. The mix varies but the rubric is fixed: technical depth, communication, and fit against the 4 Capital One values.",
+      "timelineHeader": "The day at a glance",
+      "timeline": [
+        { "time": "00:00 – 00:45", "label": "Round 1 · Coding", "note": "Warm-up problem, communication-heavy" },
+        { "time": "00:45 – 01:00", "label": "Break", "note": "Water, bathroom, reset mentally" },
+        { "time": "01:00 – 01:45", "label": "Round 2 · Coding + Job Fit", "note": "Coding + 'why Capital One'" },
+        { "time": "01:45 – 02:00", "label": "Break", "note": "Mid-day pivot" },
+        { "time": "02:00 – 02:45", "label": "Round 3 · System Design or Behavioral", "note": "Depends on your loop assignment" },
+        { "time": "02:45 – 03:00", "label": "Break", "note": "Last reset before the case" },
+        { "time": "03:00 – 03:45", "label": "Round 4 · Business Case", "note": "Quantitative + structured reasoning" }
+      ],
+      "roundsHeader": "The 4 rounds — deep dive",
+      "roundsDeep": [
+        {
+          "title": "Round 1 — Coding",
+          "body": "Live DS/Algo problem on a shared editor. They watch you think out loud.",
+          "evaluated": "Correctness, edge-case reasoning, narration. They're scoring your process, not just the final code.",
+          "pitfalls": [
+            "Going silent while coding — they can't evaluate what they can't hear.",
+            "Jumping to code before agreeing on the approach and complexity target.",
+            "Treating the interviewer's hint as an attack instead of a collaboration signal."
+          ],
+          "pacing": "5 min clarify + agree on approach · 25 min code · 5 min test edge cases · 5 min complexity + improvement discussion."
+        },
+        {
+          "title": "Round 2 — Coding + Job Fit",
+          "body": "A second coding problem, plus a conversation about why this role, why Capital One.",
+          "evaluated": "Technical breadth + genuine interest. They're watching for rehearsed answers vs specific, personal ones.",
+          "pitfalls": [
+            "Generic 'I love innovation' answers — they've heard it 100 times this week.",
+            "Not connecting your trajectory to something concrete Capital One builds.",
+            "Spending so long on the behavioral half you rush the code half (or vice versa)."
+          ],
+          "pacing": "25 min coding · 20 min 'why Capital One' + career trajectory. Expect drill-down questions on specifics."
+        },
+        {
+          "title": "Round 3 — System Design or Behavioral",
+          "body": "Coin-flip between banking sys-design (card auth, fraud, statements) and a deep behavioral drill.",
+          "evaluated": "For design: requirements → estimations → components → tradeoffs. For behavioral: STAR with numbers, values-aligned signal, no drift.",
+          "pitfalls": [
+            "Sys-design: naming products (Kafka, Redis) without the category and reason. Skipping capacity math.",
+            "Behavioral: 'we' instead of 'I' when asked about your specific decision. Heroic framing on team wins.",
+            "Both: not anchoring to Capital One's banking context (money = strong consistency, audit = first-class)."
+          ],
+          "pacing": "Sys-design: 5 min requirements · 5 min estimates · 20 min components · 15 min deepening on 1-2 areas they probe. Behavioral: 1-2 stories, 8-12 min each."
+        },
+        {
+          "title": "Round 4 — Business Case",
+          "body": "Unit economics, frameworks, sensitivity. Structure first, compute second.",
+          "evaluated": "Structured thinking, quantitative reasoning, and the ability to DEFEND an assumption when pressed.",
+          "pitfalls": [
+            "Computing numbers before naming a framework — looks unstructured.",
+            "Picking a framework and then abandoning it mid-analysis.",
+            "Over-precise numbers ($127.43) that signal false confidence. Use ranges."
+          ],
+          "pacing": "5 min clarify + pick framework · 10 min size the problem · 15 min analysis · 10 min recommendation + sensitivity."
+        }
+      ],
+      "valuesHeader": "The 4 values — how Capital One actually probes",
+      "valuesDeep": [
+        {
+          "title": "Excellence",
+          "body": "Bar-raising, root-cause over patch, data-driven quality.",
+          "signal": "Names a specific bar you raised with numbers. Discusses quality tradeoffs that cost you short-term.",
+          "antiSignal": "Conflates working extra hours with raising the bar. Describes effort, not outcome.",
+          "petPeeve": "'I spent weekends on it' without explaining what specifically got better and why."
+        },
+        {
+          "title": "Do The Right Thing",
+          "body": "Holding the line under pressure, with a named cost.",
+          "signal": "Names the specific cost you paid (political, timeline, relationship). Verbatim language of what you said.",
+          "antiSignal": "Describes speaking up without quoting yourself. Makes the decision sound easy or inevitable.",
+          "petPeeve": "'I reported it' with no tension — if there was no cost, there was no decision."
+        },
+        {
+          "title": "Respect for Individuals",
+          "body": "Dignity under pressure, credit flow, bias-awareness.",
+          "signal": "Says what you chose NOT to say. Credit flows to less-visible contributors. Names a bias you caught in yourself.",
+          "antiSignal": "Uses 'convinced' as resolution — people were overpowered, not persuaded. Teammates are props for growth arc.",
+          "petPeeve": "Stories where you were 'right' about a teammate being 'wrong' — zero bias acknowledgment."
+        },
+        {
+          "title": "Succeed Together",
+          "body": "Shared outcomes, proactive unblocking, no solo heroics.",
+          "signal": "Names teammates. Shows a capability that belongs to the team, not to you. Proactive unblocking signals.",
+          "antiSignal": "Team success with no named teammates. Martyr framing on drudge work.",
+          "petPeeve": "'We shipped it' without saying who did what — generic team language."
+        }
+      ],
+      "glossaryHeader": "Enterprise architecture glossary — category first, product second",
+      "glossarySub": "If you only name the product, you look like you're cargo-culting. Name the category and the failure mode it solves; then the product comes naturally.",
+      "glossary": [
+        { "category": "Messaging broker", "products": "RabbitMQ, Kafka, AWS SNS/SQS", "why": "Decouples producer from consumer; buffers spikes; enables fan-out." },
+        { "category": "Distributed cache", "products": "Redis, Memcached", "why": "Sub-ms reads; hot-key shedding; session storage." },
+        { "category": "Relational database", "products": "Postgres, MySQL, Aurora", "why": "ACID transactions; strong consistency; money lives here." },
+        { "category": "Columnar / wide-column", "products": "Cassandra, DynamoDB, BigTable", "why": "Horizontal scale on a predictable key; eventual consistency OK." },
+        { "category": "Object store", "products": "S3, GCS, Azure Blob", "why": "Cheap durable blobs; logs, backups, static assets." },
+        { "category": "CDC pipeline", "products": "Debezium, Kafka Connect, DynamoDB Streams", "why": "Emit row changes as events; drive downstream indexes/caches." },
+        { "category": "Search index", "products": "Elasticsearch, OpenSearch", "why": "Full-text + aggregations at latency SQL can't hit." },
+        { "category": "API gateway", "products": "Kong, AWS API Gateway, Envoy", "why": "Auth, rate-limit, routing at the edge." },
+        { "category": "Service mesh", "products": "Istio, Linkerd", "why": "Mutual TLS, retries, tracing, traffic shifting — out of your service." },
+        { "category": "Identity / SSO provider", "products": "Okta, Auth0, AWS Cognito", "why": "OIDC/SAML; token issuance; delegated auth." },
+        { "category": "Feature-flag service", "products": "LaunchDarkly, Split, Unleash", "why": "Decouple deploy from release; targeted rollouts; kill switches." },
+        { "category": "Observability stack", "products": "Datadog, New Relic, Prometheus+Grafana", "why": "Metrics + traces + logs; SLOs; paging." }
+      ],
+      "antiPatternsHeader": "Anti-patterns across all rounds",
+      "antiPatterns": [
+        { "bad": "'I'd use Kafka here.'", "why": "Naming the product without the reason signals cargo-cult. You need to show you understand WHY the category matters before naming a specific tool.", "fix": "'I need a messaging broker — something that decouples producer from consumer and buffers spikes. In practice that's Kafka or RabbitMQ; I'd reach for Kafka if I need replay or very high throughput.'" },
+        { "bad": "'We shipped it.'", "why": "In behavioral rounds, 'we' language masks your specific contribution. Capital One explicitly probes for individual ownership.", "fix": "Say 'I did X, Y led Z, Z paired with me on W.' Name teammates. Make your slice crisp." },
+        { "bad": "'$127,430.' as the answer.", "why": "False precision in a business case signals overconfidence in shaky assumptions. Interviewers will push on the weakest assumption.", "fix": "'Somewhere between $100K and $150K, most sensitive to customer-acquisition cost which I assumed at $45.' Own the range, name the sensitivity." },
+        { "bad": "'I don't know.'", "why": "Stopping at 'I don't know' costs signal. It's fine not to know — but what you do next is what they evaluate.", "fix": "'I haven't used that pattern specifically. My mental model would be X because Y. What am I missing?' Stay in dialogue." }
+      ],
+      "prepHeader": "Preparation timeline",
+      "prep": [
+        {
+          "when": "1 week before",
+          "tasks": [
+            "Run 2 full Mock Power Days in Anabasis. One in the morning, one after lunch to simulate fatigue.",
+            "Re-read your resume and prepare 3 STAR stories per Capital One value.",
+            "Skim Capital One's product line — know what One, Eno, and their card rewards stack actually do."
+          ]
+        },
+        {
+          "when": "1 day before",
+          "tasks": [
+            "One light Mock GCA (40 min) — just to stay warm, don't grind.",
+            "Review your STAR stories out loud. Time each one; target 8-12 min.",
+            "Sleep. Everything else is optimization around rest."
+          ]
+        },
+        {
+          "when": "1 hour before",
+          "tasks": [
+            "Water, no coffee spike. Bathroom.",
+            "Open the editor you'll use. Warm fingers with one easy problem — don't start fresh cold.",
+            "Read your one-pager of STAR stories one last time. Close it."
+          ]
+        },
+        {
+          "when": "During",
+          "tasks": [
+            "Narrate every decision. If you're quiet, they can't score your thinking.",
+            "On 'I don't know': validate → mental model → what you'd reach for → what you'd need to verify.",
+            "Between rounds: stretch, hydrate, reset. Do NOT post-mortem the round you just finished — it poisons the next one."
+          ]
+        }
+      ],
+      "conceptsHeader": "Key concepts · the vocabulary that unlocks the rest of this page",
+      "conceptsSub": "Everything below uses these terms. If any of them sound like jargon — read this section first. Each card explains what the concept is, why Capital One specifically evaluates it, and what it looks like in a real answer.",
+      "concepts": [
+        {
+          "term": "Tradeoffs",
+          "definition": "A tradeoff is naming out loud the COST of a technical choice. 'I pick A, which means I give up B.' Not just 'A is better,' but 'A is better FOR X, and I'm accepting Y to get it.'",
+          "why": "Capital One hires senior engineers to make judgment calls under ambiguity. If you never name a cost, you look like someone who thinks there's always a right answer — and that's a junior signal.",
+          "example": "Weak: 'I'd use Postgres.' Strong: 'I'd pick Postgres over Cassandra here. I gain strong consistency for the ledger — every transfer is atomic. I pay by not scaling writes horizontally past ~50K/sec without heavy sharding; at our volume that's fine, but I'd revisit if we hit that ceiling.'"
+        },
+        {
+          "term": "STAR",
+          "definition": "A four-beat structure for answering behavioral questions. Situation (the context), Task (what you specifically had to do), Action (what you did — 'I', not 'we'), Result (what changed, with numbers).",
+          "why": "Capital One behavioral interviewers are trained to extract STAR. If you ramble chronologically they have to pull it out of you — that loses signal. Delivering STAR cleanly means they can score faster and deeper.",
+          "example": "'[S] Our payments team was hitting 4% transaction failures during holiday spikes. [T] I was tech lead; my job was to get us under 0.5% before Black Friday. [A] I proposed and shipped a circuit-breaker pattern in front of the downstream KYC service, then added a per-customer queue so retries didn't stampede. [R] Failures dropped to 0.2%, and we sustained 3× normal volume on Black Friday without paging.'"
+        },
+        {
+          "term": "Numbers where they exist",
+          "definition": "Whenever your story contains something measurable — latency, errors, team size, dollar impact, percentage — say the number. If you don't know it, estimate and flag it as an estimate. Never replace a number with an adjective.",
+          "why": "At a bank, everything maps to dollars or regulatory risk. Interviewers cannot evaluate 'much faster' — they can evaluate 'p99 went from 800 ms to 120 ms'. Precision is the signal.",
+          "example": "Weak: 'We significantly reduced latency.' Strong: 'We cut p99 from 800 ms to 120 ms on the authorization path. About 2 million transactions per day, so at old latency ~3.2 minutes of aggregated user wait per second was just queued.'"
+        },
+        {
+          "term": "Category before product",
+          "definition": "In system design, always name the architectural CATEGORY you need before naming a specific product. Say 'a messaging broker' before you say 'Kafka'. The category explains the role; the product is the brand you happen to know.",
+          "why": "Naming Kafka without saying why reads as cargo-cult — like you're pattern-matching a résumé buzzword. Naming the category shows you understand the PROBLEM it solves, which is what they're actually testing.",
+          "example": "Weak: 'I'd put Kafka between these services.' Strong: 'Between the payment processor and the fraud pipeline I need a messaging broker — something that decouples them so a slow fraud check doesn't back-pressure payments, and that buffers spikes. In practice I'd reach for Kafka here because I also want event replay.'"
+        },
+        {
+          "term": "Framework (business case)",
+          "definition": "In a case interview, a framework is an EXPLICIT structured lens you announce at the start and use to drive your analysis. Examples: Profit Tree (revenue - cost, broken into drivers), 3Cs (Company, Customer, Competition), 4Ps (Product, Price, Place, Promotion), Porter's Five Forces.",
+          "why": "Without a framework, your analysis looks like guessing. Picking one in 30 seconds shows you have a structured approach to ambiguity — exactly what Capital One wants for someone who'll be making product + business decisions.",
+          "example": "'The question is why is the credit card business losing money. I'll use a profit tree: Revenue = interchange fees + interest + annual fees; Cost = fraud losses + rewards + acquisition + servicing. Let me walk through each and flag the biggest suspects.' That 20-second opening IS the framework — and you now have a roadmap for the next 15 minutes."
+        },
+        {
+          "term": "Defending the choice",
+          "definition": "After you pick a framework or a design, the interviewer will push on it: 'Why this framework?' 'Why not 3Cs?' 'What about X?' Defending means you have reasons ready — not defensiveness, but a confident 'here's why, and here's when I'd switch'.",
+          "why": "Capital One wants people who can commit under uncertainty and still update. 'Defending' is the opposite of 'abandoning the framework when challenged'. If you flip every time pushed, you signal you never had conviction.",
+          "example": "Interviewer: 'Why profit tree, not Porter's?' You: 'Porter's is better when the question is about market position or competitive dynamics. This one is specifically about a P&L that's turning negative, so starting from the P&L structure itself is more direct. If the root cause turns out to be competitive pricing pressure, I'd pivot to Porter's at that point.'"
+        },
+        {
+          "term": "Reason forward (when you don't know)",
+          "definition": "When you hit something you haven't seen — a technology, a pattern, a business term — you do NOT stop at 'I don't know'. You say you don't know, then narrate your inference chain out loud using first principles.",
+          "why": "Capital One interviewers have seen 'I don't know' kill otherwise strong loops. They don't expect you to know everything. They DO expect you to keep thinking visibly. Silence + confusion is the failure mode; narrated inference is the signal.",
+          "example": "'I haven't worked with CDC pipelines specifically. My mental model: if we need downstream systems to react to database changes in near-real-time, we need to get the change events out without double-writing from the app. That means tailing the database log somehow. I'd reach for something that reads the write-ahead log and publishes events — am I on the right track?'"
+        }
+      ],
+      "ctaStart": "Start Mock Power Day",
+      "ctaGca": "Warm up with a Mock GCA"
+    }
+  },
   "sidebar": {
     "progress": "Progress",
-    "patterns": "Patterns"
+    "patterns": "Patterns",
+    "companyOverview": "Overview"
   },
   "solution": {
     "answersTitle": "Answers & Explanations"

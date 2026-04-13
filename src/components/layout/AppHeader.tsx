@@ -111,6 +111,26 @@ function buildBreadcrumbs(pathname: string) {
           isLast: true,
         })
       }
+    } else if (parts[1] === 'overview' && parts[2]) {
+      const topicSlug = parts[2]
+      const topicLabel =
+        topicSlug === 'power-day'
+          ? 'Power Day Overview'
+          : topicSlug === 'gca'
+            ? 'GCA Overview'
+            : formatSlug(topicSlug)
+      segments.push({
+        label: topicLabel,
+        path: `/${companySlug}/overview/${topicSlug}`,
+        isLast: !parts[3],
+      })
+      if (parts[3]) {
+        segments.push({
+          label: formatSlug(parts[3]),
+          path: `/${companySlug}/overview/${topicSlug}/${parts[3]}`,
+          isLast: true,
+        })
+      }
     } else if (parts[1] === 'exercise' && parts[2]) {
       segments.push({
         label: 'Exercise',

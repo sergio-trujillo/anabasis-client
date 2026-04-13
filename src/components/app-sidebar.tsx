@@ -8,7 +8,7 @@
 
 import { Link, useLocation, useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { BuildingIcon, ClockIcon, LockIcon, ShuffleIcon } from 'lucide-react'
+import { BookOpenIcon, BuildingIcon, LockIcon } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -113,6 +113,7 @@ function CompanyMenuItem({
   currentPath: string
 }) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const companyQuery = trpc.companies.get.useQuery({ slug: company.slug })
   const loop = (companyQuery.data as { loop: Loop | null } | undefined)?.loop
 
@@ -137,29 +138,11 @@ function CompanyMenuItem({
         <SidebarMenuSub>
           <SidebarMenuSubItem>
             <SidebarMenuSubButton
-              onClick={() => navigate(`/${company.slug}/practice`)}
-              isActive={currentPath === `/${company.slug}/practice`}
+              onClick={() => navigate(`/${company.slug}`)}
+              isActive={currentPath === `/${company.slug}`}
             >
-              <ShuffleIcon className="size-3" />
-              Random practice
-            </SidebarMenuSubButton>
-          </SidebarMenuSubItem>
-          <SidebarMenuSubItem>
-            <SidebarMenuSubButton
-              onClick={() => navigate(`/${company.slug}/mock-gca`)}
-              isActive={currentPath === `/${company.slug}/mock-gca`}
-            >
-              <ClockIcon className="size-3" />
-              Mock GCA · 70 min
-            </SidebarMenuSubButton>
-          </SidebarMenuSubItem>
-          <SidebarMenuSubItem>
-            <SidebarMenuSubButton
-              onClick={() => navigate(`/${company.slug}/mock-power-day`)}
-              isActive={currentPath === `/${company.slug}/mock-power-day`}
-            >
-              <ClockIcon className="size-3" />
-              Mock Power Day · 3 hr
+              <BookOpenIcon className="size-3" />
+              {t('sidebar.companyOverview', { defaultValue: 'Overview' })}
             </SidebarMenuSubButton>
           </SidebarMenuSubItem>
           {loop.phases.map((phase) => (
@@ -177,7 +160,11 @@ function CompanyMenuItem({
                       ? `/${company.slug}/mock-gca`
                       : section.id === 'power-day-mock'
                         ? `/${company.slug}/mock-power-day`
-                        : `/${company.slug}/section/${section.id}`
+                        : section.id === 'gca-overview'
+                          ? `/${company.slug}/overview/gca`
+                          : section.id === 'power-day-overview'
+                            ? `/${company.slug}/overview/power-day`
+                            : `/${company.slug}/section/${section.id}`
                   const isActive = currentPath === href
                   return (
                     <li key={section.id}>

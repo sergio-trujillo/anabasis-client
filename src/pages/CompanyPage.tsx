@@ -11,15 +11,18 @@
 //   - loop.phases[] → list of { id, name, description, sections[] }
 
 import {
+  ArrowRightIcon,
   BookOpenIcon,
   BotIcon,
   BracesIcon,
   BriefcaseIcon,
+  CheckCircle2Icon,
   ChevronRightIcon,
   ClockIcon,
   FileCode2Icon,
   MessageSquareIcon,
   ShuffleIcon,
+  SparklesIcon,
   TimerIcon,
   UsersIcon,
 } from 'lucide-react'
@@ -30,7 +33,6 @@ import { GradientText } from '@/components/animate-ui/primitives/texts/gradient'
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern'
 import { Badge } from '@/components/ui/badge'
 import { BorderBeam } from '@/components/ui/border-beam'
-import { buttonVariants } from '@/components/ui/button'
 import { MagicCard } from '@/components/ui/magic-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
@@ -122,33 +124,12 @@ export function CompanyPage() {
               {company.tagline}
             </p>
 
-            {isActive && (
-              <div className="flex flex-wrap gap-2 mt-6">
-                <Link
-                  to={`/${companySlug}/mock-gca`}
-                  className={cn(buttonVariants({ variant: 'default', size: 'lg' }))}
-                >
-                  <ClockIcon className="size-4" />
-                  Mock GCA · 70 min
-                </Link>
-                <Link
-                  to={`/${companySlug}/mock-power-day`}
-                  className={cn(buttonVariants({ variant: 'default', size: 'lg' }))}
-                >
-                  <ClockIcon className="size-4" />
-                  Mock Power Day · 3 hr
-                </Link>
-                <Link
-                  to={`/${companySlug}/practice`}
-                  className={cn(buttonVariants({ variant: 'secondary', size: 'lg' }))}
-                >
-                  <ShuffleIcon className="size-4" />
-                  {t('nav.practice')}
-                </Link>
-              </div>
-            )}
           </header>
         </Fade>
+
+        {isActive && company.slug === 'capital-one' && (
+          <CapitalOneOverview companySlug={companySlug} />
+        )}
 
         {loop && loop.phases.length > 0 && (
           <section className="space-y-6">
@@ -229,7 +210,223 @@ function kindLabel(kind: string): string {
 function hrefForSection(companySlug: string, section: Section): string {
   if (section.id === 'gca-mock') return `/${companySlug}/mock-gca`
   if (section.id === 'power-day-mock') return `/${companySlug}/mock-power-day`
+  if (section.id === 'gca-overview') return `/${companySlug}/overview/gca`
+  if (section.id === 'power-day-overview') return `/${companySlug}/overview/power-day`
   return `/${companySlug}/section/${section.id}`
+}
+
+function tArray<T>(
+  t: ReturnType<typeof useTranslation>['t'],
+  key: string
+): T[] {
+  return t(key, { returnObjects: true }) as unknown as T[]
+}
+
+type JourneyStep = {
+  step: string
+  duration: string
+  what: string
+  evaluated: string
+}
+type DistinctiveItem = { title: string; body: string }
+type PlanItem = {
+  title: string
+  subtitle: string
+  body: string
+  to: 'mock-power-day' | 'mock-gca' | 'practice'
+  cta: string
+}
+
+function CapitalOneOverview({ companySlug }: { companySlug: string }) {
+  const { t } = useTranslation()
+  const k = (key: string) => t(`companyOverview.capitalOne.${key}`)
+
+  const journey = tArray<JourneyStep>(t, 'companyOverview.capitalOne.journey')
+  const distinctive = tArray<DistinctiveItem>(
+    t,
+    'companyOverview.capitalOne.distinctive'
+  )
+  const plan = tArray<PlanItem>(t, 'companyOverview.capitalOne.plan')
+
+  const stepIcons = [UsersIcon, FileCode2Icon, ClockIcon, CheckCircle2Icon]
+  const planIcons: Record<PlanItem['to'], typeof ClockIcon> = {
+    'mock-power-day': ClockIcon,
+    'mock-gca': ClockIcon,
+    practice: ShuffleIcon,
+  }
+
+  return (
+    <div className="space-y-8">
+      <Fade delay={0.05}>
+        <section className="space-y-3">
+          <div className="space-y-1">
+            <h2 className="text-xs uppercase tracking-wider text-muted-foreground">
+              {k('journeyHeader')}
+            </h2>
+            <p className="text-xs text-muted-foreground/80 max-w-3xl">
+              {k('journeySub')}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            {journey.map((j, i) => {
+              const Icon = stepIcons[i] ?? SparklesIcon
+              return (
+                <MagicCard key={j.step} className="p-5 space-y-3 relative">
+                  <div className="flex items-center gap-2">
+                    <span className="flex size-7 items-center justify-center rounded-md bg-primary/10 text-primary ring-1 ring-primary/20">
+                      <Icon className="size-3.5" />
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider text-muted-foreground tabular-nums font-semibold">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="font-heading text-base font-semibold leading-tight">
+                      {j.step}
+                    </h3>
+                    <Badge variant="outline" className="text-[10px] h-5 px-1.5">
+                      {j.duration}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {j.what}
+                  </p>
+                  <div className="text-xs pt-2 border-t border-border/50">
+                    <div className="uppercase tracking-wider text-[9px] font-semibold text-muted-foreground/70 mb-0.5">
+                      {t('overviewLabels.evaluated', {
+                        defaultValue: 'What they evaluate',
+                      })}
+                    </div>
+                    <div className="leading-relaxed">{j.evaluated}</div>
+                  </div>
+                </MagicCard>
+              )
+            })}
+          </div>
+        </section>
+      </Fade>
+
+      <Fade delay={0.12}>
+        <section className="space-y-3">
+          <div className="space-y-1">
+            <h2 className="text-xs uppercase tracking-wider text-muted-foreground">
+              {k('distinctiveHeader')}
+            </h2>
+            <p className="text-xs text-muted-foreground/80 max-w-3xl">
+              {k('distinctiveSub')}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {distinctive.map((d, i) => (
+              <MagicCard key={d.title} className="p-5 space-y-2">
+                <div className="flex items-start gap-2">
+                  <span className="shrink-0 flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary text-[11px] font-semibold ring-1 ring-primary/20 tabular-nums mt-0.5">
+                    {i + 1}
+                  </span>
+                  <h3 className="font-heading text-base font-semibold leading-tight">
+                    {d.title}
+                  </h3>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {d.body}
+                </p>
+              </MagicCard>
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-3 pt-2 text-xs">
+            <Link
+              to={`/${companySlug}/overview/power-day`}
+              className="inline-flex items-center gap-1 text-primary hover:underline"
+            >
+              <ChevronRightIcon className="size-3" />
+              {k('valuesLink')}
+            </Link>
+            <Link
+              to={`/${companySlug}/overview/gca`}
+              className="inline-flex items-center gap-1 text-primary hover:underline"
+            >
+              <ChevronRightIcon className="size-3" />
+              {k('pipelineLink')}
+            </Link>
+          </div>
+        </section>
+      </Fade>
+
+      <Fade delay={0.2}>
+        <section className="space-y-3">
+          <div className="space-y-1">
+            <h2 className="text-xs uppercase tracking-wider text-muted-foreground">
+              {k('planHeader')}
+            </h2>
+            <p className="text-xs text-muted-foreground/80 max-w-3xl">
+              {k('planSub')}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {plan.map((p, i) => {
+              const Icon = planIcons[p.to] ?? SparklesIcon
+              const primary = i === 0
+              return (
+                <Link
+                  key={p.to}
+                  to={`/${companySlug}/${p.to}`}
+                  className="group block"
+                >
+                  <MagicCard
+                    className={cn(
+                      'relative overflow-hidden h-full p-5 transition-all',
+                      'hover:border-primary/40'
+                    )}
+                  >
+                    {primary && (
+                      <BorderBeam
+                        size={140}
+                        duration={10}
+                        colorFrom="var(--primary)"
+                        colorTo="var(--chart-2)"
+                      />
+                    )}
+                    <div className="flex items-center gap-2 mb-3">
+                      <span
+                        className={cn(
+                          'flex size-9 items-center justify-center rounded-lg ring-1',
+                          primary
+                            ? 'bg-primary/10 text-primary ring-primary/20'
+                            : 'bg-muted/40 text-muted-foreground ring-border/60 group-hover:text-foreground'
+                        )}
+                      >
+                        <Icon className="size-4" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-heading text-sm font-semibold truncate">
+                          {p.title}
+                        </h3>
+                        <div className="text-[10px] uppercase tracking-wider text-muted-foreground/80 truncate">
+                          {p.subtitle}
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {p.body}
+                    </p>
+                    <div
+                      className={cn(
+                        'inline-flex items-center gap-1.5 text-xs mt-4 font-medium',
+                        primary ? 'text-primary' : 'text-foreground'
+                      )}
+                    >
+                      {p.cta}
+                      <ArrowRightIcon className="size-3 transition-transform group-hover:translate-x-0.5" />
+                    </div>
+                  </MagicCard>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      </Fade>
+    </div>
+  )
 }
 
 function PhaseCard({ companySlug, phase }: { companySlug: string; phase: Phase }) {
