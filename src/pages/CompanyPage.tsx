@@ -53,6 +53,12 @@ export function CompanyPage() {
                     Mock GCA · 70 min
                   </Link>
                 </Button>
+                <Button asChild variant="default">
+                  <Link to={`/${companySlug}/mock-power-day`}>
+                    <ClockIcon className="size-4" />
+                    Mock Power Day · 3 hr
+                  </Link>
+                </Button>
                 <Button asChild variant="secondary">
                   <Link to={`/${companySlug}/practice`}>
                     <ShuffleIcon className="size-4" />
