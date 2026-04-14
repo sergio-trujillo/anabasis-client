@@ -6,9 +6,13 @@
 // Day's coding rounds. Hides Praxema's solution tab (Anabasis doesn't
 // distribute solutions — D18: solution leak risk).
 
+import { LockIcon } from 'lucide-react'
 import { lazy, Suspense, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { ShadcnMarkdown } from '@/components/ui/shadcn-markdown'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   ResizableHandle,
   ResizablePanel,
@@ -52,6 +56,12 @@ export interface CodeProblemLayoutProps {
   isRunning: boolean
   onReset?: () => void
   result: RunResult | null
+  /** Optional reference solution — rendered in a reveal-on-click "Solution" tab. */
+  solution?: {
+    code: string
+    explanation?: { en: string; es?: string | null }
+    complexity?: { en: string; es?: string | null }
+  }
   /** Optional — right-side badge (e.g. "Problem 2 of 4 · 300 pts"). */
   rightSlot?: React.ReactNode
   /** Optional — rendered under the statement (e.g. "Next problem →" link). */
@@ -74,9 +84,12 @@ export function CodeProblemLayout({
   isRunning,
   onReset,
   result,
+  solution,
   rightSlot,
   belowStatement,
 }: CodeProblemLayoutProps) {
+  const { t } = useTranslation()
+  const [solutionRevealed, setSolutionRevealed] = useState(false)
   // refs so the toolbar's format / go-to-line hooks can reach the editor
   const onGoToLineRef = useRef<(line: number, col?: number) => void>(() => {})
   const outputPosition = useUIStore((s) => s.outputPosition)
@@ -121,17 +134,58 @@ export function CodeProblemLayout({
                 {rightSlot}
               </div>
             </div>
-            <div
-              className="flex-1 overflow-y-auto"
-              onScroll={(e) => {
-                const top = (e.target as HTMLDivElement).scrollTop
-                setScrolled((prev) => (prev ? top > 12 : top > 28))
-              }}
+            <Tabs
+              defaultValue="description"
+              className="flex-1 min-h-0 flex flex-col"
             >
-              <div className="px-6 pt-4 pb-6 text-sm text-foreground/90">
-                <ShadcnMarkdown>{bilingual(statement)}</ShadcnMarkdown>
+              <div className="flex h-9 shrink-0 items-center border-b px-1">
+                <TabsList variant="line" className="h-7 w-auto justify-start">
+                  <TabsTrigger
+                    value="description"
+                    className="h-5 flex-none gap-1 px-3 text-xs"
+                  >
+                    {t('problem.description', { defaultValue: 'Description' })}
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="solution"
+                    className="h-5 flex-none gap-1 px-3 text-xs"
+                  >
+                    {t('problem.solution', { defaultValue: 'Solution' })}
+                    {!solutionRevealed && <LockIcon className="size-3" />}
+                  </TabsTrigger>
+                </TabsList>
               </div>
-            </div>
+
+              <div className="relative min-h-0 flex-1">
+                <TabsContent
+                  value="description"
+                  className="absolute inset-0 mt-0 outline-none"
+                >
+                  <div
+                    className="h-full overflow-y-auto"
+                    onScroll={(e) => {
+                      const top = (e.target as HTMLDivElement).scrollTop
+                      setScrolled((prev) => (prev ? top > 12 : top > 28))
+                    }}
+                  >
+                    <div className="px-6 pt-4 pb-6 text-sm text-foreground/90">
+                      <ShadcnMarkdown>{bilingual(statement)}</ShadcnMarkdown>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent
+                  value="solution"
+                  className="absolute inset-0 mt-0 outline-none"
+                >
+                  <SolutionPanel
+                    solution={solution}
+                    revealed={solutionRevealed}
+                    onReveal={() => setSolutionRevealed(true)}
+                  />
+                </TabsContent>
+              </div>
+            </Tabs>
             {belowStatement && (
               <div className="shrink-0 border-t bg-background/95 backdrop-blur">
                 {belowStatement}
@@ -181,6 +235,73 @@ export function CodeProblemLayout({
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
+    </div>
+  )
+}
+
+function SolutionPanel({
+  solution,
+  revealed,
+  onReveal,
+}: {
+  solution?: CodeProblemLayoutProps['solution']
+  revealed: boolean
+  onReveal: () => void
+}) {
+  const { t } = useTranslation()
+
+  // Revealed with content → full markdown render (Praxema layout).
+  if (revealed && solution) {
+    return (
+      <div className="h-full overflow-y-auto">
+        <div className="p-6 space-y-5">
+          <pre className="rounded-md border border-border/60 bg-muted/30 p-4 text-xs leading-relaxed overflow-x-auto font-mono">
+            <code>{solution.code}</code>
+          </pre>
+
+          {solution.explanation && (
+            <div className="text-sm text-foreground/90 leading-relaxed">
+              <ShadcnMarkdown>{bilingual(solution.explanation)}</ShadcnMarkdown>
+            </div>
+          )}
+
+          {solution.complexity && (
+            <div className="space-y-1.5 border-l-2 border-primary/40 pl-3 py-1 bg-primary/5 rounded-r-md">
+              <div className="text-[10px] uppercase tracking-wider text-primary font-semibold">
+                {t('problem.complexity', { defaultValue: 'Complexity' })}
+              </div>
+              <div className="text-sm leading-relaxed">
+                <ShadcnMarkdown>{bilingual(solution.complexity)}</ShadcnMarkdown>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // Centered gate — both "solve first" and "not yet authored" share it. Matches
+  // Praxema's ProblemView pattern: large muted LockIcon + caption + outline CTA.
+  const isAuthored = !!solution
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-4 text-muted-foreground">
+      <LockIcon className="size-10 opacity-30" />
+      <p className="text-sm text-center max-w-xs px-6">
+        {isAuthored
+          ? t('problem.solveFirst', {
+              defaultValue:
+                "Solve the problem first, or reveal if you're stuck.",
+            })
+          : t('problem.solutionPending', {
+              defaultValue:
+                "The reference solution for this problem hasn't been authored yet. In the meantime, the tests on the right double as a spec of expected behavior.",
+            })}
+      </p>
+      {isAuthored && (
+        <Button variant="outline" onClick={onReveal}>
+          {t('problem.revealSolution', { defaultValue: 'Reveal solution' })}
+        </Button>
+      )}
     </div>
   )
 }

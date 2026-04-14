@@ -821,11 +821,9 @@ export function OverviewAntiPatternsAccordion({
         {items.map((ap, i) => (
           <Collapsible key={i}>
             <MagicCard className="overflow-hidden p-0">
-              <CollapsibleTrigger asChild>
-                <button
-                  type="button"
-                  className="w-full p-4 flex items-center gap-3 text-left hover:bg-muted/30 transition-colors group"
-                >
+              <CollapsibleTrigger
+                className="w-full p-4 flex items-center gap-3 text-left hover:bg-muted/30 transition-colors group"
+              >
                   <span className="shrink-0 size-7 rounded-md bg-rose-500/10 text-rose-600 flex items-center justify-center text-xs font-semibold ring-1 ring-rose-500/20">
                     ✗
                   </span>
@@ -838,7 +836,6 @@ export function OverviewAntiPatternsAccordion({
                     </div>
                   </div>
                   <ChevronDownIcon className="shrink-0 size-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-                </button>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <div className="px-4 pb-4 pl-[60px] space-y-3 border-t border-border/50 pt-3">

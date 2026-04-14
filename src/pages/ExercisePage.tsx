@@ -106,6 +106,12 @@ export function ExercisePage() {
 // Code runner — Praxema-style full-viewport layout via CodeProblemLayout
 // ─────────────────────────────────────────────────────────────────────────
 
+type CodeSolution = {
+  code: string
+  explanation?: { en: string; es?: string | null }
+  complexity?: { en: string; es?: string | null }
+}
+
 type CodeExercise = {
   id: string
   type: 'code'
@@ -114,6 +120,7 @@ type CodeExercise = {
   starterCode: string
   testCode: string
   difficulty?: string
+  solution?: CodeSolution
 }
 
 type Sibling = {
@@ -184,6 +191,7 @@ function CodeExerciseRunner({
         isRunning={runJava.isPending}
         onReset={() => setCode(exercise.starterCode)}
         result={runJava.data ?? null}
+        solution={exercise.solution}
         rightSlot={rightSlot}
         belowStatement={belowStatement}
       />

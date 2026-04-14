@@ -59,51 +59,74 @@ export function OverviewLandingPage() {
         )}
       </Fade>
 
-      <Fade delay={0.1}>
-        <section className="space-y-3">
-          <h2 className="text-xs uppercase tracking-wider text-muted-foreground">
-            {t('overviewChapters.actions.chapters')}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {chapters.map((c, i) => (
-              <Link
-                key={c.slug}
-                to={`${baseTo}/${c.slug}`}
-                className="group block"
-              >
-                <MagicCard className="p-5 h-full space-y-2 transition-colors hover:border-primary/40">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] opacity-60 tabular-nums">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <Badge
-                      variant="outline"
-                      className="text-[10px] h-5 px-1.5 font-normal"
-                    >
-                      {t('overviewChapters.actions.readMinutes', {
-                        count: c.readMinutes,
-                      })}
-                    </Badge>
-                  </div>
-                  <h3 className="font-heading text-base font-semibold leading-tight">
-                    {t(c.titleKey)}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {t(c.blurbKey)}
-                  </p>
-                  <div className="inline-flex items-center gap-1 text-xs font-medium text-primary pt-2">
-                    {t('overviewChapters.actions.continueReading')}
-                    <ArrowRightIcon
-                      data-icon="inline-end"
-                      className="transition-transform group-hover:translate-x-0.5"
-                    />
-                  </div>
-                </MagicCard>
-              </Link>
-            ))}
-          </div>
-        </section>
-      </Fade>
+      {(() => {
+        // Group chapters for the landing hub — same grouping as the strip,
+        // built inline here because the shape is specific to this page.
+        const landingGroups: Array<{
+          id: string
+          labelKey: string
+          items: Array<{ chapter: (typeof chapters)[number]; index: number }>
+        }> = []
+        chapters.forEach((c, i) => {
+          const last = landingGroups[landingGroups.length - 1]
+          if (last && last.id === c.group.id) {
+            last.items.push({ chapter: c, index: i })
+          } else {
+            landingGroups.push({
+              id: c.group.id,
+              labelKey: c.group.labelKey,
+              items: [{ chapter: c, index: i }],
+            })
+          }
+        })
+        return landingGroups.map((group, gi) => (
+          <Fade key={group.id} delay={0.1 + gi * 0.05}>
+            <section className="space-y-3">
+              <h2 className="text-xs uppercase tracking-wider text-muted-foreground">
+                {t(group.labelKey)}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {group.items.map(({ chapter: c, index: i }) => (
+                  <Link
+                    key={c.slug}
+                    to={`${baseTo}/${c.slug}`}
+                    className="group block"
+                  >
+                    <MagicCard className="p-5 h-full space-y-2 transition-colors hover:border-primary/40">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-[10px] opacity-60 tabular-nums">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] h-5 px-1.5 font-normal"
+                        >
+                          {t('overviewChapters.actions.readMinutes', {
+                            count: c.readMinutes,
+                          })}
+                        </Badge>
+                      </div>
+                      <h3 className="font-heading text-base font-semibold leading-tight">
+                        {t(c.titleKey)}
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {t(c.blurbKey)}
+                      </p>
+                      <div className="inline-flex items-center gap-1 text-xs font-medium text-primary pt-2">
+                        {t('overviewChapters.actions.continueReading')}
+                        <ArrowRightIcon
+                          data-icon="inline-end"
+                          className="transition-transform group-hover:translate-x-0.5"
+                        />
+                      </div>
+                    </MagicCard>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          </Fade>
+        ))
+      })()}
 
       <PrevNextNav chapters={chapters} currentSlug={undefined} baseTo={baseTo} />
     </>

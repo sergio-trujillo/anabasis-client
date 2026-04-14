@@ -111,6 +111,7 @@ function PracticeBoard({ exercise }: { exercise: Code }) {
       isRunning={runJava.isPending}
       onReset={() => setCode(exercise.starterCode)}
       result={runJava.data ?? null}
+      solution={(exercise as { solution?: { code: string; explanation?: { en: string; es?: string | null }; complexity?: { en: string; es?: string | null } } }).solution}
     />
   )
 }

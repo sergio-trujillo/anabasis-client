@@ -202,6 +202,14 @@
     "reset": "Reiniciar",
     "description": "Descripción",
     "solution": "Solución",
+    "revealSolution": "Revelar solución",
+    "hideSolution": "Ocultar",
+    "solutionGateTitle": "Inténtalo primero, revela después",
+    "solutionGate": "La solución de referencia está aquí, pero te va a servir más si intentas el problema primero. Revélala cuando estés atorado, no como primera lectura.",
+    "solutionPendingTitle": "Solución aún no publicada",
+    "solutionPending": "La solución de referencia para este problema todavía no se ha escrito. Mientras tanto, los tests de la derecha funcionan como especificación del comportamiento esperado.",
+    "explanation": "Explicación",
+    "complexity": "Complejidad",
     "hints": "Pistas",
     "visualize": "Visualizar",
     "solveFirst": "Resuelve el problema primero, o revela si estás atorado.",
@@ -375,6 +383,22 @@
         { "category": "cloud-native", "products": "Identidad post-2020 de migración a AWS", "why": "Capital One hizo una migración all-in a AWS y cerró data centers. Se describen como cloud-native. No propongas soluciones on-prem en sys-design." },
         { "category": "tech-first", "products": "Framing de marca", "why": "La narrativa de que Capital One es una compañía de tecnología que casualmente es un banco. Refiérete a esto en 'por qué Capital One' sin repetirlo como loro." }
       ]
+    }
+  },
+  "overviewGroups": {
+    "powerDay": {
+      "structure": "Estructura",
+      "fluency": "Lenguaje y fluidez",
+      "tactics": "Tácticas"
+    },
+    "gca": {
+      "assessment": "El assessment",
+      "playbook": "El playbook",
+      "recovery": "Cuando algo sale mal"
+    },
+    "company": {
+      "context": "Contexto",
+      "action": "Tu siguiente paso"
     }
   },
   "overviewChapters": {

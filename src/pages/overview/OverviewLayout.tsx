@@ -13,6 +13,7 @@ import {
   ShuffleIcon,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { useEffect, useRef } from 'react'
 import { Link, NavLink, Outlet, useParams } from 'react-router'
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern'
 import { Badge } from '@/components/ui/badge'
@@ -108,14 +109,46 @@ function ChapterStrip({
   currentPage: string | undefined
 }) {
   const { t } = useTranslation()
+  const navRef = useRef<HTMLElement | null>(null)
+
+  // Auto-scroll the strip so the active chapter pill is always in view.
+  // Without this the strip sits pinned at the left and the active pill is
+  // offscreen on long lists + narrow viewports. Runs on every path change.
+  useEffect(() => {
+    const nav = navRef.current
+    if (!nav) return
+    const active = nav.querySelector<HTMLElement>('[aria-current="page"]')
+    if (!active) return
+    active.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center',
+    })
+  }, [currentPage, baseTo])
+
+  // Walk chapters once, producing an ordered list of groups. Each group
+  // carries its label + its pills, in reading order. We render one "00 ·
+  // Start here" pill separately on the left since it isn't part of any
+  // content group.
+  const groups: Array<{ id: string; labelKey: string; items: Array<{ chapter: Chapter; index: number }> }> = []
+  chapters.forEach((c, i) => {
+    const last = groups[groups.length - 1]
+    if (last && last.id === c.group.id) {
+      last.items.push({ chapter: c, index: i })
+    } else {
+      groups.push({
+        id: c.group.id,
+        labelKey: c.group.labelKey,
+        items: [{ chapter: c, index: i }],
+      })
+    }
+  })
+
   return (
     <div className="sticky top-[52px] z-10 bg-background/85 backdrop-blur-sm border-b border-border/60">
       <div className="p-2 w-full flex items-center gap-2">
-        <span className="hidden sm:inline-flex shrink-0 text-[10px] uppercase tracking-wider text-muted-foreground font-semibold px-2">
-          {t('overviewChapters.actions.chapters')}
-        </span>
         <ScrollArea className="min-w-0 flex-1">
-          <nav className="flex items-center gap-1.5 py-0.5">
+          <nav ref={navRef} className="flex items-center gap-3 py-0.5">
             <ChapterPill
               to={baseTo}
               exact
@@ -123,15 +156,27 @@ function ChapterStrip({
               index="00"
               minutes={null}
             />
-            {chapters.map((c, i) => (
-              <ChapterPill
-                key={c.slug}
-                to={`${baseTo}/${c.slug}`}
-                exact={false}
-                label={stripIndex(t(c.titleKey))}
-                index={String(i + 1).padStart(2, '0')}
-                minutes={c.readMinutes}
-              />
+            {groups.map((group) => (
+              <div key={group.id} className="flex items-center gap-3">
+                <span className="h-5 w-px shrink-0 bg-border/60" aria-hidden />
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/70 font-semibold shrink-0 hidden sm:inline">
+                    {t(group.labelKey)}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {group.items.map(({ chapter, index }) => (
+                      <ChapterPill
+                        key={chapter.slug}
+                        to={`${baseTo}/${chapter.slug}`}
+                        exact={false}
+                        label={stripIndex(t(chapter.titleKey))}
+                        index={String(index + 1).padStart(2, '0')}
+                        minutes={chapter.readMinutes}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
             ))}
           </nav>
           <ScrollBar orientation="horizontal" className="h-1.5" />
