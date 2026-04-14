@@ -9,19 +9,26 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
+  BookOpenIcon,
+  CheckIcon,
+  ChevronDownIcon,
   ClockIcon,
   ShuffleIcon,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useRef } from 'react'
-import { Link, NavLink, Outlet, useParams } from 'react-router'
+import { Link, Outlet, useNavigate, useParams } from 'react-router'
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern'
 import { Badge } from '@/components/ui/badge'
 import { buttonVariants } from '@/components/ui/button'
 import {
-  ScrollArea,
-  ScrollBar,
-} from '@/components/ui/scroll-area'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import {
@@ -72,7 +79,7 @@ function CtaBar({ companySlug }: { companySlug: string }) {
         <div className="hidden sm:block text-xs text-muted-foreground mr-auto px-2">
           {t('overviewChapters.actions.launchMock')}
         </div>
-
+        
         <Link
           to={`/${companySlug}/practice`}
           className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'gap-1.5')}
@@ -109,30 +116,15 @@ function ChapterStrip({
   currentPage: string | undefined
 }) {
   const { t } = useTranslation()
-  const navRef = useRef<HTMLElement | null>(null)
+  const navigate = useNavigate()
 
-  // Auto-scroll the strip so the active chapter pill is always in view.
-  // `inline: 'nearest'` scrolls the MINIMUM needed — if the active pill is
-  // already visible, nothing moves. Using 'center' here would clip the
-  // "00 · Start here" pill off the left edge whenever you landed on an
-  // early chapter (the active pill would be pulled into the middle).
-  useEffect(() => {
-    const nav = navRef.current
-    if (!nav) return
-    const active = nav.querySelector<HTMLElement>('[aria-current="page"]')
-    if (!active) return
-    active.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'nearest',
-    })
-  }, [currentPage, baseTo])
-
-  // Walk chapters once, producing an ordered list of groups. Each group
-  // carries its label + its pills, in reading order. We render one "00 ·
-  // Start here" pill separately on the left since it isn't part of any
-  // content group.
-  const groups: Array<{ id: string; labelKey: string; items: Array<{ chapter: Chapter; index: number }> }> = []
+  // Group chapters by theme for the dropdown menu. Reading order is
+  // authoritative; groups are visual labels only.
+  const groups: Array<{
+    id: string
+    labelKey: string
+    items: Array<{ chapter: Chapter; index: number }>
+  }> = []
   chapters.forEach((c, i) => {
     const last = groups[groups.length - 1]
     if (last && last.id === c.group.id) {
@@ -146,88 +138,196 @@ function ChapterStrip({
     }
   })
 
+  // Current chapter info (undefined = landing hub).
+  const currentIdx = currentPage
+    ? chapters.findIndex((c) => c.slug === currentPage)
+    : -1
+  const currentChapter = currentIdx >= 0 ? chapters[currentIdx] : null
+  const prev =
+    currentIdx > 0
+      ? chapters[currentIdx - 1]
+      : currentIdx === 0
+        ? { slug: '', titleKey: 'overviewChapters.actions.startHere', blurbKey: '', readMinutes: 0, group: chapters[0].group }
+        : null
+  const next =
+    currentIdx === -1
+      ? chapters[0]
+      : currentIdx < chapters.length - 1
+        ? chapters[currentIdx + 1]
+        : null
+
+  // Trigger label — what the user sees before opening the menu.
+  const triggerIndex =
+    currentIdx >= 0 ? String(currentIdx + 1).padStart(2, '0') : '00'
+  const triggerTitle = currentChapter
+    ? stripIndex(t(currentChapter.titleKey))
+    : t('overviewChapters.actions.startHere')
+  const triggerGroup = currentChapter
+    ? t(currentChapter.group.labelKey)
+    : null
+  const progress = currentIdx >= 0
+    ? `${currentIdx + 1} / ${chapters.length}`
+    : `0 / ${chapters.length}`
+
   return (
     <div className="sticky top-[52px] z-10 bg-background/85 backdrop-blur-sm border-b border-border/60 overflow-hidden">
       <div className="p-2 w-full min-w-0 flex items-center gap-2">
-        <ScrollArea className="min-w-0 flex-1 w-full">
-          <nav ref={navRef} className="flex items-center gap-3 py-0.5">
-            <ChapterPill
-              to={baseTo}
-              exact
-              label={t('overviewChapters.actions.startHere')}
-              index="00"
-              minutes={null}
-            />
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            className={cn(
+              buttonVariants({ variant: 'outline', size: 'sm' }),
+              'min-w-0 flex-1 sm:flex-initial justify-start gap-2 h-auto py-1.5'
+            )}
+          >
+            <BookOpenIcon data-icon="inline-start" className="shrink-0" />
+            <span className="font-mono text-[10px] opacity-60 tabular-nums shrink-0">
+              {triggerIndex}
+            </span>
+            <span className="truncate font-medium">{triggerTitle}</span>
+            {triggerGroup && (
+              <span className="hidden md:inline text-[10px] uppercase tracking-wider text-muted-foreground/70 shrink-0">
+                · {triggerGroup}
+              </span>
+            )}
+            <Badge
+              variant="secondary"
+              className="ml-auto shrink-0 text-[10px] h-4 px-1.5 font-normal tabular-nums"
+            >
+              {progress}
+            </Badge>
+            <ChevronDownIcon className="shrink-0 opacity-60" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="start"
+            className="w-80 max-h-[70vh] overflow-y-auto"
+          >
+            <DropdownMenuItem
+              onClick={() => navigate(baseTo)}
+              className="gap-3"
+            >
+              <span className="font-mono text-[10px] opacity-60 tabular-nums w-6 shrink-0">
+                00
+              </span>
+              <span className="flex-1 truncate">
+                {t('overviewChapters.actions.startHere')}
+              </span>
+              {currentIdx === -1 && (
+                <CheckIcon data-icon="inline-end" className="text-primary" />
+              )}
+            </DropdownMenuItem>
+
             {groups.map((group) => (
-              <div key={group.id} className="flex items-center gap-3">
-                <span className="h-5 w-px shrink-0 bg-border/60" aria-hidden />
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/70 font-semibold shrink-0 hidden sm:inline">
-                    {t(group.labelKey)}
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    {group.items.map(({ chapter, index }) => (
-                      <ChapterPill
+              <div key={group.id}>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/70 font-semibold">
+                  {t(group.labelKey)}
+                </DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  {group.items.map(({ chapter, index }) => {
+                    const isActive = chapter.slug === currentPage
+                    return (
+                      <DropdownMenuItem
                         key={chapter.slug}
-                        to={`${baseTo}/${chapter.slug}`}
-                        exact={false}
-                        label={stripIndex(t(chapter.titleKey))}
-                        index={String(index + 1).padStart(2, '0')}
-                        minutes={chapter.readMinutes}
-                      />
-                    ))}
-                  </div>
-                </div>
+                        onClick={() =>
+                          navigate(`${baseTo}/${chapter.slug}`)
+                        }
+                        className="gap-3"
+                      >
+                        <span className="font-mono text-[10px] opacity-60 tabular-nums w-6 shrink-0">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <span
+                          className={cn(
+                            'flex-1 truncate',
+                            isActive && 'font-semibold text-primary'
+                          )}
+                        >
+                          {stripIndex(t(chapter.titleKey))}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground/70 tabular-nums shrink-0">
+                          {chapter.readMinutes}m
+                        </span>
+                        {isActive && (
+                          <CheckIcon
+                            data-icon="inline-end"
+                            className="text-primary"
+                          />
+                        )}
+                      </DropdownMenuItem>
+                    )
+                  })}
+                </DropdownMenuGroup>
               </div>
             ))}
-          </nav>
-          <ScrollBar orientation="horizontal" className="h-1.5" />
-        </ScrollArea>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Inline Prev / Next — only show when there's somewhere to go. */}
+        <div className="shrink-0 flex items-center gap-1">
+          <PrevNextInlineButton
+            chapter={prev}
+            baseTo={baseTo}
+            direction="prev"
+            ariaLabel={t('overviewChapters.actions.previous')}
+          />
+          <PrevNextInlineButton
+            chapter={next}
+            baseTo={baseTo}
+            direction="next"
+            ariaLabel={t('overviewChapters.actions.next')}
+          />
+        </div>
       </div>
     </div>
   )
 }
 
-function ChapterPill({
-  to,
-  exact,
-  label,
-  index,
-  minutes,
+function PrevNextInlineButton({
+  chapter,
+  baseTo,
+  direction,
+  ariaLabel,
 }: {
-  to: string
-  exact: boolean
-  label: string
-  index: string
-  minutes: number | null
+  chapter: Chapter | null | { slug: string; titleKey: string }
+  baseTo: string
+  direction: 'prev' | 'next'
+  ariaLabel: string
 }) {
-  return (
-    <NavLink
-      to={to}
-      end={exact}
-      title={label}
-      className={({ isActive }) =>
-        cn(
-          'group shrink-0 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
-          isActive
-            ? 'bg-primary text-primary-foreground border-primary'
-            : 'border-border/60 bg-background/40 text-muted-foreground hover:text-foreground hover:border-border hover:bg-muted/60'
-        )
-      }
-    >
-      <span className="font-mono text-[10px] tabular-nums opacity-60 group-aria-[current=page]:opacity-100">
-        {index}
+  const { t } = useTranslation()
+  const Icon = direction === 'prev' ? ArrowLeftIcon : ArrowRightIcon
+  const disabled = !chapter
+  const to = chapter
+    ? chapter.slug === ''
+      ? baseTo
+      : `${baseTo}/${chapter.slug}`
+    : '#'
+  const title = chapter ? t(chapter.titleKey) : ariaLabel
+
+  if (disabled) {
+    return (
+      <span
+        aria-disabled="true"
+        className={cn(
+          buttonVariants({ variant: 'ghost', size: 'sm' }),
+          'pointer-events-none opacity-40 size-8 p-0'
+        )}
+      >
+        <Icon className="size-4" />
       </span>
-      <span className="truncate max-w-[240px]">{label}</span>
-      {minutes !== null && (
-        <Badge
-          variant="outline"
-          className="h-4 px-1 text-[9px] font-normal border-current/30 bg-transparent"
-        >
-          {minutes}m
-        </Badge>
+    )
+  }
+  return (
+    <Link
+      to={to}
+      aria-label={`${ariaLabel} · ${title}`}
+      title={`${ariaLabel} · ${title}`}
+      className={cn(
+        buttonVariants({ variant: 'ghost', size: 'sm' }),
+        'size-8 p-0'
       )}
-    </NavLink>
+    >
+      <Icon className="size-4" />
+    </Link>
   )
 }
 
