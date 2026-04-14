@@ -112,8 +112,10 @@ function ChapterStrip({
   const navRef = useRef<HTMLElement | null>(null)
 
   // Auto-scroll the strip so the active chapter pill is always in view.
-  // Without this the strip sits pinned at the left and the active pill is
-  // offscreen on long lists + narrow viewports. Runs on every path change.
+  // `inline: 'nearest'` scrolls the MINIMUM needed — if the active pill is
+  // already visible, nothing moves. Using 'center' here would clip the
+  // "00 · Start here" pill off the left edge whenever you landed on an
+  // early chapter (the active pill would be pulled into the middle).
   useEffect(() => {
     const nav = navRef.current
     if (!nav) return
@@ -122,7 +124,7 @@ function ChapterStrip({
     active.scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
-      inline: 'center',
+      inline: 'nearest',
     })
   }, [currentPage, baseTo])
 
@@ -203,6 +205,7 @@ function ChapterPill({
     <NavLink
       to={to}
       end={exact}
+      title={label}
       className={({ isActive }) =>
         cn(
           'group shrink-0 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
@@ -215,7 +218,7 @@ function ChapterPill({
       <span className="font-mono text-[10px] tabular-nums opacity-60 group-aria-[current=page]:opacity-100">
         {index}
       </span>
-      <span className="truncate max-w-[200px]">{label}</span>
+      <span className="truncate max-w-[240px]">{label}</span>
       {minutes !== null && (
         <Badge
           variant="outline"
