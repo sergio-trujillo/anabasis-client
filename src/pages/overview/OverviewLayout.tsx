@@ -38,8 +38,8 @@ export function OverviewLayout() {
   const chapters = chaptersFor(safeTopic)
 
   return (
-    <div className="flex-1 overflow-y-auto">
-      <div className="relative min-h-[calc(100vh-3.5rem)]">
+    <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
+      <div className="relative min-h-[calc(100vh-3.5rem)] overflow-x-hidden">
         <AnimatedGridPattern
           numSquares={30}
           maxOpacity={0.05}
@@ -67,8 +67,8 @@ export function OverviewLayout() {
 function CtaBar({ companySlug }: { companySlug: string }) {
   const { t } = useTranslation()
   return (
-    <div className="sticky top-0 z-20 bg-background/85 backdrop-blur-sm border-b border-border/60">
-      <div className="p-2 w-full flex items-center gap-2 flex-wrap">
+    <div className="sticky top-0 z-20 bg-background/85 backdrop-blur-sm border-b border-border/60 overflow-hidden">
+      <div className="p-2 w-full min-w-0 flex items-center gap-2 flex-wrap">
         <div className="hidden sm:block text-xs text-muted-foreground mr-auto px-2">
           {t('overviewChapters.actions.launchMock')}
         </div>
@@ -147,9 +147,9 @@ function ChapterStrip({
   })
 
   return (
-    <div className="sticky top-[52px] z-10 bg-background/85 backdrop-blur-sm border-b border-border/60">
-      <div className="p-2 w-full flex items-center gap-2">
-        <ScrollArea className="min-w-0 flex-1">
+    <div className="sticky top-[52px] z-10 bg-background/85 backdrop-blur-sm border-b border-border/60 overflow-hidden">
+      <div className="p-2 w-full min-w-0 flex items-center gap-2">
+        <ScrollArea className="min-w-0 flex-1 w-full">
           <nav ref={navRef} className="flex items-center gap-3 py-0.5">
             <ChapterPill
               to={baseTo}
