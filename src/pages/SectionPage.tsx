@@ -31,6 +31,7 @@ import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern'
 import { Badge } from '@/components/ui/badge'
 import { BorderBeam } from '@/components/ui/border-beam'
 import { buttonVariants } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { MagicCard } from '@/components/ui/magic-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -473,7 +474,9 @@ export function OverviewSection({
         <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
           {header}
         </h3>
-        {sub && <p className="text-xs text-muted-foreground/80 max-w-3xl">{sub}</p>}
+        {sub && <p className="text-xs text-muted-foreground/80 ">
+        {sub}
+        </p>}
       </div>
       {children}
     </section>
@@ -554,7 +557,7 @@ export function OverviewTimeline({
   )
 }
 
-export function OverviewConceptsTabs({
+export function OverviewConcepts({
   header,
   sub,
   items,
@@ -567,54 +570,118 @@ export function OverviewConceptsTabs({
     definition: string
     why: string
     example: string
+    signals?: string[]
+    pitfalls?: string[]
   }>
-  labels: { definition: string; whyMatters: string; inPractice: string }
+  labels: {
+    definition: string
+    whyMatters: string
+    inPractice: string
+    signals: string
+    pitfalls: string
+  }
 }) {
   return (
     <OverviewSection header={header} sub={sub}>
-      <Tabs defaultValue={items[0]?.term}>
-        <TabsList className="h-auto flex-wrap gap-1 bg-muted/40 p-1">
-          {items.map((c, i) => (
-            <TabsTrigger
-              key={c.term}
-              value={c.term}
-              className="data-[state=active]:bg-background text-xs"
-            >
-              <span className="font-mono text-[10px] opacity-50 mr-1.5 tabular-nums">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              {c.term}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        {items.map((c) => (
-          <TabsContent key={c.term} value={c.term} className="mt-3">
-            <MagicCard className="p-6 space-y-5">
-              <div className="space-y-1">
-                <div className="uppercase tracking-wider text-[10px] font-semibold text-muted-foreground/70">
+      <article className="mx-auto max-w-3xl space-y-16 py-4">
+        {items.map((c, i) => (
+          <section key={c.term} className="space-y-7">
+            <header className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+                  § {String(i + 1).padStart(2, '0')}
+                </span>
+                <Separator orientation="vertical" className="h-3.5" />
+                <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
                   {labels.definition}
-                </div>
-                <p className="text-sm leading-relaxed">{c.definition}</p>
+                </span>
               </div>
-              <Separator />
-              <div className="space-y-1">
-                <div className="uppercase tracking-wider text-[10px] font-semibold text-primary/80">
-                  {labels.whyMatters}
-                </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {c.why}
-                </p>
+              <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
+                {c.term}
+              </h3>
+            </header>
+
+            <p className="text-[15px] leading-[1.9] text-foreground/90">
+              {c.definition}
+            </p>
+
+            <blockquote className="border-l-2 border-border pl-6 py-1 space-y-2">
+              <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
+                {labels.whyMatters}
               </div>
-              <div className="space-y-1 border-l-2 border-primary/50 pl-4 py-2 bg-primary/5 rounded-r-md">
-                <div className="uppercase tracking-wider text-[10px] font-semibold text-emerald-600">
-                  {labels.inPractice}
+              <p className="text-[15px] leading-[1.9] text-muted-foreground">
+                {c.why}
+              </p>
+            </blockquote>
+
+            <Card className="bg-muted/30 shadow-none">
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
+                    {labels.inPractice}
+                  </div>
+                  <p className="text-[15px] leading-[1.9] italic text-foreground/85">
+                    {c.example}
+                  </p>
                 </div>
-                <p className="text-sm leading-relaxed italic">{c.example}</p>
+
+                {c.signals && c.signals.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-[10px] uppercase tracking-[0.22em] text-emerald-600/90 font-semibold">
+                      {labels.signals}
+                    </div>
+                    <ul className="space-y-2">
+                      {c.signals.map((s, si) => (
+                        <li
+                          key={si}
+                          className="flex gap-3 text-[14px] leading-[1.8] text-foreground/85"
+                        >
+                          <span
+                            aria-hidden
+                            className="mt-2 size-1.5 shrink-0 rounded-full bg-emerald-500/70"
+                          />
+                          <span>{s}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {c.pitfalls && c.pitfalls.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-[10px] uppercase tracking-[0.22em] text-amber-600/90 font-semibold">
+                      {labels.pitfalls}
+                    </div>
+                    <ul className="space-y-2">
+                      {c.pitfalls.map((p, pi) => (
+                        <li
+                          key={pi}
+                          className="flex gap-3 text-[14px] leading-[1.8] text-foreground/85"
+                        >
+                          <span
+                            aria-hidden
+                            className="mt-2 size-1.5 shrink-0 rounded-full bg-amber-500/70"
+                          />
+                          <span>{p}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {i < items.length - 1 && (
+              <div
+                aria-hidden
+                className="pt-6 text-center font-mono text-xs tracking-[0.5em] text-muted-foreground/40 select-none"
+              >
+                § § §
               </div>
-            </MagicCard>
-          </TabsContent>
+            )}
+          </section>
         ))}
-      </Tabs>
+      </article>
     </OverviewSection>
   )
 }
@@ -1291,65 +1358,6 @@ export function OverviewPrepTimeline({
   )
 }
 
-function OverviewConcepts({
-  header,
-  sub,
-  items,
-  labels,
-}: {
-  header: string
-  sub: string
-  items: Array<{
-    term: string
-    definition: string
-    why: string
-    example: string
-  }>
-  labels: { definition: string; whyMatters: string; inPractice: string }
-}) {
-  return (
-    <OverviewSection header={header} sub={sub}>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        {items.map((c, i) => (
-          <MagicCard key={c.term} className="p-5 space-y-4">
-            <header className="flex items-center gap-2">
-              <span className="flex size-7 items-center justify-center rounded-md bg-primary/10 text-primary text-[11px] font-semibold ring-1 ring-primary/20 tabular-nums">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h4 className="font-heading text-base font-semibold leading-tight">
-                {c.term}
-              </h4>
-            </header>
-
-            <div className="space-y-1">
-              <div className="uppercase tracking-wider text-[10px] font-semibold text-muted-foreground/70">
-                {labels.definition}
-              </div>
-              <p className="text-sm leading-relaxed">{c.definition}</p>
-            </div>
-
-            <div className="space-y-1">
-              <div className="uppercase tracking-wider text-[10px] font-semibold text-primary/80">
-                {labels.whyMatters}
-              </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {c.why}
-              </p>
-            </div>
-
-            <div className="space-y-1 border-l-2 border-primary/40 pl-3 py-1 bg-primary/5 rounded-r-md">
-              <div className="uppercase tracking-wider text-[10px] font-semibold text-emerald-600">
-                {labels.inPractice}
-              </div>
-              <p className="text-sm leading-relaxed italic">{c.example}</p>
-            </div>
-          </MagicCard>
-        ))}
-      </div>
-    </OverviewSection>
-  )
-}
-
 export function OverviewSkipList({
   header,
   items,
@@ -1539,6 +1547,8 @@ function PowerDayOverview({ companySlug }: { companySlug: string }) {
     definition: string
     why: string
     example: string
+    signals?: string[]
+    pitfalls?: string[]
   }>(t, 'sectionOverview.powerDay.concepts')
 
   const ctas: SectionCta[] = [
@@ -1560,7 +1570,7 @@ function PowerDayOverview({ companySlug }: { companySlug: string }) {
     <OverviewShell kicker={k('kicker')} title={k('title')} summary={k('summary')}>
       <OverviewTimeline header={k('timelineHeader')} items={timeline} />
       <Separator />
-      <OverviewConceptsTabs
+      <OverviewConcepts
         header={k('conceptsHeader')}
         sub={k('conceptsSub')}
         items={concepts}
@@ -1570,6 +1580,12 @@ function PowerDayOverview({ companySlug }: { companySlug: string }) {
             defaultValue: 'Why Capital One cares',
           }),
           inPractice: t('overviewLabels.inPractice', { defaultValue: 'In practice' }),
+          signals: t('overviewLabels.conceptSignals', {
+            defaultValue: "Signals you're doing it well",
+          }),
+          pitfalls: t('overviewLabels.conceptPitfalls', {
+            defaultValue: 'Common mistakes',
+          }),
         }}
       />
       <Separator />

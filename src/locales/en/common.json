@@ -529,6 +529,8 @@
     "definition": "What it is",
     "whyMatters": "Why Capital One cares",
     "inPractice": "In practice",
+    "conceptSignals": "Signals you're doing it well",
+    "conceptPitfalls": "Common mistakes",
     "level": "Level",
     "probes": "Probes for",
     "tip": "How to read them",
@@ -852,43 +854,113 @@
           "term": "Tradeoffs",
           "definition": "A tradeoff is naming out loud the COST of a technical choice. 'I pick A, which means I give up B.' Not just 'A is better,' but 'A is better FOR X, and I'm accepting Y to get it.'",
           "why": "Capital One hires senior engineers to make judgment calls under ambiguity. If you never name a cost, you look like someone who thinks there's always a right answer — and that's a junior signal.",
-          "example": "Weak: 'I'd use Postgres.' Strong: 'I'd pick Postgres over Cassandra here. I gain strong consistency for the ledger — every transfer is atomic. I pay by not scaling writes horizontally past ~50K/sec without heavy sharding; at our volume that's fine, but I'd revisit if we hit that ceiling.'"
+          "example": "Weak: 'I'd use Postgres.' Strong: 'I'd pick Postgres over Cassandra here. I gain strong consistency for the ledger — every transfer is atomic. I pay by not scaling writes horizontally past ~50K/sec without heavy sharding; at our volume that's fine, but I'd revisit if we hit that ceiling.'",
+          "signals": [
+            "You name the gain and the cost in the same sentence — 'I gain X, I pay Y' — without the interviewer having to ask.",
+            "You quantify the cost: 'doesn't scale past ~50K writes/sec' instead of 'has write limitations'.",
+            "You preempt the follow-up by stating the condition under which you'd revisit the decision."
+          ],
+          "pitfalls": [
+            "You list only the benefits of your choice and wait for the interviewer to ask about downsides.",
+            "You soften the cost with vague adjectives — 'a bit slower', 'slightly more complex' — instead of a number or a threshold.",
+            "You abandon your choice at the first push from the interviewer, revealing the tradeoff was posture rather than analysis."
+          ]
         },
         {
           "term": "STAR",
           "definition": "A four-beat structure for answering behavioral questions. Situation (the context), Task (what you specifically had to do), Action (what you did — 'I', not 'we'), Result (what changed, with numbers).",
           "why": "Capital One behavioral interviewers are trained to extract STAR. If you ramble chronologically they have to pull it out of you — that loses signal. Delivering STAR cleanly means they can score faster and deeper.",
-          "example": "'[S] Our payments team was hitting 4% transaction failures during holiday spikes. [T] I was tech lead; my job was to get us under 0.5% before Black Friday. [A] I proposed and shipped a circuit-breaker pattern in front of the downstream KYC service, then added a per-customer queue so retries didn't stampede. [R] Failures dropped to 0.2%, and we sustained 3× normal volume on Black Friday without paging.'"
+          "example": "'[S] Our payments team was hitting 4% transaction failures during holiday spikes. [T] I was tech lead; my job was to get us under 0.5% before Black Friday. [A] I proposed and shipped a circuit-breaker pattern in front of the downstream KYC service, then added a per-customer queue so retries didn't stampede. [R] Failures dropped to 0.2%, and we sustained 3× normal volume on Black Friday without paging.'",
+          "signals": [
+            "You explicitly label or briefly signal each beat — even a short pause and breath-reset before the Result — so the interviewer can follow the structure without effort.",
+            "Your Action uses 'I' for decisions and 'we' for execution, making your individual contribution unambiguous.",
+            "Your Result includes at least one number and states what changed in the system, not just what you felt about it."
+          ],
+          "pitfalls": [
+            "You spend three minutes on Situation and Task and rush the Action into a single vague sentence — 'I fixed the issue'.",
+            "You say 'we did everything' throughout, leaving the interviewer unable to separate your contribution from the team's.",
+            "You end on the Action — 'and then we deployed it' — without a Result, so the story has no landing."
+          ]
         },
         {
           "term": "Numbers where they exist",
           "definition": "Whenever your story contains something measurable — latency, errors, team size, dollar impact, percentage — say the number. If you don't know it, estimate and flag it as an estimate. Never replace a number with an adjective.",
           "why": "At a bank, everything maps to dollars or regulatory risk. Interviewers cannot evaluate 'much faster' — they can evaluate 'p99 went from 800 ms to 120 ms'. Precision is the signal.",
-          "example": "Weak: 'We significantly reduced latency.' Strong: 'We cut p99 from 800 ms to 120 ms on the authorization path. About 2 million transactions per day, so at old latency ~3.2 minutes of aggregated user wait per second was just queued.'"
+          "example": "Weak: 'We significantly reduced latency.' Strong: 'We cut p99 from 800 ms to 120 ms on the authorization path. About 2 million transactions per day, so at old latency ~3.2 minutes of aggregated user wait per second was just queued.'",
+          "signals": [
+            "You give before-and-after numbers in the same clause — 'p99 went from 800 ms to 120 ms' — without the interviewer asking 'how much?'",
+            "When you don't have the exact figure, you say 'roughly 2 million transactions/day — I'd check, but that's the order of magnitude' and keep moving.",
+            "You connect the number to business impact: the p99 number isn't just a stat, it maps to aggregated user wait time or dollars at risk."
+          ],
+          "pitfalls": [
+            "You use relative adjectives — 'significantly', 'dramatically', 'much better' — in place of numbers you actually have or could estimate.",
+            "You give the result number but omit the baseline, making it impossible to evaluate the improvement.",
+            "You say 'I don't remember the exact number' and leave it there, rather than offering a calibrated estimate."
+          ]
         },
         {
           "term": "Category before product",
           "definition": "In system design, always name the architectural CATEGORY you need before naming a specific product. Say 'a messaging broker' before you say 'Kafka'. The category explains the role; the product is the brand you happen to know.",
           "why": "Naming Kafka without saying why reads as cargo-cult — like you're pattern-matching a résumé buzzword. Naming the category shows you understand the PROBLEM it solves, which is what they're actually testing.",
-          "example": "Weak: 'I'd put Kafka between these services.' Strong: 'Between the payment processor and the fraud pipeline I need a messaging broker — something that decouples them so a slow fraud check doesn't back-pressure payments, and that buffers spikes. In practice I'd reach for Kafka here because I also want event replay.'"
+          "example": "Weak: 'I'd put Kafka between these services.' Strong: 'Between the payment processor and the fraud pipeline I need a messaging broker — something that decouples them so a slow fraud check doesn't back-pressure payments, and that buffers spikes. In practice I'd reach for Kafka here because I also want event replay.'",
+          "signals": [
+            "You name the category and its role — 'a messaging broker to decouple these two services' — before the product name ever leaves your mouth.",
+            "You explain why this category fits the problem: 'I need async decoupling so back-pressure on fraud doesn't block payments' — one sentence, clear causality.",
+            "When you do name the product, you add at least one differentiating reason specific to this design: 'Kafka here because I also need event replay for the audit pipeline.'"
+          ],
+          "pitfalls": [
+            "You open with the product name — 'I'd use Kafka' — and explain the category only if the interviewer asks why.",
+            "You name the category but give a generic role ('for messaging between services') that would fit any queue, not this specific decoupling need.",
+            "You name two products in the same breath — 'Kafka or RabbitMQ' — without stating which category constraint rules one out."
+          ]
         },
         {
           "term": "Framework (business case)",
           "definition": "In a case interview, a framework is an EXPLICIT structured lens you announce at the start and use to drive your analysis. Examples: Profit Tree (revenue - cost, broken into drivers), 3Cs (Company, Customer, Competition), 4Ps (Product, Price, Place, Promotion), Porter's Five Forces.",
           "why": "Without a framework, your analysis looks like guessing. Picking one in 30 seconds shows you have a structured approach to ambiguity — exactly what Capital One wants for someone who'll be making product + business decisions.",
-          "example": "'The question is why is the credit card business losing money. I'll use a profit tree: Revenue = interchange fees + interest + annual fees; Cost = fraud losses + rewards + acquisition + servicing. Let me walk through each and flag the biggest suspects.' That 20-second opening IS the framework — and you now have a roadmap for the next 15 minutes."
+          "example": "'The question is why is the credit card business losing money. I'll use a profit tree: Revenue = interchange fees + interest + annual fees; Cost = fraud losses + rewards + acquisition + servicing. Let me walk through each and flag the biggest suspects.' That 20-second opening IS the framework — and you now have a roadmap for the next 15 minutes.",
+          "signals": [
+            "You announce the framework by name and sketch its top-level structure in one breath before asking any clarifying questions — the interviewer can see your map immediately.",
+            "You explain in one sentence why this framework fits this problem: 'I'm using a profit tree because the question is specifically about a P&L turning negative.'",
+            "You use the framework's own labels — 'revenue driver', 'cost bucket' — as signposts throughout your analysis, so the structure stays visible as you drill down."
+          ],
+          "pitfalls": [
+            "You list questions to the interviewer before announcing any framework, so 15 minutes pass and there's still no organizing structure visible.",
+            "You name the framework — 'I'll use a profit tree' — and then immediately abandon the structure, analyzing whichever driver comes to mind next.",
+            "You use a generic framework — '3Cs' or '4Ps' — without explaining why it fits a P&L problem, signaling template-matching rather than judgment."
+          ]
         },
         {
           "term": "Defending the choice",
           "definition": "After you pick a framework or a design, the interviewer will push on it: 'Why this framework?' 'Why not 3Cs?' 'What about X?' Defending means you have reasons ready — not defensiveness, but a confident 'here's why, and here's when I'd switch'.",
           "why": "Capital One wants people who can commit under uncertainty and still update. 'Defending' is the opposite of 'abandoning the framework when challenged'. If you flip every time pushed, you signal you never had conviction.",
-          "example": "Interviewer: 'Why profit tree, not Porter's?' You: 'Porter's is better when the question is about market position or competitive dynamics. This one is specifically about a P&L that's turning negative, so starting from the P&L structure itself is more direct. If the root cause turns out to be competitive pricing pressure, I'd pivot to Porter's at that point.'"
+          "example": "Interviewer: 'Why profit tree, not Porter's?' You: 'Porter's is better when the question is about market position or competitive dynamics. This one is specifically about a P&L that's turning negative, so starting from the P&L structure itself is more direct. If the root cause turns out to be competitive pricing pressure, I'd pivot to Porter's at that point.'",
+          "signals": [
+            "When pushed, you give a criterion — 'Porter's fits market-position questions; this is a P&L problem' — not a reassertion of the same choice.",
+            "You acknowledge what the alternative gets right before explaining why this context doesn't call for it.",
+            "You name the condition under which you would switch — 'if the root cause turns out to be competitive pricing' — showing the commitment is conditional, not blind."
+          ],
+          "pitfalls": [
+            "You say 'yeah, you're right' and switch frameworks the moment the interviewer raises an alternative, signaling you had no actual reason for the first choice.",
+            "You repeat the same justification louder — 'no, I really think profit tree is better' — without engaging with what the interviewer's alternative would do better.",
+            "You defend the choice by citing authority — 'this is what I was taught' or 'that's the standard approach' — rather than explaining why it fits this specific problem."
+          ]
         },
         {
           "term": "Reason forward (when you don't know)",
           "definition": "When you hit something you haven't seen — a technology, a pattern, a business term — you do NOT stop at 'I don't know'. You say you don't know, then narrate your inference chain out loud using first principles.",
           "why": "Capital One interviewers have seen 'I don't know' kill otherwise strong loops. They don't expect you to know everything. They DO expect you to keep thinking visibly. Silence + confusion is the failure mode; narrated inference is the signal.",
-          "example": "'I haven't worked with CDC pipelines specifically. My mental model: if we need downstream systems to react to database changes in near-real-time, we need to get the change events out without double-writing from the app. That means tailing the database log somehow. I'd reach for something that reads the write-ahead log and publishes events — am I on the right track?'"
+          "example": "'I haven't worked with CDC pipelines specifically. My mental model: if we need downstream systems to react to database changes in near-real-time, we need to get the change events out without double-writing from the app. That means tailing the database log somehow. I'd reach for something that reads the write-ahead log and publishes events — am I on the right track?'",
+          "signals": [
+            "You open with a clean acknowledgment — 'I haven't worked with CDC pipelines specifically' — and then immediately shift to 'here's my mental model', so the forward motion is uninterrupted.",
+            "You narrate the inference chain as a sequence of constraints: 'I need X, which rules out Y, which points toward Z' — the interviewer can follow the logic even if the conclusion is wrong.",
+            "You close with a calibration check — 'am I on the right track?' — inviting a correction that lets you continue rather than stop."
+          ],
+          "pitfalls": [
+            "You say 'I don't know' and wait silently for the interviewer to rescue you, rather than narrating what you do know about the adjacent problem.",
+            "You jump to a product name without surfacing the inference: 'I'd probably use Debezium' — said with no explanation of what problem it solves — leaving the interviewer unable to tell whether you understand it.",
+            "You over-hedge every sentence — 'this might be wrong, I'm not sure, it could be different' — so much that no actual inference gets communicated."
+          ]
         }
       ],
       "ctaStart": "Start Mock Power Day",

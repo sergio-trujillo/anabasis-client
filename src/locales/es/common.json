@@ -529,6 +529,8 @@
     "definition": "Qué es",
     "whyMatters": "Por qué Capital One lo evalúa",
     "inPractice": "En la práctica",
+    "conceptSignals": "Señales de que lo estás haciendo bien",
+    "conceptPitfalls": "Errores comunes",
     "level": "Nivel",
     "probes": "Qué indagan",
     "tip": "Cómo leerlos",
@@ -852,43 +854,113 @@
           "term": "Tradeoffs",
           "definition": "Un tradeoff es nombrar EN VOZ ALTA el costo de una decisión técnica. 'Elijo A, lo que significa que renuncio a B.' No solo 'A es mejor', sino 'A es mejor PARA X, y acepto Y para obtenerlo'.",
           "why": "Capital One contrata ingenieros sénior para tomar decisiones con criterio bajo ambigüedad. Si nunca nombras un costo, pareces alguien que cree que siempre hay una respuesta correcta — y esa es señal junior.",
-          "example": "Débil: 'Usaría Postgres.' Fuerte: 'Elegiría Postgres sobre Cassandra acá. Gano consistencia fuerte para el ledger — cada transferencia es atómica. Pago por no escalar escrituras horizontalmente más allá de ~50K/seg sin sharding pesado; a nuestro volumen está bien, pero revisaría si chocamos con ese techo.'"
+          "example": "Débil: 'Usaría Postgres.' Fuerte: 'Elegiría Postgres sobre Cassandra acá. Gano consistencia fuerte para el ledger — cada transferencia es atómica. Pago por no escalar escrituras horizontalmente más allá de ~50K/seg sin sharding pesado; a nuestro volumen está bien, pero revisaría si chocamos con ese techo.'",
+          "signals": [
+            "Nombras la ganancia y el costo en la misma oración — 'gano X, pago Y' — sin que el entrevistador tenga que pedirte el lado negativo.",
+            "Cuantificas el costo: 'no escala más allá de ~50K escrituras/seg' en lugar de 'tiene limitaciones de escritura'.",
+            "Te anticipas al follow-up mencionando la condición bajo la cual revisarías la decisión — 'si llegamos a ese techo'."
+          ],
+          "pitfalls": [
+            "Describes solo los beneficios de tu elección y esperas que el entrevistador pregunte por el costo.",
+            "Suavizas el tradeoff con adjetivos vagos — 'un poco más lento', 'ligeramente más caro' — en lugar de un número o un umbral concreto.",
+            "Cambias de opción al primer empujón del entrevistador, revelando que el 'tradeoff' era postura y no análisis."
+          ]
         },
         {
           "term": "STAR",
           "definition": "Estructura de cuatro tiempos para responder preguntas behavioral. Situation (el contexto), Task (qué específicamente TE tocaba a ti), Action (qué hiciste — 'yo', no 'nosotros'), Result (qué cambió, con números).",
           "why": "Los entrevistadores behavioral de Capital One están entrenados para extraer STAR. Si divagas cronológicamente tienen que sacártelo — eso pierde señal. Entregar STAR limpio significa que pueden puntuarte más rápido y más profundo.",
-          "example": "'[S] Nuestro equipo de pagos pegaba 4% de fallos en spikes de holiday. [T] Yo era tech lead; mi trabajo era bajarlo de 0.5% antes de Black Friday. [A] Propuse y sacamos un circuit-breaker frente al servicio KYC downstream, luego agregué una cola por cliente para que los retries no hicieran estampida. [R] Fallos bajaron a 0.2%, y sostuvimos 3× el volumen normal en Black Friday sin paging.'"
+          "example": "'[S] Nuestro equipo de pagos pegaba 4% de fallos en spikes de holiday. [T] Yo era tech lead; mi trabajo era bajarlo de 0.5% antes de Black Friday. [A] Propuse y sacamos un circuit-breaker frente al servicio KYC downstream, luego agregué una cola por cliente para que los retries no hicieran estampida. [R] Fallos bajaron a 0.2%, y sostuvimos 3× el volumen normal en Black Friday sin paging.'",
+          "signals": [
+            "Señalas cada beat explícitamente — o con una breve pausa antes del Resultado — para que el entrevistador pueda seguir la estructura sin esfuerzo.",
+            "En el Action usas 'yo' para las decisiones y 'nosotros' para la ejecución, dejando tu contribución individual inequívoca.",
+            "Tu Resultado incluye al menos un número y describe qué cambió en el sistema, no cómo te sentiste al respecto."
+          ],
+          "pitfalls": [
+            "Pasas tres minutos en Situation y Task y comprimes todo el Action en una frase vaga — 'arreglé el problema'.",
+            "Dices 'nosotros hicimos todo' durante toda la respuesta, dejando al entrevistador sin poder separar tu contribución de la del equipo.",
+            "Terminas en el Action — 'y luego lo deployamos' — sin dar ningún Resultado, así que la historia no tiene aterrizaje."
+          ]
         },
         {
           "term": "Números donde existan",
           "definition": "Cuando tu historia contiene algo medible — latencia, errores, tamaño de equipo, impacto en dólares, porcentaje — di el número. Si no lo sabes, estima y marca que es estimación. Nunca reemplaces un número por un adjetivo.",
           "why": "En un banco, todo mapea a dólares o riesgo regulatorio. Los entrevistadores no pueden evaluar 'mucho más rápido' — pueden evaluar 'p99 pasó de 800 ms a 120 ms'. La precisión es la señal.",
-          "example": "Débil: 'Redujimos latencia significativamente.' Fuerte: 'Bajamos p99 de 800 ms a 120 ms en el camino de autorización. Aproximadamente 2 millones de transacciones por día, así que a la latencia vieja ~3.2 minutos de espera agregada de usuarios por segundo estaban encolados.'"
+          "example": "Débil: 'Redujimos latencia significativamente.' Fuerte: 'Bajamos p99 de 800 ms a 120 ms en el camino de autorización. Aproximadamente 2 millones de transacciones por día, así que a la latencia vieja ~3.2 minutos de espera agregada de usuarios por segundo estaban encolados.'",
+          "signals": [
+            "Das los números antes y después en la misma cláusula — 'p99 pasó de 800 ms a 120 ms' — sin que el entrevistador tenga que preguntar '¿cuánto?'",
+            "Cuando no tienes el número exacto, dices 'aproximadamente 2 millones de transacciones/día — verificaría, pero ese es el orden de magnitud' y sigues adelante.",
+            "Conectas el número al impacto de negocio: el p99 no es solo un stat, mapea a espera agregada de usuarios o dólares en riesgo."
+          ],
+          "pitfalls": [
+            "Usas adjetivos relativos — 'significativamente', 'dramáticamente', 'mucho mejor' — en lugar de números que tienes o podrías estimar.",
+            "Das el número del resultado pero omites la línea base, haciendo imposible evaluar la mejora.",
+            "Dices 'no recuerdo el número exacto' y lo dejas ahí, en lugar de ofrecer una estimación calibrada."
+          ]
         },
         {
           "term": "Categoría antes que producto",
           "definition": "En system design, siempre nombra la CATEGORÍA arquitectónica que necesitas antes de nombrar un producto específico. Di 'un broker de mensajería' antes de decir 'Kafka'. La categoría explica el rol; el producto es la marca que resulta que conoces.",
           "why": "Nombrar Kafka sin decir por qué se lee como cargo-cult — como si estuvieras haciendo pattern-match con una palabra del CV. Nombrar la categoría muestra que entiendes el PROBLEMA que resuelve, que es lo que realmente están probando.",
-          "example": "Débil: 'Pondría Kafka entre estos servicios.' Fuerte: 'Entre el procesador de pagos y el pipeline de fraude necesito un broker de mensajería — algo que los desacople para que un check de fraude lento no haga back-pressure a pagos, y que amortigüe los picos. En la práctica iría por Kafka acá porque también quiero replay de eventos.'"
+          "example": "Débil: 'Pondría Kafka entre estos servicios.' Fuerte: 'Entre el procesador de pagos y el pipeline de fraude necesito un broker de mensajería — algo que los desacople para que un check de fraude lento no haga back-pressure a pagos, y que amortigüe los picos. En la práctica iría por Kafka acá porque también quiero replay de eventos.'",
+          "signals": [
+            "Nombras la categoría y su rol — 'un broker de mensajería para desacoplar estos dos servicios' — antes de que el nombre del producto salga de tu boca.",
+            "Explicas en una oración por qué esta categoría encaja con el problema: 'necesito desacoplamiento async para que el back-pressure en fraude no bloquee pagos'.",
+            "Cuando nombras el producto, agregas al menos una razón diferenciadora específica a este diseño: 'Kafka acá porque también necesito replay de eventos para el pipeline de auditoría'."
+          ],
+          "pitfalls": [
+            "Abres con el nombre del producto — 'usaría Kafka' — y explicas la categoría solo si el entrevistador pregunta por qué.",
+            "Nombras la categoría pero le das un rol genérico — 'para mensajería entre servicios' — que encajaría con cualquier queue, sin anclar al problema de desacoplamiento concreto.",
+            "Nombras dos productos en el mismo aliento — 'Kafka o RabbitMQ' — sin decir cuál restricción de categoría descarta uno de los dos."
+          ]
         },
         {
           "term": "Framework (business case)",
           "definition": "En una entrevista de case, un framework es una LENTE estructurada EXPLÍCITA que anuncias al inicio y usas para dirigir tu análisis. Ejemplos: Árbol de Utilidad (revenue - cost, desglosado en drivers), 3Cs (Compañía, Cliente, Competencia), 4Ps (Producto, Precio, Plaza, Promoción), Cinco Fuerzas de Porter.",
           "why": "Sin framework, tu análisis parece adivinanza. Elegir uno en 30 segundos muestra que tienes un enfoque estructurado para la ambigüedad — exactamente lo que Capital One quiere de alguien que tomará decisiones de producto + negocio.",
-          "example": "'La pregunta es por qué el negocio de tarjetas pierde dinero. Uso un árbol de utilidad: Revenue = fees de interchange + intereses + annual fees; Cost = pérdidas por fraude + rewards + adquisición + servicio. Déjame recorrer cada uno y marcar a los sospechosos más grandes.' Esa apertura de 20 segundos ES el framework — y ya tienes un roadmap para los próximos 15 minutos."
+          "example": "'La pregunta es por qué el negocio de tarjetas pierde dinero. Uso un árbol de utilidad: Revenue = fees de interchange + intereses + annual fees; Cost = pérdidas por fraude + rewards + adquisición + servicio. Déjame recorrer cada uno y marcar a los sospechosos más grandes.' Esa apertura de 20 segundos ES el framework — y ya tienes un roadmap para los próximos 15 minutos.",
+          "signals": [
+            "Anuncias el framework por nombre y esbozas su estructura de primer nivel en un solo aliento, antes de hacer preguntas — el entrevistador puede ver tu mapa de inmediato.",
+            "Explicas en una oración por qué este framework encaja con este problema: 'uso un árbol de utilidad porque la pregunta es específicamente sobre un P&L que se está volviendo negativo'.",
+            "Usas las etiquetas propias del framework — 'driver de revenue', 'bucket de costo' — como señales a lo largo del análisis, para que la estructura se mantenga visible mientras profundizas."
+          ],
+          "pitfalls": [
+            "Haces preguntas al entrevistador antes de anunciar ningún framework, de modo que pasan 15 minutos sin que haya ninguna estructura visible.",
+            "Nombras el framework — 'uso un árbol de utilidad' — y luego lo abandonas inmediatamente, analizando el driver que se te ocurre primero.",
+            "Usas un framework genérico — '3Cs' o '4Ps' — sin explicar por qué encaja en un problema de P&L, señalando template-matching en lugar de juicio."
+          ]
         },
         {
           "term": "Defender la elección",
           "definition": "Después de elegir un framework o un diseño, el entrevistador empujará contra tu elección: '¿Por qué este framework?' '¿Por qué no 3Cs?' '¿Y X?' Defender significa que tienes razones listas — no defensividad, sino un confiado 'aquí está por qué, y aquí está cuándo cambiaría'.",
           "why": "Capital One quiere gente que pueda comprometerse bajo incertidumbre y aún así actualizar. 'Defender' es lo opuesto a 'abandonar el framework al primer empujón'. Si cambias cada vez que te empujan, señalas que nunca tuviste convicción.",
-          "example": "Entrevistador: '¿Por qué árbol de utilidad, no Porter?' Tú: 'Porter es mejor cuando la pregunta es sobre posición de mercado o dinámica competitiva. Esta es específicamente sobre un P&L volviéndose negativo, así que empezar desde la estructura del P&L es más directo. Si la causa raíz termina siendo presión competitiva de precios, pivoto a Porter en ese momento.'"
+          "example": "Entrevistador: '¿Por qué árbol de utilidad, no Porter?' Tú: 'Porter es mejor cuando la pregunta es sobre posición de mercado o dinámica competitiva. Esta es específicamente sobre un P&L volviéndose negativo, así que empezar desde la estructura del P&L es más directo. Si la causa raíz termina siendo presión competitiva de precios, pivoto a Porter en ese momento.'",
+          "signals": [
+            "Cuando te presionan, das un criterio — 'Porter encaja para preguntas de posición de mercado; esta es un problema de P&L' — no una re-afirmación de la misma elección.",
+            "Reconoces lo que la alternativa hace bien antes de explicar por qué este contexto no la requiere.",
+            "Nombras la condición bajo la cual cambiarías — 'si la causa raíz resulta ser presión competitiva de precios' — mostrando que el compromiso es condicional, no ciego."
+          ],
+          "pitfalls": [
+            "Dices 'sí, tienes razón' y cambias de framework en cuanto el entrevistador menciona una alternativa, señalando que nunca tuviste una razón real para la primera elección.",
+            "Repites la misma justificación con más énfasis — 'no, realmente creo que el árbol de utilidad es mejor' — sin abordar qué haría mejor la alternativa del entrevistador.",
+            "Defiendes la elección citando autoridad — 'así me enseñaron' o 'es el enfoque estándar' — en lugar de explicar por qué encaja en este problema específico."
+          ]
         },
         {
           "term": "Razonar hacia adelante (cuando no sabes)",
           "definition": "Cuando pegas contra algo que no has visto — una tecnología, un patrón, un término de negocio — NO te quedas en 'no sé'. Dices que no sabes, luego narras tu cadena de inferencia en voz alta usando primeros principios.",
           "why": "Los entrevistadores de Capital One han visto 'no sé' matar loops por lo demás fuertes. No esperan que sepas todo. SÍ esperan que sigas pensando visiblemente. Silencio + confusión es el modo de falla; inferencia narrada es la señal.",
-          "example": "'No he trabajado con CDC pipelines específicamente. Mi modelo mental: si necesitamos que sistemas downstream reaccionen a cambios de base de datos en tiempo casi-real, necesitamos sacar los eventos de cambio sin hacer double-write desde la app. Eso significa seguir el log de la base de datos de alguna forma. Iría por algo que lea el write-ahead log y publique eventos — ¿voy por buen camino?'"
+          "example": "'No he trabajado con CDC pipelines específicamente. Mi modelo mental: si necesitamos que sistemas downstream reaccionen a cambios de base de datos en tiempo casi-real, necesitamos sacar los eventos de cambio sin hacer double-write desde la app. Eso significa seguir el log de la base de datos de alguna forma. Iría por algo que lea el write-ahead log y publique eventos — ¿voy por buen camino?'",
+          "signals": [
+            "Abres con un reconocimiento limpio — 'no he trabajado con CDC pipelines específicamente' — y de inmediato pasas a 'mi modelo mental es...', sin que el movimiento hacia adelante se interrumpa.",
+            "Narras la cadena de inferencia como una secuencia de restricciones: 'necesito X, lo que descarta Y, lo que apunta a Z' — el entrevistador puede seguir la lógica aunque la conclusión sea parcialmente incorrecta.",
+            "Cierras con una pregunta de calibración — '¿voy por buen camino?' — que invita una corrección que te permite seguir en lugar de detenerte."
+          ],
+          "pitfalls": [
+            "Dices 'no sé' y esperas en silencio a que el entrevistador te rescate, en lugar de narrar lo que sí sabes sobre el problema adyacente.",
+            "Saltas directo a un nombre de producto — 'probablemente usaría Debezium' — sin exponer la inferencia, dejando al entrevistador sin poder distinguir si entiendes qué resuelve o solo reconoces el nombre.",
+            "Sobre-cubres cada oración con hedge — 'puede que esté equivocado, no estoy seguro, podría ser diferente' — hasta el punto en que no llega a comunicarse ninguna inferencia real."
+          ]
         }
       ],
       "ctaStart": "Iniciar Mock Power Day",

@@ -14,7 +14,7 @@ import {
 import {
   type DeepItem,
   OverviewAntiPatternsAccordion,
-  OverviewConceptsTabs,
+  OverviewConcepts,
   OverviewDeepCards,
   OverviewFingerprints,
   OverviewGlossary,
@@ -110,6 +110,12 @@ function ChapterContent({
     definition: t('overviewLabels.definition', { defaultValue: 'What it is' }),
     whyMatters: t('overviewLabels.whyMatters', { defaultValue: 'Why Capital One cares' }),
     inPractice: t('overviewLabels.inPractice', { defaultValue: 'In practice' }),
+    conceptSignals: t('overviewLabels.conceptSignals', {
+      defaultValue: "Signals you're doing it well",
+    }),
+    conceptPitfalls: t('overviewLabels.conceptPitfalls', {
+      defaultValue: 'Common mistakes',
+    }),
   }
 
   // ── Power Day chapters ────────────────────────────────────────────
@@ -202,9 +208,11 @@ function ChapterContent({
         definition: string
         why: string
         example: string
+        signals?: string[]
+        pitfalls?: string[]
       }>(t, 'sectionOverview.powerDay.concepts')
       return (
-        <OverviewConceptsTabs
+        <OverviewConcepts
           header={t('sectionOverview.powerDay.conceptsHeader')}
           sub={t('sectionOverview.powerDay.conceptsSub')}
           items={items}
@@ -212,6 +220,8 @@ function ChapterContent({
             definition: labels.definition,
             whyMatters: labels.whyMatters,
             inPractice: labels.inPractice,
+            signals: labels.conceptSignals,
+            pitfalls: labels.conceptPitfalls,
           }}
         />
       )
