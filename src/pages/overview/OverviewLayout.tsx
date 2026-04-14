@@ -143,18 +143,6 @@ function ChapterStrip({
     ? chapters.findIndex((c) => c.slug === currentPage)
     : -1
   const currentChapter = currentIdx >= 0 ? chapters[currentIdx] : null
-  const prev =
-    currentIdx > 0
-      ? chapters[currentIdx - 1]
-      : currentIdx === 0
-        ? { slug: '', titleKey: 'overviewChapters.actions.startHere', blurbKey: '', readMinutes: 0, group: chapters[0].group }
-        : null
-  const next =
-    currentIdx === -1
-      ? chapters[0]
-      : currentIdx < chapters.length - 1
-        ? chapters[currentIdx + 1]
-        : null
 
   // Trigger label — what the user sees before opening the menu.
   const triggerIndex =
@@ -262,72 +250,8 @@ function ChapterStrip({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Inline Prev / Next — only show when there's somewhere to go. */}
-        <div className="shrink-0 flex items-center gap-1">
-          <PrevNextInlineButton
-            chapter={prev}
-            baseTo={baseTo}
-            direction="prev"
-            ariaLabel={t('overviewChapters.actions.previous')}
-          />
-          <PrevNextInlineButton
-            chapter={next}
-            baseTo={baseTo}
-            direction="next"
-            ariaLabel={t('overviewChapters.actions.next')}
-          />
-        </div>
       </div>
     </div>
-  )
-}
-
-function PrevNextInlineButton({
-  chapter,
-  baseTo,
-  direction,
-  ariaLabel,
-}: {
-  chapter: Chapter | null | { slug: string; titleKey: string }
-  baseTo: string
-  direction: 'prev' | 'next'
-  ariaLabel: string
-}) {
-  const { t } = useTranslation()
-  const Icon = direction === 'prev' ? ArrowLeftIcon : ArrowRightIcon
-  const disabled = !chapter
-  const to = chapter
-    ? chapter.slug === ''
-      ? baseTo
-      : `${baseTo}/${chapter.slug}`
-    : '#'
-  const title = chapter ? t(chapter.titleKey) : ariaLabel
-
-  if (disabled) {
-    return (
-      <span
-        aria-disabled="true"
-        className={cn(
-          buttonVariants({ variant: 'ghost', size: 'sm' }),
-          'pointer-events-none opacity-40 size-8 p-0'
-        )}
-      >
-        <Icon className="size-4" />
-      </span>
-    )
-  }
-  return (
-    <Link
-      to={to}
-      aria-label={`${ariaLabel} · ${title}`}
-      title={`${ariaLabel} · ${title}`}
-      className={cn(
-        buttonVariants({ variant: 'ghost', size: 'sm' }),
-        'size-8 p-0'
-      )}
-    >
-      <Icon className="size-4" />
-    </Link>
   )
 }
 
