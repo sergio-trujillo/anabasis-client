@@ -33,7 +33,6 @@ import {
   type ChapterSlug,
   type OverviewTopic,
 } from './chapters'
-import { PrevNextNav } from './OverviewLayout'
 
 export function OverviewSubPage() {
   const { companySlug = '', topic = 'power-day', page } = useParams()
@@ -78,7 +77,6 @@ export function OverviewSubPage() {
         </div>
       </Fade>
 
-      <PrevNextNav chapters={chapters} currentSlug={current.slug} baseTo={baseTo} />
     </>
   )
 }

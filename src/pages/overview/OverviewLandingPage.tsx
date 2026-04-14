@@ -18,7 +18,6 @@ import {
   topicBlurbKey,
   topicTitleKey,
 } from './chapters'
-import { PrevNextNav } from './OverviewLayout'
 
 export function OverviewLandingPage() {
   const { companySlug = '', topic = 'power-day' } = useParams()
@@ -128,7 +127,6 @@ export function OverviewLandingPage() {
         ))
       })()}
 
-      <PrevNextNav chapters={chapters} currentSlug={undefined} baseTo={baseTo} />
     </>
   )
 }

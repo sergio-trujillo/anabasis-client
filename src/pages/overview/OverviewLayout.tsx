@@ -4,11 +4,9 @@
 //   1. CtaBar            — sticky top-0, "Inicia un mock…" + 3 action buttons
 //   2. ChapterStrip      — sticky below CtaBar, horizontal scrollable pills
 //   3. <Outlet />        — full-width content
-//   4. PrevNextNav       — rendered inside each page
+//   (Navigation between chapters is handled entirely by the CtaBar dropdown.)
 
 import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
   BookOpenIcon,
   CheckIcon,
   ChevronDownIcon,
@@ -262,92 +260,6 @@ function ChapterStrip({
  */
 function stripIndex(raw: string): string {
   return raw.replace(/^\s*\d+\s*[·•·]\s*/, '').trim()
-}
-
-export function PrevNextNav({
-  chapters,
-  currentSlug,
-  baseTo,
-}: {
-  chapters: Chapter[]
-  currentSlug: string | undefined
-  baseTo: string
-}) {
-  const { t } = useTranslation()
-  const idx =
-    currentSlug === undefined
-      ? -1
-      : chapters.findIndex((c) => c.slug === currentSlug)
-  const prev = idx > 0 ? chapters[idx - 1] : null
-  const next =
-    idx === -1
-      ? chapters[0]
-      : idx < chapters.length - 1
-        ? chapters[idx + 1]
-        : null
-
-  if (!prev && !next) return null
-
-  return (
-    <div className="pt-6 mt-8 border-t border-border/60">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <PrevNextCard
-          chapter={prev}
-          baseTo={baseTo}
-          direction="prev"
-          label={t('overviewChapters.actions.previous')}
-        />
-        <PrevNextCard
-          chapter={next}
-          baseTo={baseTo}
-          direction="next"
-          label={t('overviewChapters.actions.next')}
-        />
-      </div>
-    </div>
-  )
-}
-
-function PrevNextCard({
-  chapter,
-  baseTo,
-  direction,
-  label,
-}: {
-  chapter: Chapter | null
-  baseTo: string
-  direction: 'prev' | 'next'
-  label: string
-}) {
-  const { t } = useTranslation()
-  if (!chapter) {
-    return <div className="hidden md:block" />
-  }
-  const Icon = direction === 'prev' ? ArrowLeftIcon : ArrowRightIcon
-  return (
-    <Link
-      to={`${baseTo}/${chapter.slug}`}
-      className={cn(
-        'group rounded-xl border border-border/60 bg-card/40 hover:bg-card hover:border-primary/40 transition-colors p-4',
-        'flex items-start gap-3',
-        direction === 'next' && 'md:text-right md:flex-row-reverse'
-      )}
-    >
-      <Icon
-        className={cn(
-          'shrink-0 size-5 mt-0.5 text-muted-foreground group-hover:text-primary transition-colors'
-        )}
-      />
-      <div className="min-w-0 flex-1">
-        <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-          {label}
-        </div>
-        <div className="text-sm font-medium mt-0.5 truncate">
-          {t(chapter.titleKey)}
-        </div>
-      </div>
-    </Link>
-  )
 }
 
 export { Separator }
