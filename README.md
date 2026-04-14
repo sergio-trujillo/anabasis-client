@@ -1,117 +1,130 @@
-# Praxema Client
+# anabasis-client
 
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)
-![Tailwind](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white)
-![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-latest-000000?logo=shadcnui&logoColor=white)
-![Tracks](https://img.shields.io/badge/Tracks-12-blue)
-![License](https://img.shields.io/badge/License-Proprietary-red)
+<p align="left">
+  <img alt="React" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white" />
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white" />
+  <img alt="Tailwind" src="https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white" />
+  <img alt="shadcn/ui" src="https://img.shields.io/badge/shadcn%2Fui-latest-000000?logo=shadcnui&logoColor=white" />
+  <img alt="i18n" src="https://img.shields.io/badge/i18n-en%20%2B%20es-informational" />
+  <img alt="Part of" src="https://img.shields.io/badge/Part%20of-Anabasis-black" />
+  <img alt="License" src="https://img.shields.io/badge/License-Proprietary-red" />
+</p>
 
-Frontend for the **Praxema** learning platform — a local-first, gamified environment for practicing technical interview skills with interactive lessons, algorithm animations, and guided edge-case feedback.
+> Frontend for **Anabasis** — local-first, company-specific interview prep. One company, one loop, one interview day at a time. The campaign screen: pick a target company, drill the loop, simulate the day, ship ready.
+
+Sibling to [`anabasis-server`](https://github.com/sergio-trujillo/anabasis-server), [`anabasis-content`](https://github.com/sergio-trujillo/anabasis-content), and [`anabasis-llm`](https://github.com/sergio-trujillo/anabasis-llm). **Not a monorepo.**
+
+---
+
+## What it does
+
+- **Catalog dashboard (`/`)** — featured active campaign, stats strip, coming-soon roster with Tilt cards.
+- **Company campaign page (`/:companySlug`)** — the hub for a target company. Phases, sections, mock launch buttons.
+- **Docs-style overview chapters** (`/:companySlug/overview/:topic/:page`) — paper-format reading for GCA, Power Day, and Company context. Each chapter renders one focused section with Prev/Next navigation.
+- **Concepts reader** (`.../power-day/concepts`) — one-at-a-time book UI with a table of contents and in-URL position (`?c=N`). Each concept carries a definition, "why it matters", a worked example, 3 signals of strong execution, and 3 common mistakes.
+- **Interviewer chat** — multi-turn simulated interview. The server owns turn counting; the client renders streaming messages and an end-of-session judge report. Sessions run in either English or Spanish per the UI language.
+- **Mock loops** — timed Mock GCA (70 min) and Mock Power Day (4-round onsite sampler).
+- **Exercises** — MCQ, open-prompt, code (Monaco + `javac` + JUnit 5), and interviewer-chat exercises, all loaded from `anabasis-content/` via tRPC.
 
 ## Stack
 
 | Technology | Purpose |
 |---|---|
-| **React 19** | UI framework |
-| **Vite 7** | Build tool + dev server |
-| **shadcn/ui (base-mira)** | Core component library (30+ components, base-ui primitives) |
-| **Animate UI** | Animated components (counters, particles, flip cards) |
-| **prompt-kit** | Markdown renderer + code blocks |
-| **Kibo UI** | Contribution graph + status indicators |
-| **Shiki** | Syntax highlighting (theme-aware: one-dark-pro, vitesse-dark, github-light) |
-| **Recharts** | Dashboard charts (via shadcn Charts) |
-| **Monaco Editor** | VSCode-like code editor |
-| **Motion** | Algorithm visualizer animations |
-| **D3** | Tree/graph layout computation |
-| **tRPC + React Query** | Type-safe API client with caching |
-| **React Router** | Client-side routing |
-| **Zustand** | UI state management (persisted) |
-| **i18next** | Internationalization (en/es) |
-| **Tailwind CSS 4** | Utility-first styling (OKLCH/hex custom properties) |
+| React 19 (compiler mode) | UI — no `useMemo`/`useCallback`, no `forwardRef`, no fetch `useEffect` |
+| Vite 7 | Dev server (port `5174`) + bundler |
+| shadcn/ui + base-ui primitives | Core components (30+) |
+| Animate UI + MagicCard + BorderBeam | Dashboard-grade motion |
+| Monaco Editor | Code exercises |
+| shadcn.io/ai chat | Interviewer UX (Conversation, Message, Reasoning, PromptInput) |
+| tRPC + React Query | End-to-end type-safe API client |
+| React Router 7 | Client routing |
+| i18next | Bilingual UI (EN + ES) |
+| Tailwind CSS 4 | Utility styling with OKLCH/hex custom properties |
+| Biome | Format + lint (no ESLint, no Prettier) |
 
-## Features
-
-- **Dashboard** — XP, streaks, level progression, track cards, contribution heatmap
-- **Sidebar** — Patterns grouped by difficulty level with lock/unlock status
-- **Lesson View** — Full-width markdown lessons with embedded animations
-- **Problem View** — Resizable split panels (description + editor + output) with tabs (Description / Solution / Visualize)
-- **Output Layout** — Toggle output panel below or right of editor (persisted in localStorage)
-- **Command Palette** — `Cmd+K` search across patterns and problems
-- **12 Tracks** — Java Language, Data Structures, Standard Library, Tricky Syntax, Big O, FP, Clean Code, Java Patterns, Algorithms, Concurrency, Classic AI, Design Patterns
-- **Theme Switcher** — 8 base + 4 seasonal themes via dropdown or `D` key
-- **Syntax Highlighting** — Shiki code blocks sync with active theme
-- **Gamification** — XP system, 10 levels, daily streaks, 12+ badges
-- **Algorithm Animations** — Step-by-step visualizations with educational narration
-- **Edge Case Guidance** — Progressive hints (why, check, hint) on failed tests
-- **i18n** — English and Spanish UI
-
-## Getting Started
+## Quick start
 
 ```bash
-# Install dependencies
 bun install
-
-# Start both client and server (server must be sibling at ../praxema-server)
-bun run dev
-
-# Start client only
-bun run dev:client
-
-# Type check
+bun run dev         # Vite on :5174 — requires anabasis-server running on :3001
 bun run typecheck
-
-# Lint
-bun run lint
+bun run build
+bunx biome check --write src/   # format + import sort
 ```
 
-## Project Structure
+From the parent workspace, `./start-anabasis` boots both client and server together.
+
+## Project structure
 
 ```
 src/
 ├── components/
-│   ├── layout/          # AppLayout, AppHeader, CommandPalette
-│   ├── lesson/          # LessonView
-│   ├── problem/         # ProblemList, ProblemView
-│   ├── ui/              # shadcn components (code-block, markdown, shadcn-markdown)
-│   ├── animate-ui/      # Animate UI components
-│   ├── kibo-ui/         # Kibo UI components
-│   ├── theme-provider   # Named theme system (8+ themes, persisted)
-│   └── app-sidebar.tsx  # Sidebar with tracks/patterns
-├── pages/               # Route pages (Dashboard, Lesson, Problem, etc.)
-├── store/               # Zustand stores (ui-store: track, pattern, outputPosition)
-├── hooks/               # Custom hooks
-├── lib/                 # tRPC client, utils
-└── main.tsx             # Entry point with providers
+│   ├── catalog/         # CatalogHero, StatsRow, FeaturedCampaignCard, ComingSoonGrid
+│   ├── layout/          # AppLayout, AppHeader, SidebarCompanyItem (collapsible phases)
+│   ├── chat/            # Conversation, Message, PromptInput, Reasoning, Loader
+│   ├── exercise/        # CodeExercise, McqExercise, OpenPromptExercise, InterviewerChatExercise
+│   ├── problem/         # ExercisesDataTable (TanStack)
+│   ├── animate-ui/      # motion primitives (Fade, Shine, Tilt, GradientText)
+│   └── ui/              # shadcn primitives
+├── pages/
+│   ├── CatalogPage.tsx      # dashboard at /
+│   ├── CompanyPage.tsx      # /:companySlug
+│   ├── SectionPage.tsx      # legacy all-in-one overview + paper-format renderers
+│   ├── ExercisePage.tsx     # individual exercise runner
+│   ├── MockExamPage.tsx     # GCA mock dashboard
+│   ├── MockExamRunnerPage.tsx
+│   ├── MockPowerDayPage.tsx
+│   ├── MockPowerDayRunnerPage.tsx
+│   ├── PracticePage.tsx     # random practice
+│   └── overview/
+│       ├── OverviewLayout.tsx    # chapter shell with dropdown nav
+│       ├── OverviewSubPage.tsx   # dispatches topic+slug to a renderer
+│       ├── OverviewLandingPage.tsx
+│       ├── PrevNextNav.tsx       # bottom chapter pager
+│       └── chapters.ts           # chapter registry (company / power-day / gca)
+├── hooks/
+│   └── useInterviewerChat.ts    # state + refs for a chat session (Opus-reviewed)
+├── locales/
+│   ├── en/common.json           # full EN string table
+│   └── es/common.json           # full ES string table (tuteo, no voseo)
+├── lib/                         # trpc client, i18n setup, utils
+└── router.tsx                   # all routes
 ```
 
-## Theming
+## i18n
 
-3 named themes defined as CSS custom property classes in `index.css`:
+All user-facing strings live in `src/locales/{en,es}/common.json`. Convention:
 
-| Theme | CSS Class | Mode | Shiki Theme | Icon |
-|---|---|---|---|---|
-| Lone Dusk Bro | `.theme-lone-dusk-bro` | dark | one-dark-pro | MoonStar |
-| Groovebox | `.theme-groovebox` | dark | vitesse-dark | Sunset |
-| Totally Legit IDE | `.theme-legit-ide` | light | github-light | Sun |
-
-Theme provider applies both the theme class and `dark`/`light` class to `<html>`. Persisted in localStorage.
+- UI language toggles between English and **neutral-professional Spanish with tuteo** ("tú", never "vos/usted").
+- Industry-standard technical terms stay in English (stateless, throughput, tradeoff, framework, stream, pipeline, retry, rollback, stakeholder, compliance, peer, partition, latency).
+- Chapter content (overview pages) is fully bilingual including every paper-format bullet.
+- Interviewer chat sessions run entirely in the selected language — the server picks the appropriate system prompt template based on the locale sent with `chat.start`.
 
 ## Routes
 
 | Route | Page |
 |---|---|
-| `/` | Dashboard — stats, tracks, progress |
-| `/track/:track` | Track dashboard with pattern grid |
-| `/pattern/:pattern/lesson` | Lesson view with markdown + animation |
-| `/pattern/:pattern/problems` | Problem list for the pattern |
-| `/problem/:slug` | Problem IDE (description + editor + output) |
-| `/progress` | Progress dashboard |
+| `/` | Catalog (hero + featured + coming-soon grid) |
+| `/:companySlug` | Company campaign hub |
+| `/:companySlug/overview/:topic` | Chapter landing (power-day / gca / company) |
+| `/:companySlug/overview/:topic/:page` | Individual chapter (paper format + Prev/Next) |
+| `/:companySlug/practice` | Random practice |
+| `/:companySlug/mock-gca` / `/mock-gca/:mockId` | Mock GCA dashboard + runner |
+| `/:companySlug/mock-power-day` / `/mock-power-day/:mockId` | Mock Power Day dashboard + runner |
+| `/:companySlug/exercise/:exerciseId` | Single exercise |
+| `/:companySlug/section/:sectionId` | Legacy section view |
 
-## Related Repos
+## Conventions (from CLAUDE.md)
 
-| Repo | Description |
-|---|---|
-| [praxema-server](https://github.com/sergio-trujillo/praxema-server) | Express + tRPC backend |
-| [praxema-content](https://github.com/sergio-trujillo/praxema-content) | Learning tracks, problems, lessons |
+- TypeScript strict. No manually shared types — let tRPC infer them.
+- Components ≤150 lines. Extract into `components/<feature>/` when they grow.
+- Domain-specific components (`BehavioralExerciseCard`, `TestCaseRow`), not generics.
+- Biome for format/lint. No ESLint, no Prettier.
+- React 19 compiler mode — skip `useMemo`/`useCallback`, derive in render.
+
+---
+
+## License
+
+**Proprietary.** Single-author personal project, not open-sourced. No public `LICENSE` file. See the workspace `STATUS.md` decision D19.
