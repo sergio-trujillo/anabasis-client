@@ -3,31 +3,27 @@
 //
 // Data: trpc.companies.list. Capital One is the only `active` campaign in v1;
 // 5 `coming-soon` entries render disabled.
-// Capital One expand shows loop.json phases + sections, each a clickable link
-// back to the company page (anchored later if we add per-section deep links).
 
-import { Link, useLocation, useNavigate } from 'react-router'
+import { LockIcon, MountainSnowIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { BookOpenIcon, BuildingIcon, LockIcon, MountainSnowIcon } from 'lucide-react'
+import { useNavigate } from 'react-router'
+import type { Company } from '@/components/catalog/types'
+import { NavUser } from '@/components/nav-user'
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
+  SidebarMenuItem,
+  SidebarRail,
 } from '@/components/ui/sidebar'
-import { Badge } from '@/components/ui/badge'
-import { NavUser } from '@/components/nav-user'
 import { trpc } from '@/lib/trpc'
+import { SidebarCompanyItem } from './layout/SidebarCompanyItem'
 
 // Placeholder user for the sidebar footer — Anabasis is single-user local,
 // no auth (STATUS OD-1). Treat this as identifying the machine, not a person.
@@ -37,20 +33,11 @@ const PLACEHOLDER_USER = {
   avatar: '',
 }
 
-type Company = {
-  slug: string
-  name: string
-  status: 'active' | 'coming-soon'
-  tagline: string
-  accentColor?: string
-}
-
 export function AppSidebar() {
   const { t } = useTranslation()
-  const location = useLocation()
   const navigate = useNavigate()
   const companiesQuery = trpc.companies.list.useQuery()
-  const companies = (companiesQuery.data as Company[] | undefined) ?? []
+  const companies = companiesQuery.data ?? []
   const active = companies.filter((c) => c.status === 'active')
   const comingSoon = companies.filter((c) => c.status === 'coming-soon')
 
@@ -82,15 +69,13 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{t('nav.activeCampaigns', { defaultValue: 'Active campaigns' })}</SidebarGroupLabel>
+          <SidebarGroupLabel>
+            {t('nav.activeCampaigns', { defaultValue: 'Active campaigns' })}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {active.map((company) => (
-                <CompanyMenuItem
-                  key={company.slug}
-                  company={company}
-                  currentPath={location.pathname}
-                />
+                <SidebarCompanyItem key={company.slug} company={company as Company} />
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
@@ -98,7 +83,9 @@ export function AppSidebar() {
 
         {comingSoon.length > 0 && (
           <SidebarGroup>
-            <SidebarGroupLabel>{t('nav.comingSoon', { defaultValue: 'Coming soon' })}</SidebarGroupLabel>
+            <SidebarGroupLabel>
+              {t('nav.comingSoon', { defaultValue: 'Coming soon' })}
+            </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {comingSoon.map((c) => (
@@ -121,101 +108,4 @@ export function AppSidebar() {
       <SidebarRail />
     </Sidebar>
   )
-}
-
-function CompanyMenuItem({
-  company,
-  currentPath,
-}: {
-  company: Company
-  currentPath: string
-}) {
-  const navigate = useNavigate()
-  const { t } = useTranslation()
-  const companyQuery = trpc.companies.get.useQuery({ slug: company.slug })
-  const loop = (companyQuery.data as { loop: Loop | null } | undefined)?.loop
-
-  return (
-    <SidebarMenuItem>
-      <SidebarMenuButton
-        onClick={() => navigate(`/${company.slug}`)}
-        isActive={currentPath === `/${company.slug}` || currentPath.startsWith(`/${company.slug}/`)}
-        tooltip={company.name}
-      >
-        <BuildingIcon className="size-4" />
-        <span>{company.name}</span>
-        <Badge
-          variant="outline"
-          className="ml-auto text-[10px]"
-          style={{ borderColor: company.accentColor }}
-        >
-          active
-        </Badge>
-      </SidebarMenuButton>
-
-      {loop && (
-        <SidebarMenuSub>
-          <SidebarMenuSubItem>
-            <SidebarMenuSubButton
-              onClick={() => navigate(`/${company.slug}`)}
-              isActive={currentPath === `/${company.slug}`}
-            >
-              <BookOpenIcon className="size-3" />
-              {t('sidebar.companyOverview', { defaultValue: 'Overview' })}
-            </SidebarMenuSubButton>
-          </SidebarMenuSubItem>
-          {loop.phases.map((phase) => (
-            <SidebarMenuSubItem key={phase.id}>
-              <div className="px-2 py-1 text-muted-foreground font-medium text-xs mt-2">
-                {phase.name}
-              </div>
-              <ul className="space-y-0.5">
-                {phase.sections.map((section) => {
-                  // Mock sections have their own timed routes; everything
-                  // else goes through the section page which either redirects
-                  // or lists exercises.
-                  const href =
-                    section.id === 'gca-mock'
-                      ? `/${company.slug}/mock-gca`
-                      : section.id === 'power-day-mock'
-                        ? `/${company.slug}/mock-power-day`
-                        : section.id === 'gca-overview'
-                          ? `/${company.slug}/overview/gca`
-                          : section.id === 'power-day-overview'
-                            ? `/${company.slug}/overview/power-day`
-                            : `/${company.slug}/section/${section.id}`
-                  const isActive = currentPath === href
-                  return (
-                    <li key={section.id}>
-                      <Link
-                        to={href}
-                        className={
-                          'block pl-5 pr-2 py-1 text-xs rounded-md truncate transition-colors ' +
-                          (isActive
-                            ? 'bg-muted text-foreground'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-muted')
-                        }
-                      >
-                        {section.name}
-                      </Link>
-                    </li>
-                  )
-                })}
-              </ul>
-            </SidebarMenuSubItem>
-          ))}
-        </SidebarMenuSub>
-      )}
-    </SidebarMenuItem>
-  )
-}
-
-type Loop = {
-  displayName: string
-  phases: Array<{
-    id: string
-    name: string
-    description: string
-    sections: Array<{ id: string; name: string; kind: string }>
-  }>
 }

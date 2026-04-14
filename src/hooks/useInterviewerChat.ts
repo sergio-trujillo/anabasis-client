@@ -56,7 +56,7 @@ export function useInterviewerChat() {
   const sendMut = trpc.chat.send.useMutation();
 
   const start = useCallback(
-    async (scenarioId: string) => {
+    async (scenarioId: string, locale: "en" | "es" = "en") => {
       // Reset for a fresh session.
       closedRef.current = false;
       sendingRef.current = false;
@@ -68,7 +68,7 @@ export function useInterviewerChat() {
         setCandidateCount(0);
       }
 
-      const res = await startMut.mutateAsync({ scenarioId });
+      const res = await startMut.mutateAsync({ scenarioId, locale });
 
       if (!isMountedRef.current) return;
       setSessionId(res.sessionId);

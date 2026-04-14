@@ -205,10 +205,10 @@ function ChapterStrip({
             {groups.map((group) => (
               <div key={group.id}>
                 <DropdownMenuSeparator />
-                <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/70 font-semibold">
-                  {t(group.labelKey)}
-                </DropdownMenuLabel>
                 <DropdownMenuGroup>
+                  <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/70 font-semibold">
+                    {t(group.labelKey)}
+                  </DropdownMenuLabel>
                   {group.items.map(({ chapter, index }) => {
                     const isActive = chapter.slug === currentPage
                     return (

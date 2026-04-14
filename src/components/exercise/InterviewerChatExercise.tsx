@@ -6,6 +6,13 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "@server/routers/_app";
+
+type Bilingual = { en: string; es: string };
+
+function resolveText(v: string | Bilingual, locale: "en" | "es"): string {
+  if (typeof v === "string") return v;
+  return v[locale] ?? v.en;
+}
 import { Conversation } from "@/components/chat/Conversation";
 import { Loader } from "@/components/chat/Loader";
 import { Message } from "@/components/chat/Message";
@@ -17,20 +24,23 @@ type ExerciseOutput = inferRouterOutputs<AppRouter>["exercises"]["get"];
 type Scenario = Extract<ExerciseOutput, { type: "interviewer-chat" }>;
 
 export function InterviewerChatExercise({ exercise }: { exercise: Scenario }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale: "en" | "es" = i18n.language.startsWith("es") ? "es" : "en";
   const chat = useInterviewerChat();
 
   useEffect(() => {
-    chat.start(exercise.id);
+    chat.start(exercise.id, locale);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exercise.id]);
+  }, [exercise.id, locale]);
+
+  const personaText = resolveText(exercise.persona as string | Bilingual, locale);
 
   return (
     <div className="rounded-xl border border-border bg-card overflow-hidden flex flex-col h-[70vh]">
       <div className="px-4 py-3 border-b border-border flex items-center justify-between bg-card">
         <div className="text-sm text-muted-foreground line-clamp-1">
           <span className="text-muted-foreground/60 mr-1">{t("interviewerChat.personaLabel")}</span>
-          {exercise.persona.slice(0, 80)}…
+          {personaText.slice(0, 80)}…
         </div>
         <div className="text-xs text-muted-foreground font-mono">
           {t("interviewerChat.turnCounter", {
