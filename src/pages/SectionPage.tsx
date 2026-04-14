@@ -7,1971 +7,2021 @@
 // table of exercises (type, difficulty, title, quick-open link).
 // Praxema-style polish via Fade + GradientText + MagicCard.
 
-import { Link, Navigate, useParams, useSearchParams } from 'react-router'
-import { useTranslation } from 'react-i18next'
 import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  BookOpenIcon,
-  BotIcon,
-  BracesIcon,
-  BriefcaseIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  ClockIcon,
-  FileCode2Icon,
-  MessageSquareIcon,
-  SparklesIcon,
-  TimerIcon,
-  UsersIcon,
-} from 'lucide-react'
-import { Fade } from '@/components/animate-ui/primitives/effects/fade'
-import { GradientText } from '@/components/animate-ui/primitives/texts/gradient'
-import { ExercisesDataTable } from '@/components/problem/ExercisesDataTable'
-import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern'
-import { Badge } from '@/components/ui/badge'
-import { BorderBeam } from '@/components/ui/border-beam'
-import { buttonVariants } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { MagicCard } from '@/components/ui/magic-card'
-import { Skeleton } from '@/components/ui/skeleton'
+	ArrowLeftIcon,
+	ArrowRightIcon,
+	BookOpenIcon,
+	BotIcon,
+	BracesIcon,
+	BriefcaseIcon,
+	ChevronDownIcon,
+	ChevronRightIcon,
+	ClockIcon,
+	FileCode2Icon,
+	MessageSquareIcon,
+	SparklesIcon,
+	TimerIcon,
+	UsersIcon,
+} from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Link, Navigate, useParams, useSearchParams } from "react-router";
+import { Fade } from "@/components/animate-ui/primitives/effects/fade";
+import { GradientText } from "@/components/animate-ui/primitives/texts/gradient";
+import { ExercisesDataTable } from "@/components/problem/ExercisesDataTable";
+import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
+import { Badge } from "@/components/ui/badge";
+import { BorderBeam } from "@/components/ui/border-beam";
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
-import { Progress } from '@/components/ui/progress'
-import { Separator } from '@/components/ui/separator'
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { MagicCard } from "@/components/ui/magic-card";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { cn } from '@/lib/utils'
-import { trpc } from '@/lib/trpc'
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { trpc } from "@/lib/trpc";
+import { cn } from "@/lib/utils";
 
 function iconForKind(kind: string) {
-  switch (kind) {
-    case 'code':
-      return FileCode2Icon
-    case 'code+defense':
-      return BracesIcon
-    case 'timed':
-    case 'mock-loop':
-      return TimerIcon
-    case 'lesson+drills':
-      return BookOpenIcon
-    case 'interviewer-chat':
-      return BotIcon
-    case 'behavioral':
-      return UsersIcon
-    case 'business-case':
-      return BriefcaseIcon
-    default:
-      return MessageSquareIcon
-  }
+	switch (kind) {
+		case "code":
+			return FileCode2Icon;
+		case "code+defense":
+			return BracesIcon;
+		case "timed":
+		case "mock-loop":
+			return TimerIcon;
+		case "lesson+drills":
+			return BookOpenIcon;
+		case "interviewer-chat":
+			return BotIcon;
+		case "behavioral":
+			return UsersIcon;
+		case "business-case":
+			return BriefcaseIcon;
+		default:
+			return MessageSquareIcon;
+	}
 }
 
 function kindLabel(kind: string): string {
-  switch (kind) {
-    case 'code':
-      return 'Coding'
-    case 'code+defense':
-      return 'Coding + defense'
-    case 'timed':
-      return 'Timed exam'
-    case 'mock-loop':
-      return 'Mock loop'
-    case 'lesson+drills':
-      return 'Lesson + drills'
-    case 'interviewer-chat':
-      return 'Interviewer chat'
-    case 'behavioral':
-      return 'Behavioral'
-    case 'business-case':
-      return 'Business case'
-    default:
-      return kind
-  }
+	switch (kind) {
+		case "code":
+			return "Coding";
+		case "code+defense":
+			return "Coding + defense";
+		case "timed":
+			return "Timed exam";
+		case "mock-loop":
+			return "Mock loop";
+		case "lesson+drills":
+			return "Lesson + drills";
+		case "interviewer-chat":
+			return "Interviewer chat";
+		case "behavioral":
+			return "Behavioral";
+		case "business-case":
+			return "Business case";
+		default:
+			return kind;
+	}
 }
 
 type ExerciseListItem = {
-  id: string
-  type: 'mcq' | 'code' | 'open-prompt' | 'interviewer-chat'
-  section: string
-  title: { en: string; es?: string | null }
-  difficulty?: string
-}
+	id: string;
+	type: "mcq" | "code" | "open-prompt" | "interviewer-chat";
+	section: string;
+	title: { en: string; es?: string | null };
+	difficulty?: string;
+};
 
 export function SectionPage() {
-  const { t } = useTranslation()
-  const { companySlug = '', sectionId = '' } = useParams()
+	const { t } = useTranslation();
+	const { companySlug = "", sectionId = "" } = useParams();
 
-  // Redirect mock sections to their dedicated timed pages.
-  if (sectionId === 'gca-mock') {
-    return <Navigate to={`/${companySlug}/mock-gca`} replace />
-  }
-  if (sectionId === 'power-day-mock') {
-    return <Navigate to={`/${companySlug}/mock-power-day`} replace />
-  }
+	// Redirect mock sections to their dedicated timed pages.
+	if (sectionId === "gca-mock") {
+		return <Navigate to={`/${companySlug}/mock-gca`} replace />;
+	}
+	if (sectionId === "power-day-mock") {
+		return <Navigate to={`/${companySlug}/mock-power-day`} replace />;
+	}
 
-  const companyQuery = trpc.companies.get.useQuery({ slug: companySlug })
-  const exercisesQuery = trpc.exercises.list.useQuery()
+	const companyQuery = trpc.companies.get.useQuery({ slug: companySlug });
+	const exercisesQuery = trpc.exercises.list.useQuery();
 
-  const loop = (
-    companyQuery.data as
-      | {
-          loop: {
-            phases: Array<{
-              id: string
-              name: string
-              sections: Array<{ id: string; name: string; kind: string }>
-            }>
-          } | null
-        }
-      | undefined
-  )?.loop
+	const loop = (
+		companyQuery.data as
+			| {
+					loop: {
+						phases: Array<{
+							id: string;
+							name: string;
+							sections: Array<{ id: string; name: string; kind: string }>;
+						}>;
+					} | null;
+			  }
+			| undefined
+	)?.loop;
 
-  const section = loop?.phases
-    .flatMap((p) => p.sections.map((s) => ({ ...s, phaseName: p.name })))
-    .find((s) => s.id === sectionId)
+	const section = loop?.phases
+		.flatMap((p) => p.sections.map((s) => ({ ...s, phaseName: p.name })))
+		.find((s) => s.id === sectionId);
 
-  const allExercises = (exercisesQuery.data as ExerciseListItem[] | undefined) ?? []
-  // Sort easy → medium → hard so the progression feels like Praxema
-  // (ramp-up instead of random order). Exercises without difficulty
-  // sink to the bottom.
-  const DIFF_ORDER: Record<string, number> = { easy: 0, medium: 1, hard: 2 }
-  const filtered = allExercises
-    .filter((ex) => ex.section === sectionId)
-    .slice()
-    .sort((a, b) => {
-      const da = DIFF_ORDER[a.difficulty ?? ''] ?? 99
-      const db = DIFF_ORDER[b.difficulty ?? ''] ?? 99
-      return da - db
-    })
+	const allExercises =
+		(exercisesQuery.data as ExerciseListItem[] | undefined) ?? [];
+	// Sort easy → medium → hard so the progression feels like Praxema
+	// (ramp-up instead of random order). Exercises without difficulty
+	// sink to the bottom.
+	const DIFF_ORDER: Record<string, number> = { easy: 0, medium: 1, hard: 2 };
+	const filtered = allExercises
+		.filter((ex) => ex.section === sectionId)
+		.slice()
+		.sort((a, b) => {
+			const da = DIFF_ORDER[a.difficulty ?? ""] ?? 99;
+			const db = DIFF_ORDER[b.difficulty ?? ""] ?? 99;
+			return da - db;
+		});
 
-  const isPending = companyQuery.isPending || exercisesQuery.isPending
-  const Icon = iconForKind(section?.kind ?? 'default')
+	const isPending = companyQuery.isPending || exercisesQuery.isPending;
+	const Icon = iconForKind(section?.kind ?? "default");
 
-  return (
-    <div className="flex-1 overflow-y-auto">
-      <div className="relative min-h-[calc(100vh-3.5rem)]">
-        <AnimatedGridPattern
-          numSquares={36}
-          maxOpacity={0.06}
-          duration={3}
-          className="absolute inset-0 -z-10 [mask-image:radial-gradient(700px_circle_at_top,white,transparent)]"
-        />
-        <div className="relative p-2 w-full space-y-4">
-      {isPending && (
-        <div className="space-y-4">
-          <Skeleton className="h-10 w-80" />
-          <Skeleton className="h-24 w-full rounded-xl" />
-          <Skeleton className="h-64 w-full rounded-xl" />
-        </div>
-      )}
+	return (
+		<div className="flex-1 overflow-y-auto">
+			<div className="relative min-h-[calc(100vh-3.5rem)]">
+				<AnimatedGridPattern
+					numSquares={36}
+					maxOpacity={0.06}
+					duration={3}
+					className="absolute inset-0 -z-10 [mask-image:radial-gradient(700px_circle_at_top,white,transparent)]"
+				/>
+				<div className="relative p-2 w-full space-y-4">
+					{isPending && (
+						<div className="space-y-4">
+							<Skeleton className="h-10 w-80" />
+							<Skeleton className="h-24 w-full rounded-xl" />
+							<Skeleton className="h-64 w-full rounded-xl" />
+						</div>
+					)}
 
-      {!isPending && (
-        <>
-          <Fade>
-            <header className="flex items-center gap-3">
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-border">
-                <Icon className="size-4" />
-              </span>
-              <div className="flex-1 min-w-0">
-                <div className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                  <Link
-                    to={`/${companySlug}`}
-                    className="hover:text-foreground transition-colors"
-                  >
-                    {(companyQuery.data as { company?: { name?: string } } | undefined)?.company
-                      ?.name ?? 'Company'}
-                  </Link>
-                  {section && (
-                    <>
-                      <ChevronRightIcon className="size-3" />
-                      <span>{section.phaseName}</span>
-                    </>
-                  )}
-                </div>
-                <h1 className="text-lg font-bold font-heading tracking-tight truncate leading-tight">
-                  <GradientText
-                    text={section?.name ?? sectionId}
-                    gradient="linear-gradient(90deg, var(--primary) 0%, var(--chart-2) 50%, var(--primary) 100%)"
-                  />
-                </h1>
-              </div>
-              {section && (
-                <Badge variant="outline" className="text-[10px] shrink-0">
-                  {kindLabel(section.kind)}
-                </Badge>
-              )}
-            </header>
-          </Fade>
+					{!isPending && (
+						<>
+							<Fade>
+								<header className="flex items-center gap-3">
+									<span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-border">
+										<Icon className="size-4" />
+									</span>
+									<div className="flex-1 min-w-0">
+										<div className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+											<Link
+												to={`/${companySlug}`}
+												className="hover:text-foreground transition-colors"
+											>
+												{(
+													companyQuery.data as
+														| { company?: { name?: string } }
+														| undefined
+												)?.company?.name ?? "Company"}
+											</Link>
+											{section && (
+												<>
+													<ChevronRightIcon className="size-3" />
+													<span>{section.phaseName}</span>
+												</>
+											)}
+										</div>
+										<h1 className="text-lg font-bold font-heading tracking-tight truncate leading-tight">
+											<GradientText
+												text={section?.name ?? sectionId}
+												gradient="linear-gradient(90deg, var(--primary) 0%, var(--chart-2) 50%, var(--primary) 100%)"
+											/>
+										</h1>
+									</div>
+									{section && (
+										<Badge variant="outline" className="text-[10px] shrink-0">
+											{kindLabel(section.kind)}
+										</Badge>
+									)}
+								</header>
+							</Fade>
 
-          {sectionId === 'gca-overview' ? (
-            <Fade delay={0.1}>
-              <GcaOverview companySlug={companySlug} />
-            </Fade>
-          ) : sectionId === 'power-day-overview' ? (
-            <Fade delay={0.1}>
-              <PowerDayOverview companySlug={companySlug} />
-            </Fade>
-          ) : filtered.length === 0 ? (
-            <Fade delay={0.1}>
-              <EmptySectionState
-                companySlug={companySlug}
-                sectionId={sectionId}
-                section={section ?? null}
-              />
-            </Fade>
-          ) : (
-            <Fade delay={0.1}>
-              <ExercisesDataTable companySlug={companySlug} exercises={filtered} />
-            </Fade>
-          )}
-        </>
-      )}
-        </div>
-      </div>
-    </div>
-  )
+							{sectionId === "gca-overview" ? (
+								<Fade delay={0.1}>
+									<GcaOverview companySlug={companySlug} />
+								</Fade>
+							) : sectionId === "power-day-overview" ? (
+								<Fade delay={0.1}>
+									<PowerDayOverview companySlug={companySlug} />
+								</Fade>
+							) : filtered.length === 0 ? (
+								<Fade delay={0.1}>
+									<EmptySectionState
+										companySlug={companySlug}
+										sectionId={sectionId}
+										section={section ?? null}
+									/>
+								</Fade>
+							) : (
+								<Fade delay={0.1}>
+									<ExercisesDataTable
+										companySlug={companySlug}
+										exercises={filtered}
+									/>
+								</Fade>
+							)}
+						</>
+					)}
+				</div>
+			</div>
+		</div>
+	);
 }
 
-type Section = { id: string; name: string; kind: string }
+type Section = { id: string; name: string; kind: string };
 
 function EmptySectionState({
-  companySlug,
-  sectionId,
-  section,
+	companySlug,
+	sectionId,
+	section,
 }: {
-  companySlug: string
-  sectionId: string
-  section: Section | null
+	companySlug: string;
+	sectionId: string;
+	section: Section | null;
 }) {
-  const { t } = useTranslation()
+	const { t } = useTranslation();
 
-  if (!section) {
-    return (
-      <MagicCard className="p-10 text-center">
-        <p className="text-sm text-muted-foreground">
-          {t('section.notFound', {
-            defaultValue: 'Section not listed in the company loop.',
-          })}
-        </p>
-        <Link
-          to={`/${companySlug}`}
-          className="inline-flex items-center gap-1 text-xs text-primary mt-4 hover:underline"
-        >
-          <ChevronRightIcon className="size-3 rotate-180" />
-          {t('section.backToCompany', { defaultValue: 'Back to company' })}
-        </Link>
-      </MagicCard>
-    )
-  }
+	if (!section) {
+		return (
+			<MagicCard className="p-10 text-center">
+				<p className="text-sm text-muted-foreground">
+					{t("section.notFound", {
+						defaultValue: "Section not listed in the company loop.",
+					})}
+				</p>
+				<Link
+					to={`/${companySlug}`}
+					className="inline-flex items-center gap-1 text-xs text-primary mt-4 hover:underline"
+				>
+					<ChevronRightIcon className="size-3 rotate-180" />
+					{t("section.backToCompany", { defaultValue: "Back to company" })}
+				</Link>
+			</MagicCard>
+		);
+	}
 
-  const ctas = ctasForKind(companySlug, sectionId, section.kind)
-  const Icon = iconForKind(section.kind)
+	const ctas = ctasForKind(companySlug, sectionId, section.kind);
+	const Icon = iconForKind(section.kind);
 
-  return (
-    <MagicCard className="relative overflow-hidden p-8 md:p-10">
-      <BorderBeam size={180} duration={12} />
-      <div className="max-w-2xl mx-auto text-center space-y-5">
-        <div className="inline-flex size-14 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
-          <Icon className="size-6" />
-        </div>
+	return (
+		<MagicCard className="relative overflow-hidden p-8 md:p-10">
+			<BorderBeam size={180} duration={12} />
+			<div className="max-w-2xl mx-auto text-center space-y-5">
+				<div className="inline-flex size-14 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
+					<Icon className="size-6" />
+				</div>
 
-        <div className="space-y-2">
-          <h3 className="font-heading text-2xl font-semibold tracking-tight">
-            {t('section.emptyHeadline', {
-              defaultValue: 'This section is exercised dynamically',
-              section: section.name,
-            })}
-          </h3>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {emptyBodyForKind(section.kind, t)}
-          </p>
-        </div>
+				<div className="space-y-2">
+					<h3 className="font-heading text-2xl font-semibold tracking-tight">
+						{t("section.emptyHeadline", {
+							defaultValue: "This section is exercised dynamically",
+							section: section.name,
+						})}
+					</h3>
+					<p className="text-sm text-muted-foreground leading-relaxed">
+						{emptyBodyForKind(section.kind, t)}
+					</p>
+				</div>
 
-        {ctas.length > 0 && (
-          <div className="flex flex-wrap gap-2 justify-center pt-2">
-            {ctas.map((cta) => (
-              <Link
-                key={cta.to}
-                to={cta.to}
-                className={cn(
-                  buttonVariants({
-                    variant: cta.variant,
-                    size: 'default',
-                  }),
-                  'gap-2'
-                )}
-              >
-                <cta.icon className="size-4" />
-                {cta.label}
-                <ArrowRightIcon className="size-3.5" />
-              </Link>
-            ))}
-          </div>
-        )}
+				{ctas.length > 0 && (
+					<div className="flex flex-wrap gap-2 justify-center pt-2">
+						{ctas.map((cta) => (
+							<Link
+								key={cta.to}
+								to={cta.to}
+								className={cn(
+									buttonVariants({
+										variant: cta.variant,
+										size: "default",
+									}),
+									"gap-2",
+								)}
+							>
+								<cta.icon className="size-4" />
+								{cta.label}
+								<ArrowRightIcon className="size-3.5" />
+							</Link>
+						))}
+					</div>
+				)}
 
-        <Link
-          to={`/${companySlug}`}
-          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ChevronRightIcon className="size-3 rotate-180" />
-          {t('section.backToCompany', { defaultValue: 'Back to company' })}
-        </Link>
-      </div>
-    </MagicCard>
-  )
+				<Link
+					to={`/${companySlug}`}
+					className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+				>
+					<ChevronRightIcon className="size-3 rotate-180" />
+					{t("section.backToCompany", { defaultValue: "Back to company" })}
+				</Link>
+			</div>
+		</MagicCard>
+	);
 }
 
 type SectionCta = {
-  to: string
-  label: string
-  icon: typeof ClockIcon
-  variant: 'default' | 'secondary' | 'outline'
-}
+	to: string;
+	label: string;
+	icon: typeof ClockIcon;
+	variant: "default" | "secondary" | "outline";
+};
 
 function ctasForKind(
-  companySlug: string,
-  _sectionId: string,
-  kind: string
+	companySlug: string,
+	_sectionId: string,
+	kind: string,
 ): SectionCta[] {
-  switch (kind) {
-    case 'code':
-    case 'code+defense':
-      return [
-        {
-          to: `/${companySlug}/mock-power-day`,
-          label: 'Mock Power Day',
-          icon: ClockIcon,
-          variant: 'default',
-        },
-        {
-          to: `/${companySlug}/mock-gca`,
-          label: 'Mock GCA',
-          icon: ClockIcon,
-          variant: 'secondary',
-        },
-      ]
-    case 'interviewer-chat':
-    case 'behavioral':
-    case 'business-case':
-      return [
-        {
-          to: `/${companySlug}/mock-power-day`,
-          label: 'Mock Power Day',
-          icon: ClockIcon,
-          variant: 'default',
-        },
-      ]
-    case 'lesson+drills':
-      return [
-        {
-          to: `/${companySlug}/practice`,
-          label: 'Random practice',
-          icon: SparklesIcon,
-          variant: 'secondary',
-        },
-      ]
-    default:
-      return []
-  }
+	switch (kind) {
+		case "code":
+		case "code+defense":
+			return [
+				{
+					to: `/${companySlug}/mock-power-day`,
+					label: "Mock Power Day",
+					icon: ClockIcon,
+					variant: "default",
+				},
+				{
+					to: `/${companySlug}/mock-gca`,
+					label: "Mock GCA",
+					icon: ClockIcon,
+					variant: "secondary",
+				},
+			];
+		case "interviewer-chat":
+		case "behavioral":
+		case "business-case":
+			return [
+				{
+					to: `/${companySlug}/mock-power-day`,
+					label: "Mock Power Day",
+					icon: ClockIcon,
+					variant: "default",
+				},
+			];
+		case "lesson+drills":
+			return [
+				{
+					to: `/${companySlug}/practice`,
+					label: "Random practice",
+					icon: SparklesIcon,
+					variant: "secondary",
+				},
+			];
+		default:
+			return [];
+	}
 }
 
 function emptyBodyForKind(
-  kind: string,
-  t: (k: string, o?: { defaultValue: string }) => string
+	kind: string,
+	t: (k: string, o?: { defaultValue: string }) => string,
 ): string {
-  switch (kind) {
-    case 'code':
-    case 'code+defense':
-      return t('section.emptyCode', {
-        defaultValue:
-          'Coding rounds draw from the GCA exercise pool at runtime. Launch a Mock Power Day (3 hr onsite) or a Mock GCA (70-min timed) to exercise this round against live problems.',
-      })
-    case 'interviewer-chat':
-      return t('section.emptyChat', {
-        defaultValue:
-          'System-design rounds run as interviewer chats. The scenarios live inside the Power Day loop — start a Mock Power Day to rotate through them.',
-      })
-    case 'behavioral':
-      return t('section.emptyBehavioral', {
-        defaultValue:
-          'Behavioral rounds use open-prompt drills and interviewer chats. Start a Mock Power Day to land on one of them at random.',
-      })
-    case 'business-case':
-      return t('section.emptyCase', {
-        defaultValue:
-          'Business-case rounds blend frameworks and interviewer-chat scenarios. The Mock Power Day picks one to drill.',
-      })
-    case 'lesson+drills':
-      return t('section.emptyLesson', {
-        defaultValue:
-          'Lesson content is still being authored. Random practice is the closest thing until this section ships.',
-      })
-    default:
-      return t('section.empty', {
-        defaultValue:
-          'No exercises authored yet for this section. Content authoring is ongoing.',
-      })
-  }
+	switch (kind) {
+		case "code":
+		case "code+defense":
+			return t("section.emptyCode", {
+				defaultValue:
+					"Coding rounds draw from the GCA exercise pool at runtime. Launch a Mock Power Day (3 hr onsite) or a Mock GCA (70-min timed) to exercise this round against live problems.",
+			});
+		case "interviewer-chat":
+			return t("section.emptyChat", {
+				defaultValue:
+					"System-design rounds run as interviewer chats. The scenarios live inside the Power Day loop — start a Mock Power Day to rotate through them.",
+			});
+		case "behavioral":
+			return t("section.emptyBehavioral", {
+				defaultValue:
+					"Behavioral rounds use open-prompt drills and interviewer chats. Start a Mock Power Day to land on one of them at random.",
+			});
+		case "business-case":
+			return t("section.emptyCase", {
+				defaultValue:
+					"Business-case rounds blend frameworks and interviewer-chat scenarios. The Mock Power Day picks one to drill.",
+			});
+		case "lesson+drills":
+			return t("section.emptyLesson", {
+				defaultValue:
+					"Lesson content is still being authored. Random practice is the closest thing until this section ships.",
+			});
+		default:
+			return t("section.empty", {
+				defaultValue:
+					"No exercises authored yet for this section. Content authoring is ongoing.",
+			});
+	}
 }
 
 function OverviewShell({
-  kicker,
-  title,
-  summary,
-  children,
+	kicker,
+	title,
+	summary,
+	children,
 }: {
-  kicker: string
-  title: string
-  summary: string
-  children: React.ReactNode
+	kicker: string;
+	title: string;
+	summary: string;
+	children: React.ReactNode;
 }) {
-  return (
-    <div className="space-y-6">
-      <MagicCard className="relative overflow-hidden p-8 md:p-10">
-        <BorderBeam size={240} duration={12} />
-        <div className="space-y-3 max-w-3xl">
-          <Badge variant="outline" className="gap-1.5 rounded-full p-2">
-            <SparklesIcon className="size-3 text-primary" />
-            <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
-              {kicker}
-            </span>
-          </Badge>
-          <h2 className="font-heading text-3xl font-bold tracking-tight">
-            <GradientText
-              text={title}
-              gradient="linear-gradient(90deg, var(--primary) 0%, var(--chart-2) 50%, var(--chart-4) 100%)"
-            />
-          </h2>
-          <p className="text-base text-muted-foreground leading-relaxed">{summary}</p>
-        </div>
-      </MagicCard>
-      {children}
-    </div>
-  )
+	return (
+		<div className="space-y-6">
+			<MagicCard className="relative overflow-hidden p-8 md:p-10">
+				<BorderBeam size={240} duration={12} />
+				<div className="space-y-3 max-w-3xl">
+					<Badge variant="outline" className="gap-1.5 rounded-full p-2">
+						<SparklesIcon className="size-3 text-primary" />
+						<span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+							{kicker}
+						</span>
+					</Badge>
+					<h2 className="font-heading text-3xl font-bold tracking-tight">
+						<GradientText
+							text={title}
+							gradient="linear-gradient(90deg, var(--primary) 0%, var(--chart-2) 50%, var(--chart-4) 100%)"
+						/>
+					</h2>
+					<p className="text-base text-muted-foreground leading-relaxed">
+						{summary}
+					</p>
+				</div>
+			</MagicCard>
+			{children}
+		</div>
+	);
 }
 
 export function OverviewSection({
-  header,
-  sub,
-  children,
+	header,
+	sub,
+	children,
 }: {
-  header: string
-  sub?: string
-  children: React.ReactNode
+	header: string;
+	sub?: string;
+	children: React.ReactNode;
 }) {
-  return (
-    <section className="space-y-3">
-      <div className="space-y-1">
-        <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
-          {header}
-        </h3>
-        {sub && <p className="text-xs text-muted-foreground/80 ">
-        {sub}
-        </p>}
-      </div>
-      {children}
-    </section>
-  )
+	return (
+		<section className="space-y-3">
+			<div className="space-y-1">
+				<h3 className="text-xs uppercase tracking-wider text-muted-foreground">
+					{header}
+				</h3>
+				{sub && <p className="text-xs text-muted-foreground/80 ">{sub}</p>}
+			</div>
+			{children}
+		</section>
+	);
 }
 
 export function OverviewTimeline({
-  header,
-  items,
+	header,
+	items,
 }: {
-  header: string
-  items: Array<{ time: string; label: string; note: string }>
+	header: string;
+	items: Array<{ time: string; label: string; note: string }>;
 }) {
-  // Derive minute spans from "HH:MM – HH:MM" strings so we can render
-  // proportional Progress bars.
-  const parsed = items.map((it) => {
-    const m = it.time.match(/(\d+):(\d+)\s*[–-]\s*(\d+):(\d+)/)
-    if (!m) return { ...it, minutes: 0 }
-    const start = parseInt(m[1], 10) * 60 + parseInt(m[2], 10)
-    const end = parseInt(m[3], 10) * 60 + parseInt(m[4], 10)
-    return { ...it, minutes: end - start }
-  })
-  const maxMinutes = Math.max(...parsed.map((p) => p.minutes), 1)
-  return (
-    <OverviewSection header={header}>
-      <MagicCard className="p-5">
-        <ol className="space-y-3">
-          {parsed.map((it, i) => {
-            const isBreak =
-              it.label.toLowerCase().includes('break') ||
-              it.label.toLowerCase().includes('descanso')
-            const pct = (it.minutes / maxMinutes) * 100
-            return (
-              <li
-                key={i}
-                className="grid grid-cols-[110px_1fr_60px] gap-3 items-center"
-              >
-                <span className="font-mono text-xs text-muted-foreground tabular-nums">
-                  {it.time}
-                </span>
-                <div className="space-y-1 min-w-0">
-                  <div className="flex items-center gap-2 text-sm">
-                    <span
-                      className={cn(
-                        'inline-block size-1.5 rounded-full shrink-0',
-                        isBreak ? 'bg-muted-foreground/40' : 'bg-primary'
-                      )}
-                    />
-                    <span
-                      className={cn(
-                        'font-medium truncate',
-                        isBreak && 'text-muted-foreground'
-                      )}
-                    >
-                      {it.label}
-                    </span>
-                    <span className="text-xs text-muted-foreground truncate">
-                      · {it.note}
-                    </span>
-                  </div>
-                  <Progress
-                    value={pct}
-                    className={cn(
-                      'h-1.5',
-                      isBreak && 'opacity-40'
-                    )}
-                  />
-                </div>
-                <span className="font-mono text-[10px] text-muted-foreground/70 tabular-nums text-right">
-                  {it.minutes} min
-                </span>
-              </li>
-            )
-          })}
-        </ol>
-      </MagicCard>
-    </OverviewSection>
-  )
+	// Derive minute spans from "HH:MM – HH:MM" strings so we can render
+	// proportional Progress bars.
+	const parsed = items.map((it) => {
+		const m = it.time.match(/(\d+):(\d+)\s*[–-]\s*(\d+):(\d+)/);
+		if (!m) return { ...it, minutes: 0 };
+		const start = parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+		const end = parseInt(m[3], 10) * 60 + parseInt(m[4], 10);
+		return { ...it, minutes: end - start };
+	});
+	const maxMinutes = Math.max(...parsed.map((p) => p.minutes), 1);
+	return (
+		<OverviewSection header={header}>
+			<MagicCard className="p-5">
+				<ol className="space-y-3">
+					{parsed.map((it, i) => {
+						const isBreak =
+							it.label.toLowerCase().includes("break") ||
+							it.label.toLowerCase().includes("descanso");
+						const pct = (it.minutes / maxMinutes) * 100;
+						return (
+							<li
+								key={i}
+								className="grid grid-cols-[110px_1fr_60px] gap-3 items-center"
+							>
+								<span className="font-mono text-xs text-muted-foreground tabular-nums">
+									{it.time}
+								</span>
+								<div className="space-y-1 min-w-0">
+									<div className="flex items-center gap-2 text-sm">
+										<span
+											className={cn(
+												"inline-block size-1.5 rounded-full shrink-0",
+												isBreak ? "bg-muted-foreground/40" : "bg-primary",
+											)}
+										/>
+										<span
+											className={cn(
+												"font-medium truncate",
+												isBreak && "text-muted-foreground",
+											)}
+										>
+											{it.label}
+										</span>
+										<span className="text-xs text-muted-foreground truncate">
+											· {it.note}
+										</span>
+									</div>
+									<Progress
+										value={pct}
+										className={cn("h-1.5", isBreak && "opacity-40")}
+									/>
+								</div>
+								<span className="font-mono text-[10px] text-muted-foreground/70 tabular-nums text-right">
+									{it.minutes} min
+								</span>
+							</li>
+						);
+					})}
+				</ol>
+			</MagicCard>
+		</OverviewSection>
+	);
 }
 
 export function OverviewConcepts({
-  header,
-  sub,
-  items,
-  labels,
+	header,
+	sub,
+	items,
+	labels,
 }: {
-  header: string
-  sub: string
-  items: Array<{
-    term: string
-    definition: string
-    why: string
-    example: string
-    signals?: string[]
-    pitfalls?: string[]
-  }>
-  labels: {
-    definition: string
-    whyMatters: string
-    inPractice: string
-    signals: string
-    pitfalls: string
-  }
+	header: string;
+	sub: string;
+	items: Array<{
+		term: string;
+		definition: string;
+		why: string;
+		example: string;
+		signals?: string[];
+		pitfalls?: string[];
+	}>;
+	labels: {
+		definition: string;
+		whyMatters: string;
+		inPractice: string;
+		signals: string;
+		pitfalls: string;
+	};
 }) {
-  const { t } = useTranslation()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const paramC = Number(searchParams.get('c'))
-  const safeIdx =
-    Number.isInteger(paramC) && paramC >= 1 && paramC <= items.length
-      ? paramC - 1
-      : 0
-  const current = items[safeIdx]
-  if (!current) return null
+	const { t } = useTranslation();
+	const [searchParams, setSearchParams] = useSearchParams();
+	const paramC = Number(searchParams.get("c"));
+	const safeIdx =
+		Number.isInteger(paramC) && paramC >= 1 && paramC <= items.length
+			? paramC - 1
+			: 0;
+	const current = items[safeIdx];
+	if (!current) return null;
 
-  const goTo = (i: number) => {
-    const next = new URLSearchParams(searchParams)
-    next.set('c', String(i + 1))
-    setSearchParams(next, { replace: false })
-    // Scroll to top of content so the new chapter is legible.
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+	const goTo = (i: number) => {
+		const next = new URLSearchParams(searchParams);
+		next.set("c", String(i + 1));
+		setSearchParams(next, { replace: false });
+		// Scroll to top of content so the new chapter is legible.
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	};
 
-  const prev = safeIdx > 0 ? items[safeIdx - 1] : null
-  const next = safeIdx < items.length - 1 ? items[safeIdx + 1] : null
+	const prev = safeIdx > 0 ? items[safeIdx - 1] : null;
+	const next = safeIdx < items.length - 1 ? items[safeIdx + 1] : null;
 
-  return (
-    <OverviewSection header={header} sub={sub}>
-      <div className="mx-auto max-w-3xl space-y-10 py-4">
-        <ConceptTOC
-          items={items}
-          activeIdx={safeIdx}
-          onSelect={goTo}
-          tocLabel={t('overviewLabels.conceptTOC', { defaultValue: 'Contents' })}
-        />
+	return (
+		<OverviewSection header={header} sub={sub}>
+			<div className="mx-auto max-w-6xl space-y-10 py-4">
+				<ConceptTOC
+					items={items}
+					activeIdx={safeIdx}
+					onSelect={goTo}
+					tocLabel={t("overviewLabels.conceptTOC", {
+						defaultValue: "Contents",
+					})}
+				/>
 
-        <article className="space-y-7">
-          <header className="space-y-3">
-            <div className="flex items-center gap-3">
-              <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
-                § {String(safeIdx + 1).padStart(2, '0')}
-              </span>
-              <Separator orientation="vertical" className="h-3.5" />
-              <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
-                {labels.definition}
-              </span>
-              <span className="ml-auto font-mono text-[10px] text-muted-foreground/60 tabular-nums">
-                {String(safeIdx + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}
-              </span>
-            </div>
-            <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
-              {current.term}
-            </h3>
-          </header>
+				<article className="space-y-7">
+					<header className="space-y-3">
+						<div className="flex items-center gap-3">
+							<span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+								§ {String(safeIdx + 1).padStart(2, "0")}
+							</span>
+							<Separator orientation="vertical" className="h-3.5" />
+							<span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+								{labels.definition}
+							</span>
+							<span className="ml-auto font-mono text-[10px] text-muted-foreground/60 tabular-nums">
+								{String(safeIdx + 1).padStart(2, "0")} /{" "}
+								{String(items.length).padStart(2, "0")}
+							</span>
+						</div>
+						<h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
+							{current.term}
+						</h3>
+					</header>
 
-          <p className="text-[15px] leading-[1.9] text-foreground/90">
-            {current.definition}
-          </p>
+					<p className="text-[15px] leading-[1.9] text-foreground/90">
+						{current.definition}
+					</p>
 
-          <blockquote className="border-l-2 border-border pl-6 py-1 space-y-2">
-            <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
-              {labels.whyMatters}
-            </div>
-            <p className="text-[15px] leading-[1.9] text-muted-foreground">
-              {current.why}
-            </p>
-          </blockquote>
+					<blockquote className="border-l-2 border-border pl-6 py-1 space-y-2">
+						<div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
+							{labels.whyMatters}
+						</div>
+						<p className="text-[15px] leading-[1.9] text-muted-foreground">
+							{current.why}
+						</p>
+					</blockquote>
 
-          <Card className="bg-muted/30 shadow-none">
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
-                  {labels.inPractice}
-                </div>
-                <p className="text-[15px] leading-[1.9] italic text-foreground/85">
-                  {current.example}
-                </p>
-              </div>
+					<Card className="bg-muted/30 shadow-none">
+						<CardContent className="space-y-6">
+							<div className="space-y-2">
+								<div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
+									{labels.inPractice}
+								</div>
+								<p className="text-[15px] leading-[1.9] italic text-foreground/85">
+									{current.example}
+								</p>
+							</div>
 
-              {current.signals && current.signals.length > 0 && (
-                <PaperBulletList
-                  label={labels.signals}
-                  tone="emerald"
-                  items={current.signals}
-                />
-              )}
+							{current.signals && current.signals.length > 0 && (
+								<PaperBulletList
+									label={labels.signals}
+									tone="emerald"
+									items={current.signals}
+								/>
+							)}
 
-              {current.pitfalls && current.pitfalls.length > 0 && (
-                <PaperBulletList
-                  label={labels.pitfalls}
-                  tone="amber"
-                  items={current.pitfalls}
-                />
-              )}
-            </CardContent>
-          </Card>
-        </article>
+							{current.pitfalls && current.pitfalls.length > 0 && (
+								<PaperBulletList
+									label={labels.pitfalls}
+									tone="amber"
+									items={current.pitfalls}
+								/>
+							)}
+						</CardContent>
+					</Card>
+				</article>
 
-        <ConceptPrevNext
-          prev={prev}
-          next={next}
-          onPrev={() => goTo(safeIdx - 1)}
-          onNext={() => goTo(safeIdx + 1)}
-          labels={{
-            prev: t('prevNext.previous', { defaultValue: 'Previous' }),
-            next: t('prevNext.next', { defaultValue: 'Next' }),
-          }}
-        />
-      </div>
-    </OverviewSection>
-  )
+				<ConceptPrevNext
+					prev={prev}
+					next={next}
+					onPrev={() => goTo(safeIdx - 1)}
+					onNext={() => goTo(safeIdx + 1)}
+					labels={{
+						prev: t("prevNext.previous", { defaultValue: "Previous" }),
+						next: t("prevNext.next", { defaultValue: "Next" }),
+					}}
+				/>
+			</div>
+		</OverviewSection>
+	);
 }
 
 function ConceptTOC({
-  items,
-  activeIdx,
-  onSelect,
-  tocLabel,
+	items,
+	activeIdx,
+	onSelect,
+	tocLabel,
 }: {
-  items: Array<{ term: string }>
-  activeIdx: number
-  onSelect: (i: number) => void
-  tocLabel: string
+	items: Array<{ term: string }>;
+	activeIdx: number;
+	onSelect: (i: number) => void;
+	tocLabel: string;
 }) {
-  return (
-    <nav
-      aria-label={tocLabel}
-      className="rounded-lg border border-border/60 bg-card/40 p-3"
-    >
-      <div className="mb-2 flex items-center gap-2 px-1">
-        <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
-          {tocLabel}
-        </span>
-      </div>
-      <ol className="space-y-0.5">
-        {items.map((it, i) => {
-          const isActive = i === activeIdx
-          return (
-            <li key={it.term}>
-              <button
-                type="button"
-                onClick={() => onSelect(i)}
-                aria-current={isActive ? 'page' : undefined}
-                className={cn(
-                  'w-full flex items-center gap-3 rounded-md px-2 py-1.5 text-left text-sm transition-colors',
-                  isActive
-                    ? 'bg-muted text-foreground font-medium'
-                    : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
-                )}
-              >
-                <span className="font-mono text-[10px] tabular-nums text-muted-foreground/60 shrink-0">
-                  § {String(i + 1).padStart(2, '0')}
-                </span>
-                <span className="truncate">{it.term}</span>
-              </button>
-            </li>
-          )
-        })}
-      </ol>
-    </nav>
-  )
+	return (
+		<nav
+			aria-label={tocLabel}
+			className="rounded-lg border border-border/60 bg-card/40 p-3"
+		>
+			<div className="mb-2 flex items-center gap-2 px-1">
+				<span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+					{tocLabel}
+				</span>
+			</div>
+			<ol className="space-y-0.5">
+				{items.map((it, i) => {
+					const isActive = i === activeIdx;
+					return (
+						<li key={it.term}>
+							<button
+								type="button"
+								onClick={() => onSelect(i)}
+								aria-current={isActive ? "page" : undefined}
+								className={cn(
+									"w-full flex items-center gap-3 rounded-md px-2 py-1.5 text-left text-sm transition-colors",
+									isActive
+										? "bg-muted text-foreground font-medium"
+										: "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+								)}
+							>
+								<span className="font-mono text-[10px] tabular-nums text-muted-foreground/60 shrink-0">
+									§ {String(i + 1).padStart(2, "0")}
+								</span>
+								<span className="truncate">{it.term}</span>
+							</button>
+						</li>
+					);
+				})}
+			</ol>
+		</nav>
+	);
 }
 
 function ConceptPrevNext({
-  prev,
-  next,
-  onPrev,
-  onNext,
-  labels,
+	prev,
+	next,
+	onPrev,
+	onNext,
+	labels,
 }: {
-  prev: { term: string } | null
-  next: { term: string } | null
-  onPrev: () => void
-  onNext: () => void
-  labels: { prev: string; next: string }
+	prev: { term: string } | null;
+	next: { term: string } | null;
+	onPrev: () => void;
+	onNext: () => void;
+	labels: { prev: string; next: string };
 }) {
-  if (!prev && !next) return null
-  return (
-    <nav className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-6 border-t border-border/60">
-      {prev ? (
-        <button
-          type="button"
-          onClick={onPrev}
-          className="group flex items-center gap-4 rounded-lg border border-border/60 bg-card/40 p-4 text-left transition-all hover:border-border hover:bg-card"
-        >
-          <ArrowLeftIcon className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors group-hover:-translate-x-0.5" />
-          <div className="min-w-0 flex-1">
-            <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
-              {labels.prev}
-            </div>
-            <div className="mt-1 font-heading text-sm font-semibold truncate">
-              {prev.term}
-            </div>
-          </div>
-        </button>
-      ) : (
-        <div aria-hidden />
-      )}
-      {next ? (
-        <button
-          type="button"
-          onClick={onNext}
-          className="group flex items-center gap-4 rounded-lg border border-border/60 bg-card/40 p-4 text-right transition-all hover:border-border hover:bg-card md:col-start-2 md:flex-row-reverse"
-        >
-          <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors group-hover:translate-x-0.5" />
-          <div className="min-w-0 flex-1">
-            <div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
-              {labels.next}
-            </div>
-            <div className="mt-1 font-heading text-sm font-semibold truncate">
-              {next.term}
-            </div>
-          </div>
-        </button>
-      ) : (
-        <div aria-hidden />
-      )}
-    </nav>
-  )
+	if (!prev && !next) return null;
+	return (
+		<nav className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-6 border-t border-border/60">
+			{prev ? (
+				<button
+					type="button"
+					onClick={onPrev}
+					className="group flex items-center gap-4 rounded-lg border border-border/60 bg-card/40 p-4 text-left transition-all hover:border-border hover:bg-card"
+				>
+					<ArrowLeftIcon className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors group-hover:-translate-x-0.5" />
+					<div className="min-w-0 flex-1">
+						<div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+							{labels.prev}
+						</div>
+						<div className="mt-1 font-heading text-sm font-semibold truncate">
+							{prev.term}
+						</div>
+					</div>
+				</button>
+			) : (
+				<div aria-hidden />
+			)}
+			{next ? (
+				<button
+					type="button"
+					onClick={onNext}
+					className="group flex items-center gap-4 rounded-lg border border-border/60 bg-card/40 p-4 text-right transition-all hover:border-border hover:bg-card md:col-start-2 md:flex-row-reverse"
+				>
+					<ArrowRightIcon className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors group-hover:translate-x-0.5" />
+					<div className="min-w-0 flex-1">
+						<div className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+							{labels.next}
+						</div>
+						<div className="mt-1 font-heading text-sm font-semibold truncate">
+							{next.term}
+						</div>
+					</div>
+				</button>
+			) : (
+				<div aria-hidden />
+			)}
+		</nav>
+	);
 }
 
 export function OverviewRoundsTabs({
-  header,
-  items,
-  labels,
+	header,
+	items,
+	labels,
 }: {
-  header: string
-  items: DeepItem[]
-  labels: {
-    evaluated: string
-    pacing: string
-    pitfalls: string
-    signals?: string
-    inPractice?: string
-    playbook?: string
-  }
+	header: string;
+	items: DeepItem[];
+	labels: {
+		evaluated: string;
+		pacing: string;
+		pitfalls: string;
+		signals?: string;
+		inPractice?: string;
+		playbook?: string;
+	};
 }) {
-  return (
-    <OverviewSection header={header}>
-      <article className="mx-auto max-w-3xl space-y-16 py-4">
-        {items.map((it, i) => {
-          const cleanTitle = it.title.replace(/^(Round|Ronda)\s+\d+\s*[—-]\s*/i, '')
-          return (
-            <section key={it.title} className="space-y-7">
-              <header className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
-                    § {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <Separator orientation="vertical" className="h-3.5" />
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
-                    R{i + 1}
-                  </span>
-                </div>
-                <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
-                  {cleanTitle}
-                </h3>
-              </header>
+	return (
+		<OverviewSection header={header}>
+			<article className="mx-auto max-w-3xl space-y-16 py-4">
+				{items.map((it, i) => {
+					const cleanTitle = it.title.replace(
+						/^(Round|Ronda)\s+\d+\s*[—-]\s*/i,
+						"",
+					);
+					return (
+						<section key={it.title} className="space-y-7">
+							<header className="space-y-3">
+								<div className="flex items-center gap-3">
+									<span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+										§ {String(i + 1).padStart(2, "0")}
+									</span>
+									<Separator orientation="vertical" className="h-3.5" />
+									<span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+										R{i + 1}
+									</span>
+								</div>
+								<h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
+									{cleanTitle}
+								</h3>
+							</header>
 
-              <p className="text-[15px] leading-[1.9] text-foreground/90">
-                {it.body}
-              </p>
+							<p className="text-[15px] leading-[1.9] text-foreground/90">
+								{it.body}
+							</p>
 
-              {(it.evaluated || it.pacing) && (
-                <dl className="grid grid-cols-1 md:grid-cols-2 gap-6 border-l-2 border-border pl-6 py-1">
-                  {it.evaluated && (
-                    <div className="space-y-1.5">
-                      <dt className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
-                        {labels.evaluated}
-                      </dt>
-                      <dd className="text-[15px] leading-[1.8] text-foreground/85">
-                        {it.evaluated}
-                      </dd>
-                    </div>
-                  )}
-                  {it.pacing && (
-                    <div className="space-y-1.5">
-                      <dt className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
-                        {labels.pacing}
-                      </dt>
-                      <dd className="text-[15px] leading-[1.8] text-muted-foreground">
-                        {it.pacing}
-                      </dd>
-                    </div>
-                  )}
-                </dl>
-              )}
+							{(it.evaluated || it.pacing) && (
+								<dl className="grid grid-cols-1 md:grid-cols-2 gap-6 border-l-2 border-border pl-6 py-1">
+									{it.evaluated && (
+										<div className="space-y-1.5">
+											<dt className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
+												{labels.evaluated}
+											</dt>
+											<dd className="text-[15px] leading-[1.8] text-foreground/85">
+												{it.evaluated}
+											</dd>
+										</div>
+									)}
+									{it.pacing && (
+										<div className="space-y-1.5">
+											<dt className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
+												{labels.pacing}
+											</dt>
+											<dd className="text-[15px] leading-[1.8] text-muted-foreground">
+												{it.pacing}
+											</dd>
+										</div>
+									)}
+								</dl>
+							)}
 
-              {(it.example ||
-                (it.signals && it.signals.length > 0) ||
-                (it.pitfalls && it.pitfalls.length > 0) ||
-                (it.playbook && it.playbook.length > 0)) && (
-                <Card className="bg-muted/30 shadow-none">
-                  <CardContent className="space-y-6">
-                    {it.example && (
-                      <div className="space-y-2">
-                        <div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
-                          {labels.inPractice ?? 'In practice'}
-                        </div>
-                        <p className="text-[15px] leading-[1.9] italic text-foreground/85">
-                          {it.example}
-                        </p>
-                      </div>
-                    )}
+							{(it.example ||
+								(it.signals && it.signals.length > 0) ||
+								(it.pitfalls && it.pitfalls.length > 0) ||
+								(it.playbook && it.playbook.length > 0)) && (
+								<Card className="bg-muted/30 shadow-none">
+									<CardContent className="space-y-6">
+										{it.example && (
+											<div className="space-y-2">
+												<div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
+													{labels.inPractice ?? "In practice"}
+												</div>
+												<p className="text-[15px] leading-[1.9] italic text-foreground/85">
+													{it.example}
+												</p>
+											</div>
+										)}
 
-                    {it.signals && it.signals.length > 0 && (
-                      <PaperBulletList
-                        label={labels.signals ?? 'Signals'}
-                        tone="emerald"
-                        items={it.signals}
-                      />
-                    )}
+										{it.signals && it.signals.length > 0 && (
+											<PaperBulletList
+												label={labels.signals ?? "Signals"}
+												tone="emerald"
+												items={it.signals}
+											/>
+										)}
 
-                    {it.pitfalls && it.pitfalls.length > 0 && (
-                      <PaperBulletList
-                        label={labels.pitfalls}
-                        tone="amber"
-                        items={it.pitfalls}
-                      />
-                    )}
+										{it.pitfalls && it.pitfalls.length > 0 && (
+											<PaperBulletList
+												label={labels.pitfalls}
+												tone="amber"
+												items={it.pitfalls}
+											/>
+										)}
 
-                    {it.playbook && it.playbook.length > 0 && (
-                      <PaperBulletList
-                        label={labels.playbook ?? 'Playbook'}
-                        tone="primary"
-                        items={it.playbook}
-                      />
-                    )}
-                  </CardContent>
-                </Card>
-              )}
+										{it.playbook && it.playbook.length > 0 && (
+											<PaperBulletList
+												label={labels.playbook ?? "Playbook"}
+												tone="primary"
+												items={it.playbook}
+											/>
+										)}
+									</CardContent>
+								</Card>
+							)}
 
-              {i < items.length - 1 && <PaperSceneBreak />}
-            </section>
-          )
-        })}
-      </article>
-    </OverviewSection>
-  )
+							{i < items.length - 1 && <PaperSceneBreak />}
+						</section>
+					);
+				})}
+			</article>
+		</OverviewSection>
+	);
 }
 
 function PaperBulletList({
-  label,
-  items,
-  tone,
+	label,
+	items,
+	tone,
 }: {
-  label: string
-  items: string[]
-  tone: 'emerald' | 'amber' | 'rose' | 'primary'
+	label: string;
+	items: string[];
+	tone: "emerald" | "amber" | "rose" | "primary";
 }) {
-  const dot =
-    tone === 'emerald'
-      ? 'bg-emerald-500/70'
-      : tone === 'amber'
-        ? 'bg-amber-500/70'
-        : tone === 'rose'
-          ? 'bg-rose-500/70'
-          : 'bg-primary/70'
-  const labelColor =
-    tone === 'emerald'
-      ? 'text-emerald-600/90'
-      : tone === 'amber'
-        ? 'text-amber-600/90'
-        : tone === 'rose'
-          ? 'text-rose-600/90'
-          : 'text-primary/90'
-  return (
-    <div className="space-y-2">
-      <div
-        className={cn(
-          'text-[10px] uppercase tracking-[0.22em] font-semibold',
-          labelColor
-        )}
-      >
-        {label}
-      </div>
-      <ul className="space-y-2">
-        {items.map((it, i) => (
-          <li
-            key={i}
-            className="flex gap-3 text-[14px] leading-[1.8] text-foreground/85"
-          >
-            <span
-              aria-hidden
-              className={cn('mt-2 size-1.5 shrink-0 rounded-full', dot)}
-            />
-            <span>{it}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
+	const dot =
+		tone === "emerald"
+			? "bg-emerald-500/70"
+			: tone === "amber"
+				? "bg-amber-500/70"
+				: tone === "rose"
+					? "bg-rose-500/70"
+					: "bg-primary/70";
+	const labelColor =
+		tone === "emerald"
+			? "text-emerald-600/90"
+			: tone === "amber"
+				? "text-amber-600/90"
+				: tone === "rose"
+					? "text-rose-600/90"
+					: "text-primary/90";
+	return (
+		<div className="space-y-2">
+			<div
+				className={cn(
+					"text-[10px] uppercase tracking-[0.22em] font-semibold",
+					labelColor,
+				)}
+			>
+				{label}
+			</div>
+			<ul className="space-y-2">
+				{items.map((it, i) => (
+					<li
+						key={i}
+						className="flex gap-3 text-[14px] leading-[1.8] text-foreground/85"
+					>
+						<span
+							aria-hidden
+							className={cn("mt-2 size-1.5 shrink-0 rounded-full", dot)}
+						/>
+						<span>{it}</span>
+					</li>
+				))}
+			</ul>
+		</div>
+	);
 }
 
 function PaperSceneBreak() {
-  return (
-    <div
-      aria-hidden
-      className="pt-6 text-center font-mono text-xs tracking-[0.5em] text-muted-foreground/40 select-none"
-    >
-      § § §
-    </div>
-  )
+	return (
+		<div
+			aria-hidden
+			className="pt-6 text-center font-mono text-xs tracking-[0.5em] text-muted-foreground/40 select-none"
+		>
+			§ § §
+		</div>
+	);
 }
 
 export function OverviewValuesTabs({
-  header,
-  items,
-  labels,
+	header,
+	items,
+	labels,
 }: {
-  header: string
-  items: Array<{
-    title: string
-    body: string
-    signal: string
-    antiSignal: string
-    petPeeve: string
-    signals?: string[]
-    antiSignals?: string[]
-    petPeeves?: string[]
-    example?: string
-  }>
-  labels: {
-    signal: string
-    antiSignal: string
-    petPeeve: string
-    inPractice?: string
-  }
+	header: string;
+	items: Array<{
+		title: string;
+		body: string;
+		signal: string;
+		antiSignal: string;
+		petPeeve: string;
+		signals?: string[];
+		antiSignals?: string[];
+		petPeeves?: string[];
+		example?: string;
+	}>;
+	labels: {
+		signal: string;
+		antiSignal: string;
+		petPeeve: string;
+		inPractice?: string;
+	};
 }) {
-  return (
-    <OverviewSection header={header}>
-      <article className="mx-auto max-w-3xl space-y-16 py-4">
-        {items.map((v, i) => {
-          const signals = v.signals && v.signals.length > 0 ? v.signals : [v.signal]
-          const antiSignals =
-            v.antiSignals && v.antiSignals.length > 0 ? v.antiSignals : [v.antiSignal]
-          const petPeeves =
-            v.petPeeves && v.petPeeves.length > 0 ? v.petPeeves : [v.petPeeve]
-          return (
-            <section key={v.title} className="space-y-7">
-              <header className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
-                    § {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <Separator orientation="vertical" className="h-3.5" />
-                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
-                    Value
-                  </span>
-                </div>
-                <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
-                  {v.title}
-                </h3>
-              </header>
+	return (
+		<OverviewSection header={header}>
+			<article className="mx-auto max-w-3xl space-y-16 py-4">
+				{items.map((v, i) => {
+					const signals =
+						v.signals && v.signals.length > 0 ? v.signals : [v.signal];
+					const antiSignals =
+						v.antiSignals && v.antiSignals.length > 0
+							? v.antiSignals
+							: [v.antiSignal];
+					const petPeeves =
+						v.petPeeves && v.petPeeves.length > 0 ? v.petPeeves : [v.petPeeve];
+					return (
+						<section key={v.title} className="space-y-7">
+							<header className="space-y-3">
+								<div className="flex items-center gap-3">
+									<span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+										§ {String(i + 1).padStart(2, "0")}
+									</span>
+									<Separator orientation="vertical" className="h-3.5" />
+									<span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+										Value
+									</span>
+								</div>
+								<h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
+									{v.title}
+								</h3>
+							</header>
 
-              <p className="text-[15px] leading-[1.9] text-foreground/90">
-                {v.body}
-              </p>
+							<p className="text-[15px] leading-[1.9] text-foreground/90">
+								{v.body}
+							</p>
 
-              <Card className="bg-muted/30 shadow-none">
-                <CardContent className="space-y-6">
-                  {v.example && (
-                    <div className="space-y-2">
-                      <div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
-                        {labels.inPractice ?? 'In practice'}
-                      </div>
-                      <p className="text-[15px] leading-[1.9] italic text-foreground/85">
-                        {v.example}
-                      </p>
-                    </div>
-                  )}
+							<Card className="bg-muted/30 shadow-none">
+								<CardContent className="space-y-6">
+									{v.example && (
+										<div className="space-y-2">
+											<div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
+												{labels.inPractice ?? "In practice"}
+											</div>
+											<p className="text-[15px] leading-[1.9] italic text-foreground/85">
+												{v.example}
+											</p>
+										</div>
+									)}
 
-                  <PaperBulletList
-                    label={labels.signal}
-                    tone="emerald"
-                    items={signals}
-                  />
-                  <PaperBulletList
-                    label={labels.antiSignal}
-                    tone="rose"
-                    items={antiSignals}
-                  />
-                  <PaperBulletList
-                    label={labels.petPeeve}
-                    tone="amber"
-                    items={petPeeves}
-                  />
-                </CardContent>
-              </Card>
+									<PaperBulletList
+										label={labels.signal}
+										tone="emerald"
+										items={signals}
+									/>
+									<PaperBulletList
+										label={labels.antiSignal}
+										tone="rose"
+										items={antiSignals}
+									/>
+									<PaperBulletList
+										label={labels.petPeeve}
+										tone="amber"
+										items={petPeeves}
+									/>
+								</CardContent>
+							</Card>
 
-              {i < items.length - 1 && <PaperSceneBreak />}
-            </section>
-          )
-        })}
-      </article>
-    </OverviewSection>
-  )
+							{i < items.length - 1 && <PaperSceneBreak />}
+						</section>
+					);
+				})}
+			</article>
+		</OverviewSection>
+	);
 }
 
 export function OverviewAntiPatternsAccordion({
-  header,
-  sub,
-  items,
-  labels,
+	header,
+	sub,
+	items,
+	labels,
 }: {
-  header: string
-  sub?: string
-  items: Array<{
-    bad: string
-    why: string
-    fix: string
-    examples?: string[]
-    triggers?: string[]
-  }>
-  labels: {
-    bad: string
-    why: string
-    fix: string
-    examples?: string
-    triggers?: string
-  }
+	header: string;
+	sub?: string;
+	items: Array<{
+		bad: string;
+		why: string;
+		fix: string;
+		examples?: string[];
+		triggers?: string[];
+	}>;
+	labels: {
+		bad: string;
+		why: string;
+		fix: string;
+		examples?: string;
+		triggers?: string;
+	};
 }) {
-  return (
-    <OverviewSection header={header} sub={sub}>
-      <article className="mx-auto max-w-3xl space-y-16 py-4">
-        {items.map((ap, i) => (
-          <section key={i} className="space-y-7">
-            <header className="space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
-                  § {String(i + 1).padStart(2, '0')}
-                </span>
-                <Separator orientation="vertical" className="h-3.5" />
-                <span className="text-[10px] uppercase tracking-[0.22em] text-rose-600/90 font-semibold">
-                  {labels.bad}
-                </span>
-              </div>
-              <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
-                {ap.bad}
-              </h3>
-            </header>
+	return (
+		<OverviewSection header={header} sub={sub}>
+			<article className="mx-auto max-w-3xl space-y-16 py-4">
+				{items.map((ap, i) => (
+					<section key={i} className="space-y-7">
+						<header className="space-y-3">
+							<div className="flex items-center gap-3">
+								<span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+									§ {String(i + 1).padStart(2, "0")}
+								</span>
+								<Separator orientation="vertical" className="h-3.5" />
+								<span className="text-[10px] uppercase tracking-[0.22em] text-rose-600/90 font-semibold">
+									{labels.bad}
+								</span>
+							</div>
+							<h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
+								{ap.bad}
+							</h3>
+						</header>
 
-            <blockquote className="border-l-2 border-amber-500/50 pl-6 py-1 space-y-2">
-              <div className="text-[10px] uppercase tracking-[0.22em] text-amber-600/90 font-semibold">
-                {labels.why}
-              </div>
-              <p className="text-[15px] leading-[1.9] text-muted-foreground">
-                {ap.why}
-              </p>
-            </blockquote>
+						<blockquote className="border-l-2 border-amber-500/50 pl-6 py-1 space-y-2">
+							<div className="text-[10px] uppercase tracking-[0.22em] text-amber-600/90 font-semibold">
+								{labels.why}
+							</div>
+							<p className="text-[15px] leading-[1.9] text-muted-foreground">
+								{ap.why}
+							</p>
+						</blockquote>
 
-            <Card className="bg-muted/30 shadow-none">
-              <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-emerald-600/90 font-semibold">
-                    {labels.fix}
-                  </div>
-                  <p className="text-[15px] leading-[1.9] italic text-foreground/85">
-                    {ap.fix}
-                  </p>
-                </div>
+						<Card className="bg-muted/30 shadow-none">
+							<CardContent className="space-y-6">
+								<div className="space-y-2">
+									<div className="text-[10px] uppercase tracking-[0.22em] text-emerald-600/90 font-semibold">
+										{labels.fix}
+									</div>
+									<p className="text-[15px] leading-[1.9] italic text-foreground/85">
+										{ap.fix}
+									</p>
+								</div>
 
-                {ap.triggers && ap.triggers.length > 0 && (
-                  <PaperBulletList
-                    label={labels.triggers ?? 'Triggers'}
-                    tone="amber"
-                    items={ap.triggers}
-                  />
-                )}
+								{ap.triggers && ap.triggers.length > 0 && (
+									<PaperBulletList
+										label={labels.triggers ?? "Triggers"}
+										tone="amber"
+										items={ap.triggers}
+									/>
+								)}
 
-                {ap.examples && ap.examples.length > 0 && (
-                  <PaperBulletList
-                    label={labels.examples ?? 'Examples'}
-                    tone="rose"
-                    items={ap.examples}
-                  />
-                )}
-              </CardContent>
-            </Card>
+								{ap.examples && ap.examples.length > 0 && (
+									<PaperBulletList
+										label={labels.examples ?? "Examples"}
+										tone="rose"
+										items={ap.examples}
+									/>
+								)}
+							</CardContent>
+						</Card>
 
-            {i < items.length - 1 && <PaperSceneBreak />}
-          </section>
-        ))}
-      </article>
-    </OverviewSection>
-  )
+						{i < items.length - 1 && <PaperSceneBreak />}
+					</section>
+				))}
+			</article>
+		</OverviewSection>
+	);
 }
 
 export function OverviewPanelCards({
-  header,
-  sub,
-  items,
-  labels,
+	header,
+	sub,
+	items,
+	labels,
 }: {
-  header: string
-  sub?: string
-  items: Array<{
-    title: string
-    body: string
-    level: string
-    probes: string
-    tip: string
-  }>
-  labels: { level: string; probes: string; tip: string }
+	header: string;
+	sub?: string;
+	items: Array<{
+		title: string;
+		body: string;
+		level: string;
+		probes: string;
+		tip: string;
+	}>;
+	labels: { level: string; probes: string; tip: string };
 }) {
-  return (
-    <OverviewSection header={header} sub={sub}>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        {items.map((m, i) => (
-          <MagicCard key={m.title} className="p-5 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary text-[11px] font-semibold ring-1 ring-primary/20 tabular-nums">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h4 className="font-heading text-base font-semibold leading-tight">
-                {m.title}
-              </h4>
-            </div>
-            <p className="text-sm leading-relaxed">{m.body}</p>
-            <div className="space-y-2 pt-1 border-t border-border/50">
-              <div className="space-y-0.5 text-xs">
-                <div className="uppercase tracking-wider text-[10px] font-semibold text-muted-foreground/70">
-                  {labels.level}
-                </div>
-                <div className="text-muted-foreground leading-relaxed">
-                  {m.level}
-                </div>
-              </div>
-              <div className="space-y-0.5 text-xs">
-                <div className="uppercase tracking-wider text-[10px] font-semibold text-primary/80">
-                  {labels.probes}
-                </div>
-                <div className="leading-relaxed">{m.probes}</div>
-              </div>
-              <div className="space-y-0.5 text-xs border-l-2 border-emerald-500/40 pl-3 py-1 bg-emerald-500/5 rounded-r-md">
-                <div className="uppercase tracking-wider text-[10px] font-semibold text-emerald-600">
-                  {labels.tip}
-                </div>
-                <div className="leading-relaxed italic">{m.tip}</div>
-              </div>
-            </div>
-          </MagicCard>
-        ))}
-      </div>
-    </OverviewSection>
-  )
+	return (
+		<OverviewSection header={header} sub={sub}>
+			<div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+				{items.map((m, i) => (
+					<MagicCard key={m.title} className="p-5 space-y-3">
+						<div className="flex items-center gap-2">
+							<span className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary text-[11px] font-semibold ring-1 ring-primary/20 tabular-nums">
+								{String(i + 1).padStart(2, "0")}
+							</span>
+							<h4 className="font-heading text-base font-semibold leading-tight">
+								{m.title}
+							</h4>
+						</div>
+						<p className="text-sm leading-relaxed">{m.body}</p>
+						<div className="space-y-2 pt-1 border-t border-border/50">
+							<div className="space-y-0.5 text-xs">
+								<div className="uppercase tracking-wider text-[10px] font-semibold text-muted-foreground/70">
+									{labels.level}
+								</div>
+								<div className="text-muted-foreground leading-relaxed">
+									{m.level}
+								</div>
+							</div>
+							<div className="space-y-0.5 text-xs">
+								<div className="uppercase tracking-wider text-[10px] font-semibold text-primary/80">
+									{labels.probes}
+								</div>
+								<div className="leading-relaxed">{m.probes}</div>
+							</div>
+							<div className="space-y-0.5 text-xs border-l-2 border-emerald-500/40 pl-3 py-1 bg-emerald-500/5 rounded-r-md">
+								<div className="uppercase tracking-wider text-[10px] font-semibold text-emerald-600">
+									{labels.tip}
+								</div>
+								<div className="leading-relaxed italic">{m.tip}</div>
+							</div>
+						</div>
+					</MagicCard>
+				))}
+			</div>
+		</OverviewSection>
+	);
 }
 
 export function OverviewGrid({
-  header,
-  items,
+	header,
+	items,
 }: {
-  header: string
-  items: Array<{ title: string; body: string; weight?: string }>
+	header: string;
+	items: Array<{ title: string; body: string; weight?: string }>;
 }) {
-  return (
-    <OverviewSection header={header}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {items.map((item, i) => (
-          <MagicCard key={item.title} className="p-5 space-y-2">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <span className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary text-[11px] font-semibold ring-1 ring-primary/20 tabular-nums">
-                  {i + 1}
-                </span>
-                <h4 className="font-heading text-base font-semibold truncate">
-                  {item.title}
-                </h4>
-              </div>
-              {item.weight && (
-                <Badge variant="outline" className="text-[10px] shrink-0">
-                  {item.weight}
-                </Badge>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {item.body}
-            </p>
-          </MagicCard>
-        ))}
-      </div>
-    </OverviewSection>
-  )
+	return (
+		<OverviewSection header={header}>
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+				{items.map((item, i) => (
+					<MagicCard key={item.title} className="p-5 space-y-2">
+						<div className="flex items-center justify-between gap-2">
+							<div className="flex items-center gap-2">
+								<span className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary text-[11px] font-semibold ring-1 ring-primary/20 tabular-nums">
+									{i + 1}
+								</span>
+								<h4 className="font-heading text-base font-semibold truncate">
+									{item.title}
+								</h4>
+							</div>
+							{item.weight && (
+								<Badge variant="outline" className="text-[10px] shrink-0">
+									{item.weight}
+								</Badge>
+							)}
+						</div>
+						<p className="text-sm text-muted-foreground leading-relaxed">
+							{item.body}
+						</p>
+					</MagicCard>
+				))}
+			</div>
+		</OverviewSection>
+	);
 }
 
 export type DeepItem = {
-  title: string
-  body: string
-  pattern?: string
-  pacing?: string
-  trap?: string
-  evaluated?: string
-  pitfalls?: string[]
-  signals?: string[]
-  example?: string
-  playbook?: string[]
-}
+	title: string;
+	body: string;
+	pattern?: string;
+	pacing?: string;
+	trap?: string;
+	evaluated?: string;
+	pitfalls?: string[];
+	signals?: string[];
+	example?: string;
+	playbook?: string[];
+};
 
 export function OverviewDeepCards({
-  header,
-  sub,
-  items,
-  labels,
+	header,
+	sub,
+	items,
+	labels,
 }: {
-  header: string
-  sub?: string
-  items: DeepItem[]
-  labels: {
-    pattern?: string
-    pacing?: string
-    trap?: string
-    evaluated?: string
-    pitfalls?: string
-  }
+	header: string;
+	sub?: string;
+	items: DeepItem[];
+	labels: {
+		pattern?: string;
+		pacing?: string;
+		trap?: string;
+		evaluated?: string;
+		pitfalls?: string;
+	};
 }) {
-  return (
-    <OverviewSection header={header} sub={sub}>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        {items.map((item, i) => (
-          <MagicCard key={item.title} className="p-5 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary text-[11px] font-semibold ring-1 ring-primary/20 tabular-nums">
-                {i + 1}
-              </span>
-              <h4 className="font-heading text-base font-semibold">{item.title}</h4>
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {item.body}
-            </p>
-            <div className="space-y-2 pt-1">
-              {item.pattern && labels.pattern && (
-                <DetailRow label={labels.pattern} value={item.pattern} />
-              )}
-              {item.evaluated && labels.evaluated && (
-                <DetailRow label={labels.evaluated} value={item.evaluated} />
-              )}
-              {item.pacing && labels.pacing && (
-                <DetailRow label={labels.pacing} value={item.pacing} />
-              )}
-              {item.trap && labels.trap && (
-                <DetailRow label={labels.trap} value={item.trap} tone="warn" />
-              )}
-              {item.pitfalls && labels.pitfalls && (
-                <div className="text-xs space-y-1 pt-1">
-                  <div className="uppercase tracking-wider text-amber-600 font-semibold text-[10px]">
-                    {labels.pitfalls}
-                  </div>
-                  <ul className="space-y-1">
-                    {item.pitfalls.map((p, j) => (
-                      <li
-                        key={j}
-                        className="flex gap-2 leading-relaxed text-muted-foreground"
-                      >
-                        <span className="text-amber-600">•</span>
-                        <span>{p}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </MagicCard>
-        ))}
-      </div>
-    </OverviewSection>
-  )
+	return (
+		<OverviewSection header={header} sub={sub}>
+			<div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+				{items.map((item, i) => (
+					<MagicCard key={item.title} className="p-5 space-y-3">
+						<div className="flex items-center gap-2">
+							<span className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary text-[11px] font-semibold ring-1 ring-primary/20 tabular-nums">
+								{i + 1}
+							</span>
+							<h4 className="font-heading text-base font-semibold">
+								{item.title}
+							</h4>
+						</div>
+						<p className="text-sm text-muted-foreground leading-relaxed">
+							{item.body}
+						</p>
+						<div className="space-y-2 pt-1">
+							{item.pattern && labels.pattern && (
+								<DetailRow label={labels.pattern} value={item.pattern} />
+							)}
+							{item.evaluated && labels.evaluated && (
+								<DetailRow label={labels.evaluated} value={item.evaluated} />
+							)}
+							{item.pacing && labels.pacing && (
+								<DetailRow label={labels.pacing} value={item.pacing} />
+							)}
+							{item.trap && labels.trap && (
+								<DetailRow label={labels.trap} value={item.trap} tone="warn" />
+							)}
+							{item.pitfalls && labels.pitfalls && (
+								<div className="text-xs space-y-1 pt-1">
+									<div className="uppercase tracking-wider text-amber-600 font-semibold text-[10px]">
+										{labels.pitfalls}
+									</div>
+									<ul className="space-y-1">
+										{item.pitfalls.map((p, j) => (
+											<li
+												key={j}
+												className="flex gap-2 leading-relaxed text-muted-foreground"
+											>
+												<span className="text-amber-600">•</span>
+												<span>{p}</span>
+											</li>
+										))}
+									</ul>
+								</div>
+							)}
+						</div>
+					</MagicCard>
+				))}
+			</div>
+		</OverviewSection>
+	);
 }
 
 function DetailRow({
-  label,
-  value,
-  tone = 'muted',
+	label,
+	value,
+	tone = "muted",
 }: {
-  label: string
-  value: string
-  tone?: 'muted' | 'warn'
+	label: string;
+	value: string;
+	tone?: "muted" | "warn";
 }) {
-  return (
-    <div className="text-xs space-y-0.5">
-      <div
-        className={cn(
-          'uppercase tracking-wider font-semibold text-[10px]',
-          tone === 'warn' ? 'text-amber-600' : 'text-muted-foreground/70'
-        )}
-      >
-        {label}
-      </div>
-      <div className="text-sm leading-relaxed">{value}</div>
-    </div>
-  )
+	return (
+		<div className="text-xs space-y-0.5">
+			<div
+				className={cn(
+					"uppercase tracking-wider font-semibold text-[10px]",
+					tone === "warn" ? "text-amber-600" : "text-muted-foreground/70",
+				)}
+			>
+				{label}
+			</div>
+			<div className="text-sm leading-relaxed">{value}</div>
+		</div>
+	);
 }
 
 function OverviewValueCards({
-  header,
-  items,
-  labels,
+	header,
+	items,
+	labels,
 }: {
-  header: string
-  items: Array<{
-    title: string
-    body: string
-    signal: string
-    antiSignal: string
-    petPeeve: string
-  }>
-  labels: { signal: string; antiSignal: string; petPeeve: string }
+	header: string;
+	items: Array<{
+		title: string;
+		body: string;
+		signal: string;
+		antiSignal: string;
+		petPeeve: string;
+	}>;
+	labels: { signal: string; antiSignal: string; petPeeve: string };
 }) {
-  return (
-    <OverviewSection header={header}>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        {items.map((v) => (
-          <MagicCard key={v.title} className="p-5 space-y-3">
-            <h4 className="font-heading text-base font-semibold">{v.title}</h4>
-            <p className="text-sm text-muted-foreground leading-relaxed">{v.body}</p>
-            <div className="space-y-2 pt-1 border-t border-border/50">
-              <ValueRow tone="good" label={labels.signal} value={v.signal} />
-              <ValueRow tone="bad" label={labels.antiSignal} value={v.antiSignal} />
-              <ValueRow tone="warn" label={labels.petPeeve} value={v.petPeeve} />
-            </div>
-          </MagicCard>
-        ))}
-      </div>
-    </OverviewSection>
-  )
+	return (
+		<OverviewSection header={header}>
+			<div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+				{items.map((v) => (
+					<MagicCard key={v.title} className="p-5 space-y-3">
+						<h4 className="font-heading text-base font-semibold">{v.title}</h4>
+						<p className="text-sm text-muted-foreground leading-relaxed">
+							{v.body}
+						</p>
+						<div className="space-y-2 pt-1 border-t border-border/50">
+							<ValueRow tone="good" label={labels.signal} value={v.signal} />
+							<ValueRow
+								tone="bad"
+								label={labels.antiSignal}
+								value={v.antiSignal}
+							/>
+							<ValueRow
+								tone="warn"
+								label={labels.petPeeve}
+								value={v.petPeeve}
+							/>
+						</div>
+					</MagicCard>
+				))}
+			</div>
+		</OverviewSection>
+	);
 }
 
 function ValueRow({
-  tone,
-  label,
-  value,
+	tone,
+	label,
+	value,
 }: {
-  tone: 'good' | 'bad' | 'warn'
-  label: string
-  value: string
+	tone: "good" | "bad" | "warn";
+	label: string;
+	value: string;
 }) {
-  const toneClass =
-    tone === 'good'
-      ? 'text-emerald-600'
-      : tone === 'bad'
-        ? 'text-rose-600'
-        : 'text-amber-600'
-  const marker = tone === 'good' ? '✓' : tone === 'bad' ? '✗' : '!'
-  return (
-    <div className="flex gap-2 text-xs">
-      <span className={cn('font-semibold shrink-0 w-4 text-center', toneClass)}>
-        {marker}
-      </span>
-      <div className="min-w-0">
-        <span className={cn('uppercase tracking-wider text-[10px] font-semibold', toneClass)}>
-          {label}
-        </span>
-        <span className="text-sm text-muted-foreground leading-relaxed ml-2">
-          {value}
-        </span>
-      </div>
-    </div>
-  )
+	const toneClass =
+		tone === "good"
+			? "text-emerald-600"
+			: tone === "bad"
+				? "text-rose-600"
+				: "text-amber-600";
+	const marker = tone === "good" ? "✓" : tone === "bad" ? "✗" : "!";
+	return (
+		<div className="flex gap-2 text-xs">
+			<span className={cn("font-semibold shrink-0 w-4 text-center", toneClass)}>
+				{marker}
+			</span>
+			<div className="min-w-0">
+				<span
+					className={cn(
+						"uppercase tracking-wider text-[10px] font-semibold",
+						toneClass,
+					)}
+				>
+					{label}
+				</span>
+				<span className="text-sm text-muted-foreground leading-relaxed ml-2">
+					{value}
+				</span>
+			</div>
+		</div>
+	);
 }
 
 export function OverviewGlossary({
-  header,
-  sub,
-  rows,
-  columns,
+	header,
+	sub,
+	rows,
+	columns,
 }: {
-  header: string
-  sub: string
-  rows: Array<{
-    category: string
-    products: string
-    why: string
-    example?: string
-    signals?: string[]
-    pitfalls?: string[]
-  }>
-  columns: {
-    category: string
-    products: string
-    why: string
-    inPractice?: string
-    signals?: string
-    pitfalls?: string
-  }
+	header: string;
+	sub: string;
+	rows: Array<{
+		category: string;
+		products: string;
+		why: string;
+		example?: string;
+		signals?: string[];
+		pitfalls?: string[];
+	}>;
+	columns: {
+		category: string;
+		products: string;
+		why: string;
+		inPractice?: string;
+		signals?: string;
+		pitfalls?: string;
+	};
 }) {
-  return (
-    <OverviewSection header={header} sub={sub}>
-      <article className="mx-auto max-w-3xl space-y-16 py-4">
-        {rows.map((r, i) => (
-          <section key={r.category} className="space-y-7">
-            <header className="space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
-                  § {String(i + 1).padStart(2, '0')}
-                </span>
-                <Separator orientation="vertical" className="h-3.5" />
-                <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
-                  {columns.category}
-                </span>
-              </div>
-              <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
-                {r.category}
-              </h3>
-            </header>
+	return (
+		<OverviewSection header={header} sub={sub}>
+			<article className="mx-auto max-w-3xl space-y-16 py-4">
+				{rows.map((r, i) => (
+					<section key={r.category} className="space-y-7">
+						<header className="space-y-3">
+							<div className="flex items-center gap-3">
+								<span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+									§ {String(i + 1).padStart(2, "0")}
+								</span>
+								<Separator orientation="vertical" className="h-3.5" />
+								<span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+									{columns.category}
+								</span>
+							</div>
+							<h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
+								{r.category}
+							</h3>
+						</header>
 
-            <p className="text-[15px] leading-[1.9] text-foreground/90">
-              {r.why}
-            </p>
+						<p className="text-[15px] leading-[1.9] text-foreground/90">
+							{r.why}
+						</p>
 
-            <dl className="border-l-2 border-border pl-6 py-1 space-y-1.5">
-              <dt className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
-                {columns.products}
-              </dt>
-              <dd className="text-[15px] leading-[1.8] text-muted-foreground">
-                {r.products}
-              </dd>
-            </dl>
+						<dl className="border-l-2 border-border pl-6 py-1 space-y-1.5">
+							<dt className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
+								{columns.products}
+							</dt>
+							<dd className="text-[15px] leading-[1.8] text-muted-foreground">
+								{r.products}
+							</dd>
+						</dl>
 
-            {(r.example ||
-              (r.signals && r.signals.length > 0) ||
-              (r.pitfalls && r.pitfalls.length > 0)) && (
-              <Card className="bg-muted/30 shadow-none">
-                <CardContent className="space-y-6">
-                  {r.example && (
-                    <div className="space-y-2">
-                      <div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
-                        {columns.inPractice ?? 'In practice'}
-                      </div>
-                      <p className="text-[15px] leading-[1.9] italic text-foreground/85">
-                        {r.example}
-                      </p>
-                    </div>
-                  )}
+						{(r.example ||
+							(r.signals && r.signals.length > 0) ||
+							(r.pitfalls && r.pitfalls.length > 0)) && (
+							<Card className="bg-muted/30 shadow-none">
+								<CardContent className="space-y-6">
+									{r.example && (
+										<div className="space-y-2">
+											<div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
+												{columns.inPractice ?? "In practice"}
+											</div>
+											<p className="text-[15px] leading-[1.9] italic text-foreground/85">
+												{r.example}
+											</p>
+										</div>
+									)}
 
-                  {r.signals && r.signals.length > 0 && (
-                    <PaperBulletList
-                      label={columns.signals ?? 'When to reach for it'}
-                      tone="emerald"
-                      items={r.signals}
-                    />
-                  )}
+									{r.signals && r.signals.length > 0 && (
+										<PaperBulletList
+											label={columns.signals ?? "When to reach for it"}
+											tone="emerald"
+											items={r.signals}
+										/>
+									)}
 
-                  {r.pitfalls && r.pitfalls.length > 0 && (
-                    <PaperBulletList
-                      label={columns.pitfalls ?? 'Common mistakes'}
-                      tone="amber"
-                      items={r.pitfalls}
-                    />
-                  )}
-                </CardContent>
-              </Card>
-            )}
+									{r.pitfalls && r.pitfalls.length > 0 && (
+										<PaperBulletList
+											label={columns.pitfalls ?? "Common mistakes"}
+											tone="amber"
+											items={r.pitfalls}
+										/>
+									)}
+								</CardContent>
+							</Card>
+						)}
 
-            {i < rows.length - 1 && <PaperSceneBreak />}
-          </section>
-        ))}
-      </article>
-    </OverviewSection>
-  )
+						{i < rows.length - 1 && <PaperSceneBreak />}
+					</section>
+				))}
+			</article>
+		</OverviewSection>
+	);
 }
 
 export function OverviewFingerprints({
-  header,
-  rows,
-  columns,
+	header,
+	rows,
+	columns,
 }: {
-  header: string
-  rows: Array<{ category: string; signal: string }>
-  columns: { category: string; signal: string }
+	header: string;
+	rows: Array<{ category: string; signal: string }>;
+	columns: { category: string; signal: string };
 }) {
-  return (
-    <OverviewSection header={header}>
-      <div className="rounded-xl border bg-card/60 backdrop-blur-sm overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[240px]">{columns.category}</TableHead>
-              <TableHead>{columns.signal}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((r) => (
-              <TableRow key={r.category}>
-                <TableCell className="font-medium">{r.category}</TableCell>
-                <TableCell className="text-sm text-muted-foreground leading-relaxed">
-                  {r.signal}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </OverviewSection>
-  )
+	return (
+		<OverviewSection header={header}>
+			<div className="rounded-xl border bg-card/60 backdrop-blur-sm overflow-hidden">
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHead className="w-[240px]">{columns.category}</TableHead>
+							<TableHead>{columns.signal}</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						{rows.map((r) => (
+							<TableRow key={r.category}>
+								<TableCell className="font-medium">{r.category}</TableCell>
+								<TableCell className="text-sm text-muted-foreground leading-relaxed">
+									{r.signal}
+								</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</div>
+		</OverviewSection>
+	);
 }
 
 export function OverviewAntiPatterns({
-  header,
-  items,
-  labels,
+	header,
+	items,
+	labels,
 }: {
-  header: string
-  items: Array<{ bad: string; why: string; fix: string }>
-  labels: { bad: string; why: string; fix: string }
+	header: string;
+	items: Array<{ bad: string; why: string; fix: string }>;
+	labels: { bad: string; why: string; fix: string };
 }) {
-  return (
-    <OverviewSection header={header}>
-      <div className="grid grid-cols-1 gap-3">
-        {items.map((ap, i) => (
-          <MagicCard key={i} className="p-5 space-y-3">
-            <div className="flex items-start gap-3">
-              <span className="shrink-0 size-6 flex items-center justify-center rounded-md bg-rose-500/10 text-rose-600 ring-1 ring-rose-500/20 text-xs font-semibold">
-                ✗
-              </span>
-              <div className="min-w-0">
-                <div className="uppercase tracking-wider text-[10px] font-semibold text-rose-600">
-                  {labels.bad}
-                </div>
-                <div className="text-sm font-medium mt-0.5 leading-relaxed">
-                  {ap.bad}
-                </div>
-              </div>
-            </div>
-            <div className="text-sm text-muted-foreground leading-relaxed pl-9">
-              <span className="uppercase tracking-wider text-[10px] font-semibold text-amber-600">
-                {labels.why}
-              </span>
-              <span className="ml-2">{ap.why}</span>
-            </div>
-            <div className="text-sm leading-relaxed pl-9 pt-1 border-t border-border/50">
-              <span className="uppercase tracking-wider text-[10px] font-semibold text-emerald-600">
-                {labels.fix}
-              </span>
-              <span className="ml-2 text-foreground">{ap.fix}</span>
-            </div>
-          </MagicCard>
-        ))}
-      </div>
-    </OverviewSection>
-  )
+	return (
+		<OverviewSection header={header}>
+			<div className="grid grid-cols-1 gap-3">
+				{items.map((ap, i) => (
+					<MagicCard key={i} className="p-5 space-y-3">
+						<div className="flex items-start gap-3">
+							<span className="shrink-0 size-6 flex items-center justify-center rounded-md bg-rose-500/10 text-rose-600 ring-1 ring-rose-500/20 text-xs font-semibold">
+								✗
+							</span>
+							<div className="min-w-0">
+								<div className="uppercase tracking-wider text-[10px] font-semibold text-rose-600">
+									{labels.bad}
+								</div>
+								<div className="text-sm font-medium mt-0.5 leading-relaxed">
+									{ap.bad}
+								</div>
+							</div>
+						</div>
+						<div className="text-sm text-muted-foreground leading-relaxed pl-9">
+							<span className="uppercase tracking-wider text-[10px] font-semibold text-amber-600">
+								{labels.why}
+							</span>
+							<span className="ml-2">{ap.why}</span>
+						</div>
+						<div className="text-sm leading-relaxed pl-9 pt-1 border-t border-border/50">
+							<span className="uppercase tracking-wider text-[10px] font-semibold text-emerald-600">
+								{labels.fix}
+							</span>
+							<span className="ml-2 text-foreground">{ap.fix}</span>
+						</div>
+					</MagicCard>
+				))}
+			</div>
+		</OverviewSection>
+	);
 }
 
 export function OverviewPrepTimeline({
-  header,
-  items,
-  labels,
+	header,
+	items,
+	labels,
 }: {
-  header: string
-  items: Array<{
-    when: string
-    tasks: string[]
-    rationale?: string
-    deliverables?: string[]
-    pitfalls?: string[]
-  }>
-  labels?: {
-    tasks?: string
-    deliverables?: string
-    pitfalls?: string
-  }
+	header: string;
+	items: Array<{
+		when: string;
+		tasks: string[];
+		rationale?: string;
+		deliverables?: string[];
+		pitfalls?: string[];
+	}>;
+	labels?: {
+		tasks?: string;
+		deliverables?: string;
+		pitfalls?: string;
+	};
 }) {
-  return (
-    <OverviewSection header={header}>
-      <article className="mx-auto max-w-3xl space-y-16 py-4">
-        {items.map((block, i) => (
-          <section key={block.when} className="space-y-7">
-            <header className="space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
-                  § {String(i + 1).padStart(2, '0')}
-                </span>
-                <Separator orientation="vertical" className="h-3.5" />
-                <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
-                  Phase
-                </span>
-              </div>
-              <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
-                {block.when}
-              </h3>
-            </header>
+	return (
+		<OverviewSection header={header}>
+			<article className="mx-auto max-w-3xl space-y-16 py-4">
+				{items.map((block, i) => (
+					<section key={block.when} className="space-y-7">
+						<header className="space-y-3">
+							<div className="flex items-center gap-3">
+								<span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+									§ {String(i + 1).padStart(2, "0")}
+								</span>
+								<Separator orientation="vertical" className="h-3.5" />
+								<span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+									Phase
+								</span>
+							</div>
+							<h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
+								{block.when}
+							</h3>
+						</header>
 
-            {block.rationale && (
-              <p className="text-[15px] leading-[1.9] text-foreground/90">
-                {block.rationale}
-              </p>
-            )}
+						{block.rationale && (
+							<p className="text-[15px] leading-[1.9] text-foreground/90">
+								{block.rationale}
+							</p>
+						)}
 
-            <Card className="bg-muted/30 shadow-none">
-              <CardContent className="space-y-6">
-                <PaperBulletList
-                  label={labels?.tasks ?? 'Tasks'}
-                  tone="primary"
-                  items={block.tasks}
-                />
+						<Card className="bg-muted/30 shadow-none">
+							<CardContent className="space-y-6">
+								<PaperBulletList
+									label={labels?.tasks ?? "Tasks"}
+									tone="primary"
+									items={block.tasks}
+								/>
 
-                {block.deliverables && block.deliverables.length > 0 && (
-                  <PaperBulletList
-                    label={labels?.deliverables ?? 'Deliverables'}
-                    tone="emerald"
-                    items={block.deliverables}
-                  />
-                )}
+								{block.deliverables && block.deliverables.length > 0 && (
+									<PaperBulletList
+										label={labels?.deliverables ?? "Deliverables"}
+										tone="emerald"
+										items={block.deliverables}
+									/>
+								)}
 
-                {block.pitfalls && block.pitfalls.length > 0 && (
-                  <PaperBulletList
-                    label={labels?.pitfalls ?? 'Pitfalls'}
-                    tone="amber"
-                    items={block.pitfalls}
-                  />
-                )}
-              </CardContent>
-            </Card>
+								{block.pitfalls && block.pitfalls.length > 0 && (
+									<PaperBulletList
+										label={labels?.pitfalls ?? "Pitfalls"}
+										tone="amber"
+										items={block.pitfalls}
+									/>
+								)}
+							</CardContent>
+						</Card>
 
-            {i < items.length - 1 && <PaperSceneBreak />}
-          </section>
-        ))}
-      </article>
-    </OverviewSection>
-  )
+						{i < items.length - 1 && <PaperSceneBreak />}
+					</section>
+				))}
+			</article>
+		</OverviewSection>
+	);
 }
 
 export function OverviewSkipList({
-  header,
-  items,
+	header,
+	items,
 }: {
-  header: string
-  items: string[]
+	header: string;
+	items: string[];
 }) {
-  return (
-    <OverviewSection header={header}>
-      <MagicCard className="p-5">
-        <ul className="space-y-2.5">
-          {items.map((item, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm leading-relaxed">
-              <span className="shrink-0 size-5 flex items-center justify-center rounded-full bg-amber-500/10 text-amber-600 ring-1 ring-amber-500/20 text-[10px] font-semibold tabular-nums mt-0.5">
-                {i + 1}
-              </span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </MagicCard>
-    </OverviewSection>
-  )
+	return (
+		<OverviewSection header={header}>
+			<MagicCard className="p-5">
+				<ul className="space-y-2.5">
+					{items.map((item, i) => (
+						<li
+							key={i}
+							className="flex items-start gap-3 text-sm leading-relaxed"
+						>
+							<span className="shrink-0 size-5 flex items-center justify-center rounded-full bg-amber-500/10 text-amber-600 ring-1 ring-amber-500/20 text-[10px] font-semibold tabular-nums mt-0.5">
+								{i + 1}
+							</span>
+							<span>{item}</span>
+						</li>
+					))}
+				</ul>
+			</MagicCard>
+		</OverviewSection>
+	);
 }
 
 function OverviewTips({ header, tips }: { header: string; tips: string[] }) {
-  return (
-    <section className="space-y-3">
-      <h3 className="text-xs uppercase tracking-wider text-muted-foreground">
-        {header}
-      </h3>
-      <MagicCard className="p-5">
-        <ul className="space-y-2.5">
-          {tips.map((tip, i) => (
-            <li key={i} className="flex items-start gap-3 text-sm">
-              <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary text-[10px] font-semibold tabular-nums mt-0.5 ring-1 ring-primary/20">
-                {i + 1}
-              </span>
-              <span className="leading-relaxed">{tip}</span>
-            </li>
-          ))}
-        </ul>
-      </MagicCard>
-    </section>
-  )
+	return (
+		<section className="space-y-3">
+			<h3 className="text-xs uppercase tracking-wider text-muted-foreground">
+				{header}
+			</h3>
+			<MagicCard className="p-5">
+				<ul className="space-y-2.5">
+					{tips.map((tip, i) => (
+						<li key={i} className="flex items-start gap-3 text-sm">
+							<span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary text-[10px] font-semibold tabular-nums mt-0.5 ring-1 ring-primary/20">
+								{i + 1}
+							</span>
+							<span className="leading-relaxed">{tip}</span>
+						</li>
+					))}
+				</ul>
+			</MagicCard>
+		</section>
+	);
 }
 
 function OverviewCtas({ ctas }: { ctas: SectionCta[] }) {
-  return (
-    <div className="flex flex-wrap gap-2">
-      {ctas.map((cta) => (
-        <Link
-          key={cta.to}
-          to={cta.to}
-          className={cn(
-            buttonVariants({ variant: cta.variant, size: 'lg' }),
-            'gap-2'
-          )}
-        >
-          <cta.icon className="size-4" />
-          {cta.label}
-          <ArrowRightIcon className="size-4" />
-        </Link>
-      ))}
-    </div>
-  )
+	return (
+		<div className="flex flex-wrap gap-2">
+			{ctas.map((cta) => (
+				<Link
+					key={cta.to}
+					to={cta.to}
+					className={cn(
+						buttonVariants({ variant: cta.variant, size: "lg" }),
+						"gap-2",
+					)}
+				>
+					<cta.icon className="size-4" />
+					{cta.label}
+					<ArrowRightIcon className="size-4" />
+				</Link>
+			))}
+		</div>
+	);
 }
 
 // i18next typing doesn't type `returnObjects: true`, so we pull arrays via
 // this helper and cast — the JSON shape is authoritative.
 export function tArray<T>(
-  t: ReturnType<typeof useTranslation>['t'],
-  key: string
+	t: ReturnType<typeof useTranslation>["t"],
+	key: string,
 ): T[] {
-  return t(key, { returnObjects: true }) as unknown as T[]
+	return t(key, { returnObjects: true }) as unknown as T[];
 }
 
 function GcaOverview({ companySlug }: { companySlug: string }) {
-  const { t } = useTranslation()
-  const k = (key: string) => t(`sectionOverview.gca.${key}`)
+	const { t } = useTranslation();
+	const k = (key: string) => t(`sectionOverview.gca.${key}`);
 
-  const scoring = tArray<{ title: string; body: string }>(
-    t,
-    'sectionOverview.gca.scoring'
-  )
-  const modulesDeep = tArray<DeepItem>(t, 'sectionOverview.gca.modulesDeep')
-  const fingerprints = tArray<{ category: string; signal: string }>(
-    t,
-    'sectionOverview.gca.fingerprints'
-  )
-  const skip = tArray<string>(t, 'sectionOverview.gca.skip')
-  const antiPatterns = tArray<{ bad: string; why: string; fix: string }>(
-    t,
-    'sectionOverview.gca.antiPatterns'
-  )
-  const tips = [k('tip1'), k('tip2'), k('tip3'), k('tip4')]
+	const scoring = tArray<{ title: string; body: string }>(
+		t,
+		"sectionOverview.gca.scoring",
+	);
+	const modulesDeep = tArray<DeepItem>(t, "sectionOverview.gca.modulesDeep");
+	const fingerprints = tArray<{ category: string; signal: string }>(
+		t,
+		"sectionOverview.gca.fingerprints",
+	);
+	const skip = tArray<string>(t, "sectionOverview.gca.skip");
+	const antiPatterns = tArray<{ bad: string; why: string; fix: string }>(
+		t,
+		"sectionOverview.gca.antiPatterns",
+	);
+	const tips = [k("tip1"), k("tip2"), k("tip3"), k("tip4")];
 
-  // Weight badges for modules
-  const weights = ['100', '200', '300', '400']
-  const modulesWithWeight = modulesDeep.map((m, i) => ({
-    ...m,
-    body: `${m.body}`,
-    weight: weights[i],
-  })) as (DeepItem & { weight: string })[]
+	// Weight badges for modules
+	const weights = ["100", "200", "300", "400"];
+	const modulesWithWeight = modulesDeep.map((m, i) => ({
+		...m,
+		body: `${m.body}`,
+		weight: weights[i],
+	})) as (DeepItem & { weight: string })[];
 
-  const ctas: SectionCta[] = [
-    {
-      to: `/${companySlug}/mock-gca`,
-      label: k('ctaStart'),
-      icon: ClockIcon,
-      variant: 'default',
-    },
-    {
-      to: `/${companySlug}/practice`,
-      label: k('ctaPractice'),
-      icon: SparklesIcon,
-      variant: 'secondary',
-    },
-  ]
+	const ctas: SectionCta[] = [
+		{
+			to: `/${companySlug}/mock-gca`,
+			label: k("ctaStart"),
+			icon: ClockIcon,
+			variant: "default",
+		},
+		{
+			to: `/${companySlug}/practice`,
+			label: k("ctaPractice"),
+			icon: SparklesIcon,
+			variant: "secondary",
+		},
+	];
 
-  return (
-    <OverviewShell kicker={k('kicker')} title={k('title')} summary={k('summary')}>
-      <OverviewGrid header={k('scoringHeader')} items={scoring} />
-      <OverviewDeepCards
-        header={k('modulesHeader')}
-        items={modulesWithWeight}
-        labels={{
-          pattern: t('overviewLabels.pattern', { defaultValue: 'Pattern' }),
-          pacing: t('overviewLabels.pacing', { defaultValue: 'Pacing' }),
-          trap: t('overviewLabels.trap', { defaultValue: 'Trap' }),
-        }}
-      />
-      <OverviewFingerprints
-        header={k('fingerprintsHeader')}
-        rows={fingerprints}
-        columns={{
-          category: t('overviewLabels.pattern', { defaultValue: 'Pattern' }),
-          signal: t('overviewLabels.signal', { defaultValue: 'Signal' }),
-        }}
-      />
-      <OverviewSkipList header={k('skipHeader')} items={skip} />
-      <OverviewAntiPatterns
-        header={k('antiPatternsHeader')}
-        items={antiPatterns}
-        labels={{
-          bad: t('overviewLabels.bad', { defaultValue: 'Anti-pattern' }),
-          why: t('overviewLabels.why', { defaultValue: 'Why it costs you' }),
-          fix: t('overviewLabels.fix', { defaultValue: 'Say this instead' }),
-        }}
-      />
-      <OverviewTips header={k('tipsHeader')} tips={tips} />
-      <OverviewCtas ctas={ctas} />
-    </OverviewShell>
-  )
+	return (
+		<OverviewShell
+			kicker={k("kicker")}
+			title={k("title")}
+			summary={k("summary")}
+		>
+			<OverviewGrid header={k("scoringHeader")} items={scoring} />
+			<OverviewDeepCards
+				header={k("modulesHeader")}
+				items={modulesWithWeight}
+				labels={{
+					pattern: t("overviewLabels.pattern", { defaultValue: "Pattern" }),
+					pacing: t("overviewLabels.pacing", { defaultValue: "Pacing" }),
+					trap: t("overviewLabels.trap", { defaultValue: "Trap" }),
+				}}
+			/>
+			<OverviewFingerprints
+				header={k("fingerprintsHeader")}
+				rows={fingerprints}
+				columns={{
+					category: t("overviewLabels.pattern", { defaultValue: "Pattern" }),
+					signal: t("overviewLabels.signal", { defaultValue: "Signal" }),
+				}}
+			/>
+			<OverviewSkipList header={k("skipHeader")} items={skip} />
+			<OverviewAntiPatterns
+				header={k("antiPatternsHeader")}
+				items={antiPatterns}
+				labels={{
+					bad: t("overviewLabels.bad", { defaultValue: "Anti-pattern" }),
+					why: t("overviewLabels.why", { defaultValue: "Why it costs you" }),
+					fix: t("overviewLabels.fix", { defaultValue: "Say this instead" }),
+				}}
+			/>
+			<OverviewTips header={k("tipsHeader")} tips={tips} />
+			<OverviewCtas ctas={ctas} />
+		</OverviewShell>
+	);
 }
 
 function PowerDayOverview({ companySlug }: { companySlug: string }) {
-  const { t } = useTranslation()
-  const k = (key: string) => t(`sectionOverview.powerDay.${key}`)
+	const { t } = useTranslation();
+	const k = (key: string) => t(`sectionOverview.powerDay.${key}`);
 
-  const timeline = tArray<{ time: string; label: string; note: string }>(
-    t,
-    'sectionOverview.powerDay.timeline'
-  )
-  const roundsDeep = tArray<DeepItem>(t, 'sectionOverview.powerDay.roundsDeep')
-  const valuesDeep = tArray<{
-    title: string
-    body: string
-    signal: string
-    antiSignal: string
-    petPeeve: string
-  }>(t, 'sectionOverview.powerDay.valuesDeep')
-  const glossary = tArray<{ category: string; products: string; why: string }>(
-    t,
-    'sectionOverview.powerDay.glossary'
-  )
-  const antiPatterns = tArray<{ bad: string; why: string; fix: string }>(
-    t,
-    'sectionOverview.powerDay.antiPatterns'
-  )
-  const prep = tArray<{ when: string; tasks: string[] }>(
-    t,
-    'sectionOverview.powerDay.prep'
-  )
-  const concepts = tArray<{
-    term: string
-    definition: string
-    why: string
-    example: string
-    signals?: string[]
-    pitfalls?: string[]
-  }>(t, 'sectionOverview.powerDay.concepts')
+	const timeline = tArray<{ time: string; label: string; note: string }>(
+		t,
+		"sectionOverview.powerDay.timeline",
+	);
+	const roundsDeep = tArray<DeepItem>(t, "sectionOverview.powerDay.roundsDeep");
+	const valuesDeep = tArray<{
+		title: string;
+		body: string;
+		signal: string;
+		antiSignal: string;
+		petPeeve: string;
+	}>(t, "sectionOverview.powerDay.valuesDeep");
+	const glossary = tArray<{ category: string; products: string; why: string }>(
+		t,
+		"sectionOverview.powerDay.glossary",
+	);
+	const antiPatterns = tArray<{ bad: string; why: string; fix: string }>(
+		t,
+		"sectionOverview.powerDay.antiPatterns",
+	);
+	const prep = tArray<{ when: string; tasks: string[] }>(
+		t,
+		"sectionOverview.powerDay.prep",
+	);
+	const concepts = tArray<{
+		term: string;
+		definition: string;
+		why: string;
+		example: string;
+		signals?: string[];
+		pitfalls?: string[];
+	}>(t, "sectionOverview.powerDay.concepts");
 
-  const ctas: SectionCta[] = [
-    {
-      to: `/${companySlug}/mock-power-day`,
-      label: k('ctaStart'),
-      icon: ClockIcon,
-      variant: 'default',
-    },
-    {
-      to: `/${companySlug}/mock-gca`,
-      label: k('ctaGca'),
-      icon: ClockIcon,
-      variant: 'secondary',
-    },
-  ]
+	const ctas: SectionCta[] = [
+		{
+			to: `/${companySlug}/mock-power-day`,
+			label: k("ctaStart"),
+			icon: ClockIcon,
+			variant: "default",
+		},
+		{
+			to: `/${companySlug}/mock-gca`,
+			label: k("ctaGca"),
+			icon: ClockIcon,
+			variant: "secondary",
+		},
+	];
 
-  return (
-    <OverviewShell kicker={k('kicker')} title={k('title')} summary={k('summary')}>
-      <OverviewTimeline header={k('timelineHeader')} items={timeline} />
-      <Separator />
-      <OverviewConcepts
-        header={k('conceptsHeader')}
-        sub={k('conceptsSub')}
-        items={concepts}
-        labels={{
-          definition: t('overviewLabels.definition', { defaultValue: 'What it is' }),
-          whyMatters: t('overviewLabels.whyMatters', {
-            defaultValue: 'Why Capital One cares',
-          }),
-          inPractice: t('overviewLabels.inPractice', { defaultValue: 'In practice' }),
-          signals: t('overviewLabels.conceptSignals', {
-            defaultValue: "Signals you're doing it well",
-          }),
-          pitfalls: t('overviewLabels.conceptPitfalls', {
-            defaultValue: 'Common mistakes',
-          }),
-        }}
-      />
-      <Separator />
-      <OverviewRoundsTabs
-        header={k('roundsHeader')}
-        items={roundsDeep}
-        labels={{
-          evaluated: t('overviewLabels.evaluated', { defaultValue: 'What they evaluate' }),
-          pacing: t('overviewLabels.pacing', { defaultValue: 'Pacing' }),
-          pitfalls: t('overviewLabels.pitfalls', { defaultValue: 'Common pitfalls' }),
-        }}
-      />
-      <Separator />
-      <OverviewValuesTabs
-        header={k('valuesHeader')}
-        items={valuesDeep}
-        labels={{
-          signal: t('overviewLabels.signal', { defaultValue: 'Signal' }),
-          antiSignal: t('overviewLabels.antiSignal', { defaultValue: 'Anti-signal' }),
-          petPeeve: t('overviewLabels.petPeeve', { defaultValue: 'Pet peeve' }),
-        }}
-      />
-      <Separator />
-      <OverviewGlossary
-        header={k('glossaryHeader')}
-        sub={k('glossarySub')}
-        rows={glossary}
-        columns={{
-          category: t('overviewLabels.category', { defaultValue: 'Category' }),
-          products: t('overviewLabels.products', { defaultValue: 'Products' }),
-          why: t('overviewLabels.why', { defaultValue: 'Why it exists' }),
-        }}
-      />
-      <Separator />
-      <OverviewAntiPatternsAccordion
-        header={k('antiPatternsHeader')}
-        items={antiPatterns}
-        labels={{
-          bad: t('overviewLabels.bad', { defaultValue: 'Anti-pattern' }),
-          why: t('overviewLabels.why', { defaultValue: 'Why it costs you' }),
-          fix: t('overviewLabels.fix', { defaultValue: 'Say this instead' }),
-        }}
-      />
-      <Separator />
-      <OverviewPrepTimeline header={k('prepHeader')} items={prep} />
-      <OverviewCtas ctas={ctas} />
-    </OverviewShell>
-  )
+	return (
+		<OverviewShell
+			kicker={k("kicker")}
+			title={k("title")}
+			summary={k("summary")}
+		>
+			<OverviewTimeline header={k("timelineHeader")} items={timeline} />
+			<Separator />
+			<OverviewConcepts
+				header={k("conceptsHeader")}
+				sub={k("conceptsSub")}
+				items={concepts}
+				labels={{
+					definition: t("overviewLabels.definition", {
+						defaultValue: "What it is",
+					}),
+					whyMatters: t("overviewLabels.whyMatters", {
+						defaultValue: "Why Capital One cares",
+					}),
+					inPractice: t("overviewLabels.inPractice", {
+						defaultValue: "In practice",
+					}),
+					signals: t("overviewLabels.conceptSignals", {
+						defaultValue: "Signals you're doing it well",
+					}),
+					pitfalls: t("overviewLabels.conceptPitfalls", {
+						defaultValue: "Common mistakes",
+					}),
+				}}
+			/>
+			<Separator />
+			<OverviewRoundsTabs
+				header={k("roundsHeader")}
+				items={roundsDeep}
+				labels={{
+					evaluated: t("overviewLabels.evaluated", {
+						defaultValue: "What they evaluate",
+					}),
+					pacing: t("overviewLabels.pacing", { defaultValue: "Pacing" }),
+					pitfalls: t("overviewLabels.pitfalls", {
+						defaultValue: "Common pitfalls",
+					}),
+				}}
+			/>
+			<Separator />
+			<OverviewValuesTabs
+				header={k("valuesHeader")}
+				items={valuesDeep}
+				labels={{
+					signal: t("overviewLabels.signal", { defaultValue: "Signal" }),
+					antiSignal: t("overviewLabels.antiSignal", {
+						defaultValue: "Anti-signal",
+					}),
+					petPeeve: t("overviewLabels.petPeeve", { defaultValue: "Pet peeve" }),
+				}}
+			/>
+			<Separator />
+			<OverviewGlossary
+				header={k("glossaryHeader")}
+				sub={k("glossarySub")}
+				rows={glossary}
+				columns={{
+					category: t("overviewLabels.category", { defaultValue: "Category" }),
+					products: t("overviewLabels.products", { defaultValue: "Products" }),
+					why: t("overviewLabels.why", { defaultValue: "Why it exists" }),
+				}}
+			/>
+			<Separator />
+			<OverviewAntiPatternsAccordion
+				header={k("antiPatternsHeader")}
+				items={antiPatterns}
+				labels={{
+					bad: t("overviewLabels.bad", { defaultValue: "Anti-pattern" }),
+					why: t("overviewLabels.why", { defaultValue: "Why it costs you" }),
+					fix: t("overviewLabels.fix", { defaultValue: "Say this instead" }),
+				}}
+			/>
+			<Separator />
+			<OverviewPrepTimeline header={k("prepHeader")} items={prep} />
+			<OverviewCtas ctas={ctas} />
+		</OverviewShell>
+	);
 }
-
