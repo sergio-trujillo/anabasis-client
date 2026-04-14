@@ -33,6 +33,7 @@ import {
   type ChapterSlug,
   type OverviewTopic,
 } from './chapters'
+import { PrevNextNav } from './PrevNextNav'
 
 export function OverviewSubPage() {
   const { companySlug = '', topic = 'power-day', page } = useParams()
@@ -77,6 +78,13 @@ export function OverviewSubPage() {
         </div>
       </Fade>
 
+      <Fade delay={0.14}>
+        <PrevNextNav
+          chapters={chapters}
+          currentSlug={current.slug}
+          baseTo={baseTo}
+        />
+      </Fade>
     </>
   )
 }
@@ -116,6 +124,13 @@ function ChapterContent({
     conceptPitfalls: t('overviewLabels.conceptPitfalls', {
       defaultValue: 'Common mistakes',
     }),
+    inPractice: t('overviewLabels.inPractice', { defaultValue: 'In practice' }),
+    playbook: t('overviewLabels.playbook', { defaultValue: 'Playbook' }),
+    triggers: t('overviewLabels.triggers', { defaultValue: 'Triggers' }),
+    examples: t('overviewLabels.examples', { defaultValue: 'Examples' }),
+    deliverables: t('overviewLabels.deliverables', { defaultValue: 'Deliverables' }),
+    tasks: t('overviewLabels.tasks', { defaultValue: 'Tasks' }),
+    whenToUse: t('overviewLabels.whenToUse', { defaultValue: 'When to reach for it' }),
   }
 
   // ── Power Day chapters ────────────────────────────────────────────
@@ -236,6 +251,9 @@ function ChapterContent({
             evaluated: labels.evaluated,
             pacing: labels.pacing,
             pitfalls: labels.pitfalls,
+            signals: labels.conceptSignals,
+            inPractice: labels.inPractice,
+            playbook: labels.playbook,
           }}
         />
       )
@@ -247,6 +265,10 @@ function ChapterContent({
         signal: string
         antiSignal: string
         petPeeve: string
+        signals?: string[]
+        antiSignals?: string[]
+        petPeeves?: string[]
+        example?: string
       }>(t, 'sectionOverview.powerDay.valuesDeep')
       return (
         <OverviewValuesTabs
@@ -256,6 +278,7 @@ function ChapterContent({
             signal: labels.signal,
             antiSignal: labels.antiSignal,
             petPeeve: labels.petPeeve,
+            inPractice: labels.inPractice,
           }}
         />
       )
@@ -279,6 +302,9 @@ function ChapterContent({
         category: string
         products: string
         why: string
+        example?: string
+        signals?: string[]
+        pitfalls?: string[]
       }>(t, 'sectionOverview.powerDay.glossary')
       return (
         <OverviewGlossary
@@ -289,32 +315,52 @@ function ChapterContent({
             category: labels.category,
             products: labels.products,
             why: labels.why,
+            inPractice: labels.inPractice,
+            signals: labels.whenToUse,
+            pitfalls: labels.conceptPitfalls,
           }}
         />
       )
     }
     if (slug === 'anti-patterns') {
-      const items = tArray<{ bad: string; why: string; fix: string }>(
-        t,
-        'sectionOverview.powerDay.antiPatterns'
-      )
+      const items = tArray<{
+        bad: string
+        why: string
+        fix: string
+        examples?: string[]
+        triggers?: string[]
+      }>(t, 'sectionOverview.powerDay.antiPatterns')
       return (
         <OverviewAntiPatternsAccordion
           header={t('sectionOverview.powerDay.antiPatternsHeader')}
           items={items}
-          labels={{ bad: labels.bad, why: labels.whyCosts, fix: labels.fix }}
+          labels={{
+            bad: labels.bad,
+            why: labels.whyCosts,
+            fix: labels.fix,
+            triggers: labels.triggers,
+            examples: labels.examples,
+          }}
         />
       )
     }
     if (slug === 'prep') {
-      const items = tArray<{ when: string; tasks: string[] }>(
-        t,
-        'sectionOverview.powerDay.prep'
-      )
+      const items = tArray<{
+        when: string
+        tasks: string[]
+        rationale?: string
+        deliverables?: string[]
+        pitfalls?: string[]
+      }>(t, 'sectionOverview.powerDay.prep')
       return (
         <OverviewPrepTimeline
           header={t('sectionOverview.powerDay.prepHeader')}
           items={items}
+          labels={{
+            tasks: labels.tasks,
+            deliverables: labels.deliverables,
+            pitfalls: labels.conceptPitfalls,
+          }}
         />
       )
     }

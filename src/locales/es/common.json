@@ -402,6 +402,11 @@
       "action": "Tu siguiente paso"
     }
   },
+  "prevNext": {
+    "nav": "Navegación de capítulos",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
   "overviewChapters": {
     "actions": {
       "practice": "Práctica aleatoria",
@@ -531,6 +536,12 @@
     "inPractice": "En la práctica",
     "conceptSignals": "Señales de que lo estás haciendo bien",
     "conceptPitfalls": "Errores comunes",
+    "playbook": "Playbook",
+    "triggers": "Situaciones que lo disparan",
+    "examples": "Ejemplos",
+    "deliverables": "Entregables",
+    "tasks": "Tareas",
+    "whenToUse": "Cuándo lo sacas",
     "level": "Nivel",
     "probes": "Qué indagan",
     "tip": "Cómo leerlos",
@@ -678,7 +689,18 @@
             "Saltar al código antes de acordar el enfoque y la complejidad objetivo.",
             "Tomar la pista del entrevistador como ataque en vez de señal colaborativa."
           ],
-          "pacing": "5 min aclarar + acordar enfoque · 25 min codear · 5 min probar edge-cases · 5 min discutir complejidad + mejoras."
+          "pacing": "5 min aclarar + acordar enfoque · 25 min codear · 5 min probar edge-cases · 5 min discutir complejidad + mejoras.",
+          "example": "Lees el problema, dices 'veo una huella de sliding window aquí — confirmo el constraint antes de elegir la complejidad objetivo', y escribes el skeleton en pseudocódigo narrando en voz alta. Cuando el entrevistador suelta un hint sutil — '¿qué pasa si el input está vacío?' — respondes 'buena observación, agrego ese guard aquí' y sigues. El código compila limpio en el primer intento.",
+          "signals": [
+            "Declara la complejidad objetivo en voz alta y espera confirmación del entrevistador antes de escribir una línea de código.",
+            "Narra cada decisión no obvia — 'uso puntero izquierdo y derecho para evitar el inner loop' — de modo que el entrevistador puede seguir el razonamiento sin preguntar.",
+            "Cuando encuentra un bug, se autocorrige con razonamiento: 'este índice está desplazado porque no estoy contando el límite inclusivo — lo corrijo aquí'."
+          ],
+          "playbook": [
+            "Antes de escribir código, declara la complejidad objetivo en voz alta y acuérdala con el entrevistador: '¿Apunto a O(n) tiempo, O(1) espacio — coincide con lo que tienes en mente?'",
+            "Escribe un stub de función con la firma y el tipo de retorno antes de llenar el cuerpo, para que el entrevistador vea la forma de tu solución de inmediato.",
+            "Después de que tu solución pasa el caso base, propón un edge case adversarial tú mismo — no esperes a que el entrevistador lo encuentre."
+          ]
         },
         {
           "title": "Ronda 2 — Coding + Job Fit",
@@ -689,7 +711,18 @@
             "No conectar tu trayectoria con algo concreto que Capital One construye.",
             "Gastar tanto en la parte behavioral que apuras el código (o viceversa)."
           ],
-          "pacing": "25 min coding · 20 min 'por qué Capital One' + trayectoria. Espera preguntas a profundidad sobre especificidades."
+          "pacing": "25 min coding · 20 min 'por qué Capital One' + trayectoria. Espera preguntas a profundidad sobre especificidades.",
+          "example": "El problema de coding cierra en 22 minutos. El entrevistador pivota: 'Cuéntame por qué Capital One.' Respondes: 'Pasé los últimos cuatro años construyendo rails de pagos — resolución de disputas, chargebacks, reconciliación de ledger. La apuesta de Capital One por un card stack cloud-native es la versión más difícil de esos problemas a escala. El trabajo que haría aquí es más duro que lo que haría en cualquier otro lado.' El entrevistador profundiza: '¿Qué específicamente del ángulo cloud-native?' Y tienes la respuesta lista.",
+          "signals": [
+            "La respuesta de 'por qué Capital One' hace referencia a un producto o desafío técnico específico — One, Eno, la plataforma de card rewards — no a un atributo genérico de la empresa.",
+            "Gestiona el reloj sin que se lo pidan: pivota limpiamente de coding a job-fit cuando el problema termina, o se asoma al marcador a los 25 minutos.",
+            "Responde preguntas de job-fit con la misma precisión que las técnicas — nombra un equipo, rol o problema específico en lugar de 'quiero crecer'."
+          ],
+          "playbook": [
+            "Antes de la ronda, prepara una historia concreta de 'por qué Capital One' anclada a un producto o desafío de ingeniería que investigaste — no la propuesta de valor que leíste en la página de carreras.",
+            "Al llegar al minuto 25, si el entrevistador no ha pivotado, di: 'Creo que el código está en buen lugar — ¿pasamos a la conversación de job-fit?' — demuestra que llevas el reloj.",
+            "Cuando el entrevistador profundice en tu 'por qué', responde con un constraint, no una preferencia: 'El pipeline de fraud detection a este volumen de transacciones es una versión más difícil de lo que he construido — eso es lo que me jala.'"
+          ]
         },
         {
           "title": "Ronda 3 — System Design o Behavioral",
@@ -700,7 +733,18 @@
             "Behavioral: decir 'nosotros' cuando preguntan por tu decisión específica. Framing heroico en éxitos de equipo.",
             "Ambas: no anclar al contexto bancario de Capital One (dinero = consistencia fuerte, auditoría = de primera clase)."
           ],
-          "pacing": "Sys-design: 5 min requerimientos · 5 min estimates · 20 min componentes · 15 min profundizar en 1-2 áreas. Behavioral: 1-2 historias, 8-12 min c/u."
+          "pacing": "Sys-design: 5 min requerimientos · 5 min estimates · 20 min componentes · 15 min profundizar en 1-2 áreas. Behavioral: 1-2 historias, 8-12 min c/u.",
+          "example": "El prompt dice: 'Diseña un sistema de detección de fraude en tiempo real.' Abres: 'Antes de dibujar nada — ¿el requerimiento es autorización en tiempo real o flagging asíncrono? Son modelos de consistencia distintos.' Después de confirmar, dices: 'Estimo 2,000 transacciones por segundo en peak. Eso define el presupuesto de latencia: la autorización es síncrona, así que el check de fraude necesita quedar bajo 80 ms end-to-end.' Luego dibujas el camino: API gateway → servicio de scoring de fraude → feature store → rule engine, nombrando la categoría de cada componente antes del producto.",
+          "signals": [
+            "Abre clarificando los requerimientos de consistencia — síncrono vs. asíncrono, fuerte vs. eventual — antes de dibujar un solo componente.",
+            "Ancla las estimaciones a un número concreto: '2,000 transacciones por segundo, presupuesto de latencia de 50 ms para autorización' — no 'tráfico alto'.",
+            "Nombra el modo de falla que justifica cada decisión arquitectónica: 'pongo el broker aquí para que un check de fraude lento no haga back-pressure al path de autorización'."
+          ],
+          "playbook": [
+            "Para sys-design: enuncia los tres constraints que guiarán cada decisión — throughput objetivo, presupuesto de latencia, requerimiento de consistencia — antes de dibujar nada.",
+            "Para behavioral: abre con una oración de Situation que ancle el scope y las apuestas, luego di 'mi trabajo específico era...' antes de que el entrevistador lo tenga que preguntar.",
+            "Si te toca behavioral y la historia pasa los 10 minutos, surfea el tiempo: '¿Llego al resultado — bajamos la latencia p99 de 800 ms a 120 ms? ¿Quieres que profundice en alguna parte del Action?'"
+          ]
         },
         {
           "title": "Ronda 4 — Business Case",
@@ -711,7 +755,18 @@
             "Elegir un framework y luego abandonarlo a medio análisis.",
             "Números demasiado precisos ($127.43) que señalan falsa confianza. Usa rangos."
           ],
-          "pacing": "5 min aclarar + elegir framework · 10 min dimensionar · 15 min análisis · 10 min recomendación + sensibilidad."
+          "pacing": "5 min aclarar + elegir framework · 10 min dimensionar · 15 min análisis · 10 min recomendación + sensibilidad.",
+          "example": "El prompt: 'Capital One está considerando un nuevo producto de cashback. ¿Vale la pena?' Dices: 'Uso un árbol de utilidad — Revenue = fees de tarjeta nueva + interchange + float; Cost = liability de cashback + adquisición + fraude. Recorro cada bucket y marco cuál driver creo que domina.' Después de 12 minutos de análisis estructurado llegas a: 'El case depende de la reducción de churn — si el cashback retiene 8% más de clientes al año, el IRR es positivo en el año 2. Si es 4%, el break-even es en año 4, que es marginal.' El entrevistador presiona tu número de churn. Lo defiendes sin parpadear.",
+          "signals": [
+            "Anuncia el framework y su estructura de primer nivel antes de hacer cualquier pregunta aclaratoria — el roadmap es visible desde el minuto uno.",
+            "Nombra el supuesto más sensible y lo cuantifica: 'Esto depende de la tasa de reducción de churn — una variación de 4 puntos mueve el IRR en tres años.'",
+            "Cuando el entrevistador presiona un supuesto, da un criterio para cambiarlo: 'Revisaría ese supuesto si me dijeras que el cohort de churn actual se concentra en clientes de alto gasto.'"
+          ],
+          "playbook": [
+            "Abre con: 'Uso [nombre del framework] porque esta pregunta tiene forma de [tipo de problema]' — una oración, framework nombrado, razón declarada, antes de cualquier número.",
+            "Después de dimensionar el problema, pausa y di cuál supuesto es carga crítica: 'Todo lo que sigue depende principalmente de [X] — estoy asumiendo [valor].'",
+            "Cuando defiendas ante un pushback, no repitas el número — da la lógica: 'Llego a esa estimación vía [cadena de razonamiento]; si [supuesto de entrada] cambia, el número se mueve a [rango].'"
+          ]
         }
       ],
       "valuesHeader": "Los 4 valores — cómo los indagan de verdad",
@@ -721,28 +776,92 @@
           "body": "Subir el bar, causa raíz sobre parche, calidad con datos.",
           "signal": "Nombra un bar específico que subiste con números. Discute tradeoffs de calidad que te costaron a corto plazo.",
           "antiSignal": "Confunde trabajar horas extra con subir el bar. Describe esfuerzo, no resultado.",
-          "petPeeve": "'Le metí fines de semana' sin explicar qué específicamente mejoró y por qué."
+          "petPeeve": "'Le metí fines de semana' sin explicar qué específicamente mejoró y por qué.",
+          "example": "Estábamos a dos semanas del lanzamiento y noté que el servicio de cálculo de fees devolvía tarifas obsoletas bajo carga concurrente — cerca del 0.3% de las transacciones estaban siendo subcobradas. Lo escalé a mi manager sabiendo que íbamos a retrasar el sprint. Atrasamos una semana, parcheamos la race condition, y evitamos lo que habría sido una revelación regulatoria bajo Reg E.",
+          "signals": [
+            "Nombra una métrica específica que cambió como resultado de la inversión en calidad — 'la tasa de error bajó de 0.3% a cero' — no 'las cosas mejoraron'.",
+            "Habla del costo a corto plazo de la decisión de calidad sin enmarcarlo como martirio: 'retrasamos un sprint; la alternativa era una divulgación bajo Reg E'.",
+            "Distingue entre solución de causa raíz y parche: explica por qué eligió la solución más profunda y qué habría dejado expuesto el parche."
+          ],
+          "antiSignals": [
+            "Describe el esfuerzo — 'refactoricé todo el módulo' — pero nunca mide qué mejoró después de la refactorización.",
+            "Usa 'calidad' como sinónimo de 'trabajé mucho': la historia es sobre horas invertidas, no sobre un bar medible que subió.",
+            "El resultado es 'el equipo estaba más contento' o 'el código quedó más limpio' — sin impacto nombrado en el cliente externo o en compliance."
+          ],
+          "petPeeves": [
+            "'Le metí tres fines de semana' — las horas como métrica de excelencia, sin ningún número de resultado adjunto.",
+            "Historias donde el problema de calidad era obvio y todos estaban de acuerdo — sin tensión, sin tradeoff, sin decisión real tomada.",
+            "Confundir hacer code reviews minuciosamente con subir el bar: revisar PRs con cuidado es baseline, no una historia de bar-raise."
+          ]
         },
         {
           "title": "Do The Right Thing",
           "body": "Sostener la línea bajo presión, con un costo nombrado.",
           "signal": "Nombra el costo específico que pagaste (político, timeline, relación). Palabras textuales de lo que dijiste.",
           "antiSignal": "Describe hablar sin citarte a ti mismo. Hace la decisión sonar fácil o inevitable.",
-          "petPeeve": "'Lo reporté' sin tensión — si no hubo costo, no hubo decisión."
+          "petPeeve": "'Lo reporté' sin tensión — si no hubo costo, no hubo decisión.",
+          "example": "Estábamos a dos semanas del shipping y noté que el nuevo flujo de fees no reflejaba con precisión la estructura real — estábamos subdivulgando en un tipo de cargo. Lo levanté con mi manager sabiendo que iba a retrasar el launch. Atrasamos un sprint, corregimos la divulgación, y evitamos lo que habría sido un hallazgo de auditoría regulatoria. Mi director no estaba contento con el retraso al principio.",
+          "signals": [
+            "Se cita a sí mismo — 'le dije a mi manager: esto es un potencial issue de Reg E y creo que necesitamos retrasar' — en lugar de parafrasear el acto de hablar.",
+            "Nombra el costo explícitamente y no lo minimiza: 'esa decisión me hizo impopular con dos stakeholders por cerca de un mes'.",
+            "La historia tiene un momento donde hacer lo correcto era genuinamente incierto o controversial — no una decisión obvia con la que todos estaban de acuerdo."
+          ],
+          "antiSignals": [
+            "La decisión ética no tuvo costo — todos estuvieron de acuerdo en que era lo correcto y no hubo pushback ni retraso.",
+            "La historia se enmarca como seguir una regla: 'seguí la política de compliance' — sin juicio personal bajo ambigüedad.",
+            "Describe escalar sin decir qué dijo exactamente ni qué pasó después — la narrativa salta de 'lo escalé' a 'el problema fue resuelto'."
+          ],
+          "petPeeves": [
+            "'Siempre hago lo correcto' como apertura — una declaración de valores, no una historia con un costo nombrado.",
+            "'Lo reporté a compliance' sin tensión — si era un issue obvio de compliance, no hubo decisión ética, solo un procedimiento.",
+            "Historias sobre prevenir una desviación menor de proceso: el bajo nivel de riesgo implica baja señal en este valor."
+          ]
         },
         {
           "title": "Respect for Individuals",
           "body": "Dignidad bajo presión, flujo del crédito, conciencia de sesgo.",
           "signal": "Dice lo que eligió NO decir. El crédito fluye a contribuidores menos visibles. Nombra un sesgo que atrapó en sí mismo.",
           "antiSignal": "Usa 'convencí' como resolución — las personas fueron forzadas, no persuadidas. Los compañeros son props para el arco de crecimiento.",
-          "petPeeve": "Historias donde tú tenías 'razón' y el compañero estaba 'equivocado' — cero reconocimiento de sesgo."
+          "petPeeve": "Historias donde tú tenías 'razón' y el compañero estaba 'equivocado' — cero reconocimiento de sesgo.",
+          "example": "Un ingeniero junior del equipo propuso un enfoque que yo pensaba que estaba mal. Me atrapé a punto de anularlo públicamente en el design review. En cambio, le pedí que me explicara su razonamiento — y me di cuenta de que su modelado de constraints era en realidad más completo que el mío. Lo dije en la reunión, con nombre y apellido.",
+          "signals": [
+            "Nombra un sesgo o supuesto que atrapó en sí mismo — 'inicialmente descarté la idea porque la persona era junior, no porque la idea fuera mala'.",
+            "El crédito fluye a alguien menos visible: nombra a un compañero que no aparece en el highlight reel del manager y explica su contribución específica.",
+            "Describe una elección de no hablar o de no escalar — 'decidí no corregirlo en la reunión; lo busqué uno a uno después'."
+          ],
+          "antiSignals": [
+            "Resuelve el conflicto siendo persuasivo: 'expliqué mi razonamiento y terminó de acuerdo' — sin reconocer que el punto de vista de la otra persona tenía mérito.",
+            "La historia de 'respeto' es en realidad una historia de mentoring sobre cómo el candidato ayudó a un junior a mejorar — el arco de crecimiento está centrado en el candidato, no en la dignidad de la otra persona.",
+            "Los compañeros son innominados, indiferenciados, y existen solo como contexto para las decisiones del candidato."
+          ],
+          "petPeeves": [
+            "Historias enmarcadas como 'tenía razón, pero fui amable al explicarlo' — la cortesía no es respeto, y tener razón no es lo mismo que escuchar.",
+            "Sin reconocimiento del diferencial de poder: un senior anulando a un junior 'con respeto' sigue siendo una anulación — el candidato no nombra esa tensión.",
+            "El reconocimiento de sesgo es abstracto: 'trato de ser consciente del sesgo' sin nombrar una instancia específica donde el sesgo afectó su juicio."
+          ]
         },
         {
           "title": "Succeed Together",
           "body": "Resultados compartidos, desbloquear proactivamente, sin heroísmos solos.",
           "signal": "Nombra compañeros. Muestra una capacidad que pertenece al equipo, no a ti. Señales de desbloqueo proactivo.",
           "antiSignal": "Éxito de equipo sin compañeros nombrados. Framing de mártir en trabajo pesado.",
-          "petPeeve": "'Lo sacamos' sin decir quién hizo qué — lenguaje genérico de equipo."
+          "petPeeve": "'Lo sacamos' sin decir quién hizo qué — lenguaje genérico de equipo.",
+          "example": "Tres días antes del freeze de deploy de Black Friday, noté que el trabajo de pipeline de Elena estaba bloqueado por un ticket de infra que no iba a moverse a tiempo. No me habían asignado ese trabajo, pero tomé el ticket, lo limpié en un día, y notifiqué el desbloqueo al equipo. Salimos con 48 horas de margen. Elena era dueña de ese pipeline; yo solo quité el bloqueador.",
+          "signals": [
+            "Nombra al menos dos compañeros por nombre y describe sus contribuciones específicas, no solo 'el equipo trabajó duro'.",
+            "Describe una acción proactiva de desbloqueo — algo que hizo antes de que se lo pidieran, al servicio del objetivo de otra persona.",
+            "Distingue su contribución del resultado del equipo sin framing heroico: 'yo despejé un bloqueador; el ship era de Elena'."
+          ],
+          "antiSignals": [
+            "Usa 'nosotros' en toda la historia sin compañeros nombrados — el entrevistador no puede distinguir si era un equipo de dos o de diez, ni qué hizo exactamente cada quien.",
+            "La historia se centra en cuánto trabajó el candidato personalmente, con los compañeros como contexto de fondo: framing de mártir disfrazado de trabajo en equipo.",
+            "Las historias de desbloqueo proactivo donde el candidato terminó haciendo la mayor parte del trabajo del camino crítico — eso es rescatar, no habilitar."
+          ],
+          "petPeeves": [
+            "'Éramos un equipo muy bueno' — una caracterización, no una historia de acción compartida específica.",
+            "El único compañero nombrado es el manager que recibe crédito por 'confiar' en el candidato — los peers son invisibles.",
+            "'Me puse al frente cuando nadie más lo hizo' — framing de heroísmo individual que implica que el equipo era débil, no que el candidato fue colaborativo."
+          ]
         }
       ],
       "languageHeader": "Cómo decirlo — no digas esto, di esto",
@@ -792,25 +911,261 @@
       "glossaryHeader": "Glosario de arquitectura enterprise — primero la categoría, después el producto",
       "glossarySub": "Si solo nombras el producto, pareces cargo-cult. Nombra la categoría y el modo de falla que resuelve; el producto sale natural.",
       "glossary": [
-        { "category": "Broker de mensajería", "products": "RabbitMQ, Kafka, AWS SNS/SQS", "why": "Desacopla productor de consumidor; amortigua picos; habilita fan-out." },
-        { "category": "Cache distribuido", "products": "Redis, Memcached", "why": "Lecturas sub-ms; shedding de hot-keys; almacenar sesiones." },
-        { "category": "Base de datos relacional", "products": "Postgres, MySQL, Aurora", "why": "Transacciones ACID; consistencia fuerte; el dinero vive aquí." },
-        { "category": "Columnar / wide-column", "products": "Cassandra, DynamoDB, BigTable", "why": "Escalado horizontal por key predecible; consistencia eventual OK." },
-        { "category": "Object store", "products": "S3, GCS, Azure Blob", "why": "Blobs durables baratos; logs, backups, assets estáticos." },
-        { "category": "Pipeline CDC", "products": "Debezium, Kafka Connect, DynamoDB Streams", "why": "Emite cambios de fila como eventos; alimenta índices/caches downstream." },
-        { "category": "Índice de búsqueda", "products": "Elasticsearch, OpenSearch", "why": "Full-text + agregaciones con latencia que SQL no alcanza." },
-        { "category": "API gateway", "products": "Kong, AWS API Gateway, Envoy", "why": "Auth, rate-limit, ruteo en el edge." },
-        { "category": "Service mesh", "products": "Istio, Linkerd", "why": "mTLS, reintentos, tracing, traffic shifting — fuera de tu servicio." },
-        { "category": "Proveedor de identidad / SSO", "products": "Okta, Auth0, AWS Cognito", "why": "OIDC/SAML; emisión de tokens; auth delegada." },
-        { "category": "Feature-flag service", "products": "LaunchDarkly, Split, Unleash", "why": "Desacopla deploy de release; rollouts dirigidos; kill switches." },
-        { "category": "Stack de observabilidad", "products": "Datadog, New Relic, Prometheus+Grafana", "why": "Métricas + trazas + logs; SLOs; paging." }
+        {
+          "category": "Broker de mensajería",
+          "products": "RabbitMQ, Kafka, AWS SNS/SQS",
+          "why": "Desacopla productor de consumidor; amortigua picos; habilita fan-out.",
+          "example": "Entre el servicio de checkout y el scorer de fraude pongo un broker de mensajería para que un check de fraude lento no haga back-pressure a la latencia del checkout, y un pico de tráfico a las 9 PM no cascade al indexador downstream.",
+          "signals": [
+            "Cuando necesitas desacoplamiento asíncrono entre dos servicios con SLOs de latencia distintos — uno síncrono, uno que tolera segundos de lag.",
+            "Cuando un solo evento necesita llegar a múltiples consumidores — log de auditoría, scorer de fraude e indexador de búsqueda consumiendo el mismo evento de pago.",
+            "Cuando necesitas replay de eventos para recuperación o auditoría — reprocesar transacciones después de una caída downstream o un cambio en el rule engine."
+          ],
+          "pitfalls": [
+            "Usar un broker para patrones request-response: un broker agrega latencia y complejidad cuando el llamador necesita una respuesta síncrona en menos de 100 ms.",
+            "Elegir Kafka para un caso de bajo throughput sin contabilizar el overhead de gestión de particiones — a veces SQS es el nivel correcto de herramienta.",
+            "No diseñar para consumidores idempotentes: la entrega at-least-once significa que tu downstream debe manejar mensajes duplicados, especialmente en transacciones financieras."
+          ]
+        },
+        {
+          "category": "Cache distribuido",
+          "products": "Redis, Memcached",
+          "why": "Lecturas sub-ms; shedding de hot-keys; almacenar sesiones.",
+          "example": "Frente al lookup de rewards de tarjeta pongo un cache distribuido — los saldos de rewards se leen en cada visualización de transacción pero solo se actualizan de noche, así que un TTL de 30 segundos absorbe el 95% del tráfico de lectura sin tocar la base de datos.",
+          "signals": [
+            "Cuando un dataset tiene muchas lecturas, rara vez muta, y tolera brevedad en el staleness — saldos de rewards, tipos de cambio, datos de referencia.",
+            "Cuando una hot partition en la base de datos está causando picos en la latencia p99: cachea el rango de hot-key con un TTL corto.",
+            "Cuando el estado de sesión necesita acceso sub-ms a través de réplicas stateless del servicio — listas negras de JWT, contadores de rate-limit, locks distribuidos."
+          ],
+          "pitfalls": [
+            "Cachear datos financieros específicos del usuario sin TTL — un saldo obsoleto mostrado después de una actualización de cuenta puede generar un hallazgo de compliance.",
+            "Cache-aside sin manejar el thundering herd: al reiniciar en frío después de un flush, todas las réplicas golpean la base de datos simultáneamente.",
+            "Tratar el cache como fuente de verdad para cualquier dato que requiera consistencia fuerte — saldos de ledger y estados de transacción deben leerse de la base de datos."
+          ]
+        },
+        {
+          "category": "Base de datos relacional",
+          "products": "Postgres, MySQL, Aurora",
+          "why": "Transacciones ACID; consistencia fuerte; el dinero vive aquí.",
+          "example": "Cada débito y crédito de una transacción de tarjeta vive en la base de datos relacional — la garantía ACID es lo que me permite escribir una transferencia como una unidad atómica y saber que el ledger siempre está balanceado, aunque el servidor de aplicación muera a mitad de la escritura.",
+          "signals": [
+            "Cada vez que el dinero cambia de manos: transferencias, entradas de ledger, chargebacks — la consistencia fuerte no es negociable y ACID es la herramienta correcta.",
+            "Cuando necesitas joins complejos a través de tablas normalizadas y los patrones de consulta no se conocen al momento del diseño del schema.",
+            "Cuando los datos tienen requerimientos rígidos de integridad referencial — foreign keys entre cuentas, transacciones y registros de disputas."
+          ],
+          "pitfalls": [
+            "Usar una base de datos relacional para workloads de escritura pesada con patrones de acceso impredecibles — vas a chocar con write-amplification y contención de locks antes de las 50K transacciones/seg sin sharding significativo.",
+            "Guardar blobs o datos no estructurados (payloads de eventos JSON) en una columna relacional y luego consultar dentro del blob — para eso existe un document store o un motor de búsqueda.",
+            "Saltarse el connection pooling en un servicio de pagos de alta concurrencia: abrir una nueva conexión a Postgres por request a 2,000 req/s agota el límite de conexiones en segundos."
+          ]
+        },
+        {
+          "category": "Columnar / wide-column",
+          "products": "Cassandra, DynamoDB, BigTable",
+          "why": "Escalado horizontal por key predecible; consistencia eventual OK.",
+          "example": "Para la vista de historial de transacciones — dame los últimos 90 días de transacciones del cliente 123 — uso un wide-column store particionado por ID de cliente, para que una lectura por key sea un scan de partición local, no un join cross-shard en un clúster relacional.",
+          "signals": [
+            "Cuando tu patrón de acceso primario es un lookup por key única o un range scan sobre una partition key conocida — historial de transacciones, logs de eventos, métricas de series de tiempo.",
+            "Cuando necesitas escala horizontal de escrituras predecible más allá de lo que puede proveer un leader relacional — 100K+ escrituras/seg a través de cuentas distribuidas geográficamente.",
+            "Cuando la consistencia eventual es aceptable para el caso de uso — feeds de actividad del usuario, datos de preferencias no financieros, logs de auditoría donde un lag breve es tolerable."
+          ],
+          "pitfalls": [
+            "Modelar datos relacionalmente en Cassandra y luego hacer consultas multi-partición — vas a obtener scatter-gather a escala, que es más lento que el join SQL que estabas evitando.",
+            "Elegir DynamoDB sin modelar los patrones de acceso de antemano: una partition key caliente (como un ID de comercio popular) va a throttle toda tu tabla bajo carga.",
+            "Usar un wide-column store para datos de ledger financiero que requieren consistencia fuerte — consistencia eventual y dinero son una combinación peligrosa sin coordinación adicional."
+          ]
+        },
+        {
+          "category": "Object store",
+          "products": "S3, GCS, Azure Blob",
+          "why": "Blobs durables baratos; logs, backups, assets estáticos.",
+          "example": "Los PDFs de estados de cuenta mensuales los guardo en S3 — se escriben una vez, se leen con poca frecuencia, y la durabilidad importa más que la latencia de lectura. Con 100 millones de cuentas generando un PDF al mes, el delta de costo vs. una base de datos es de varios órdenes de magnitud.",
+          "signals": [
+            "Artefactos inmutables o de escritura única: estados de cuenta, logs de auditoría, documentos de contrato, datasets de entrenamiento de ML — escritos una vez y leídos con poca frecuencia.",
+            "Payloads binarios grandes que no necesitan consultas ni indexación — guardarlos en una columna de base de datos desperdicia IOPS y no agrega valor.",
+            "Pipelines de data lake o procesamiento por lotes: streams de eventos crudos llegan a S3, procesados por Spark o Athena, sin tocar la base de datos transaccional."
+          ],
+          "pitfalls": [
+            "Guardar objetos que se consultan por su contenido — un object store es un key-value blob store, no un motor de búsqueda; pon esos en Elasticsearch.",
+            "Usar un object store como mecanismo de coordinación: hacer polling de S3 para nuevos archivos crea lag y costo; usa un broker de mensajería para triggers event-driven.",
+            "Olvidar las lifecycle policies: los PDFs de estados de cuenta mayores de 7 años necesitan moverse a Glacier bajo la política de compliance, o tu factura de almacenamiento crece linealmente para siempre."
+          ]
+        },
+        {
+          "category": "Pipeline CDC",
+          "products": "Debezium, Kafka Connect, DynamoDB Streams",
+          "why": "Emite cambios de fila como eventos; alimenta índices/caches downstream.",
+          "example": "Entre la base de datos de pagos y el feature store de fraude pongo un pipeline CDC — cada INSERT o UPDATE en la tabla de transacciones se convierte en un evento en Kafka en menos de 50 ms, sin que el servicio de pagos tenga que hacer double-write a dos sistemas.",
+          "signals": [
+            "Cuando necesitas que sistemas downstream reaccionen a cambios de base de datos en tiempo casi-real sin acoplarlos al path de escritura de la aplicación.",
+            "Cuando tienes un cache o índice de búsqueda que se ha desincronizado de la fuente de verdad y necesitas un mecanismo de sync confiable.",
+            "Cuando necesitas un trail de auditoría de cada mutación de fila sin agregar instrumentación a cada path de código de aplicación."
+          ],
+          "pitfalls": [
+            "Tratar CDC como patrón de integración primario para sistemas nuevos — es una herramienta de captura de cambios, no un sustituto de una API event-driven bien diseñada.",
+            "No contabilizar la evolución del schema: un pipeline CDC se rompe cuando la tabla fuente agrega una columna no-nullable a menos que el consumidor maneje campos faltantes con graceful degradation.",
+            "Usar CDC para dirigir workflows síncronos: los eventos CDC son eventualmente consistentes, así que un servicio downstream leyendo de CDC puede estar segundos detrás de la base de datos fuente."
+          ]
+        },
+        {
+          "category": "Índice de búsqueda",
+          "products": "Elasticsearch, OpenSearch",
+          "why": "Full-text + agregaciones con latencia que SQL no alcanza.",
+          "example": "Para la feature de búsqueda de transacciones — 'encuentra todas mis compras de Amazon mayores a $50 en los últimos 3 meses' — uso un índice de búsqueda. La consulta tiene full-text match, un filtro numérico y un rango de fechas; esa combinación sobre 2 mil millones de filas en Postgres tomaría segundos, pero Elasticsearch lo devuelve en menos de 100 ms.",
+          "signals": [
+            "Cuando la consulta involucra búsqueda full-text, fuzzy matching o filtrado por facetas que una cláusula WHERE relacional no puede manejar eficientemente a escala.",
+            "Cuando las consultas de agregación — gasto total por categoría, top 10 comercios — necesitan ejecutarse en menos de 200 ms sobre cientos de millones de filas.",
+            "Cuando necesitas ranking por relevancia en lugar de ordenamiento determinístico — scores de riesgo de fraude, similitud de documentos, feeds de recomendaciones."
+          ],
+          "pitfalls": [
+            "Usar Elasticsearch como el store primario para datos financieros — ofrece consistencia eventual y no tiene garantías ACID, así que debe ser una réplica de lectura, no la fuente de verdad.",
+            "Sobre-indexar cada campo por default: el dynamic mapping de Elasticsearch indexará todo a menos que configures mappings explícitos, lo que crea overhead innecesario de disco y memoria.",
+            "No contabilizar el costo de reindexar: cambiar un mapping sobre un índice de 2 mil millones de documentos requiere un reindex completo que puede tomar horas y duplica temporalmente tu almacenamiento del clúster."
+          ]
+        },
+        {
+          "category": "API gateway",
+          "products": "Kong, AWS API Gateway, Envoy",
+          "why": "Auth, rate-limit, ruteo en el edge.",
+          "example": "Todo el tráfico externo golpea primero el API gateway — validación de JWT, rate limiting a 1,000 req/s por token de cliente, y ruteo al servicio downstream correcto. El servicio de pagos nunca ve una request no autenticada.",
+          "signals": [
+            "Cuando necesitas un punto único de enforcement para auth, rate limiting y ruteo a través de múltiples servicios downstream — no repliques esa lógica en cada servicio.",
+            "Cuando necesitas versionar APIs externamente (/v1, /v2) sin cambiar los contratos de los servicios downstream.",
+            "Cuando necesitas imponer throttling por token de cliente para evitar que un tenant hambree a otros — clásico en plataformas multi-tenant de card-issuing."
+          ],
+          "pitfalls": [
+            "Poner lógica de negocio en el API gateway: debe imponer cross-cutting concerns, no tomar decisiones de producto — enrutar al 'tipo de cuenta correcto' pertenece a un servicio, no a una regla de gateway.",
+            "No diseñar para la falla del gateway: si el gateway es un single point of failure sin circuit-breaking, una caída del gateway derriba todo el tráfico externo simultáneamente.",
+            "Usar el API gateway para llamadas servicio-a-servicio dentro del clúster — para eso existe un service mesh; enrutar tráfico interno por el edge gateway agrega latencia innecesaria."
+          ]
+        },
+        {
+          "category": "Service mesh",
+          "products": "Istio, Linkerd",
+          "why": "mTLS, reintentos, tracing, traffic shifting — fuera de tu servicio.",
+          "example": "No escribo lógica de retry ni handshakes de mTLS en mi servicio de pagos — el sidecar proxy lo maneja. Cuando quiero hacer un canary del nuevo scorer de fraude al 5% del tráfico, configuro una regla de traffic shifting en el mesh, no un feature flag en el código de aplicación.",
+          "signals": [
+            "Cuando necesitas mTLS entre servicios en un entorno regulado — los auditores de PCI-DSS y SOC2 quieren encriptación en tránsito en la capa servicio-a-servicio, no solo en el edge.",
+            "Cuando necesitas distributed tracing a través de 20+ microservicios sin instrumentar cada uno individualmente.",
+            "Cuando quieres hacer canary releases o traffic shifting sin desplegar nuevo código de aplicación — el mesh maneja las reglas de ruteo."
+          ],
+          "pitfalls": [
+            "Introducir un service mesh en un entorno de pocos microservicios (menos de 10 servicios): el overhead operativo de gestionar un control plane supera el beneficio.",
+            "Depender del mesh para la lógica de retry sin hacer los servicios idempotentes: el mesh reintentará requests fallidas, y si el downstream no es idempotente, crearás transacciones financieras duplicadas.",
+            "No monitorear el overhead de recursos del sidecar: cada sidecar de Envoy consume 50-100 MB de RAM; con 200 pods, eso es 10-20 GB de overhead antes de que tu aplicación corra."
+          ]
+        },
+        {
+          "category": "Proveedor de identidad / SSO",
+          "products": "Okta, Auth0, AWS Cognito",
+          "why": "OIDC/SAML; emisión de tokens; auth delegada.",
+          "example": "El portal de gestión de tarjetas delega la autenticación al proveedor de SSO — nunca almacenamos contraseñas. Cuando un usuario inicia sesión, el proveedor emite un JWT con expiración de 15 minutos y un refresh token, y cada servicio valida la firma del JWT localmente sin una llamada de red.",
+          "signals": [
+            "Cada vez que necesitas identidad federada a través de múltiples servicios o productos — no construyas tu propio auth cuando existe un proveedor regulado y auditado.",
+            "Cuando la aplicación necesita soportar enterprise SSO (SAML) para clientes corporativos junto con OAuth de consumidor — el proveedor maneja ambos protocolos.",
+            "Cuando compliance requiere enforcement de MFA: el proveedor de SSO impone la política centralmente, así que cada app del fleet obtiene MFA sin cambios por app."
+          ],
+          "pitfalls": [
+            "Validar JWTs llamando al proveedor de SSO en cada request — eso crea una dependencia síncrona; valida la firma localmente usando la clave pública del proveedor.",
+            "No diseñar para revocación de tokens: los JWTs son stateless, así que una ventana de expiración de 15 minutos significa que un token comprometido es válido por hasta 15 minutos incluso después de que el usuario cierre sesión.",
+            "Guardar el client secret en variables de entorno de la aplicación sin rotación: un secret filtrado da acceso total a la emisión de tokens para toda tu app."
+          ]
+        },
+        {
+          "category": "Feature-flag service",
+          "products": "LaunchDarkly, Split, Unleash",
+          "why": "Desacopla deploy de release; rollouts dirigidos; kill switches.",
+          "example": "Desplegamos el nuevo flujo de KYC a producción tres semanas antes del lanzamiento, en modo oscuro — el flag estaba apagado para el 100% del tráfico. El día del lanzamiento lo encendimos al 1% de cuentas nuevas, observamos la tasa de error 30 minutos, y luego subimos al 100% en dos horas. Cero deploy requerido el día del lanzamiento.",
+          "signals": [
+            "Cuando necesitas desacoplar deployment de release — shipar código a producción continuamente y encender features para cohortes específicos sin un nuevo deploy.",
+            "Cuando un feature nuevo afecta un flujo regulado (KYC, credit decisioning, divulgación de fees) y necesitas la capacidad de apagarlo al instante si emerge un issue de compliance.",
+            "Cuando necesitas hacer A/B testing de un cambio de producto en un segmento de usuarios específico — clientes de alto gasto, cohorte de cuentas nuevas — sin bifurcar el codebase."
+          ],
+          "pitfalls": [
+            "Dejar flags obsoletos en el codebase: cada flag activo es una rama en tu lógica; después de completar el rollout, elimina el flag y el dead code path dentro de un sprint.",
+            "Usar feature flags para configuración de larga duración: los flags son para control de release, no para config permanente — usa variables de entorno o un config service para valores permanentes.",
+            "No contabilizar la latencia de evaluación del flag: una evaluación síncrona en cada request agrega una llamada de red si el SDK no está cacheando; un TTL de cache mal configurado puede causar estados de rollout obsoletos."
+          ]
+        },
+        {
+          "category": "Stack de observabilidad",
+          "products": "Datadog, New Relic, Prometheus+Grafana",
+          "why": "Métricas + trazas + logs; SLOs; paging.",
+          "example": "Instrumento el path de autorización de pagos con una métrica de latencia p99 y un trace ID en cada request. Cuando p99 cruza los 200 ms me llega un page. El trace ID me permite saltar directamente del alerta al request específico que causó el pico — timeout del scorer de fraude, no la base de datos.",
+          "signals": [
+            "Antes de cualquier deploy a producción de un feature que toca el path de autorización — define el SLO (p99 < 150 ms, tasa de error < 0.1%) y el umbral de alerta antes de que el código llegue a producción.",
+            "Cuando depuras una regresión de latencia: las trazas distribuidas te muestran dónde se gasta el tiempo por hop de servicio, no solo el tiempo end-to-end agregado.",
+            "Cuando necesitas demostrarle a un auditor que un evento relevante para compliance (login, cambio de cuenta, transacción) fue registrado con un timestamp e identificador de usuario."
+          ],
+          "pitfalls": [
+            "Fijar umbrales de alerta sobre promedios: un pico de p99 que afecta al 1% de los requests es invisible en la media pero representa 20,000 requests malos por segundo a escala.",
+            "Loguear demasiado en nivel INFO en un path de alto throughput: 2,000 transacciones/seg generando 5 líneas de log cada una son 864 millones de líneas de log por día — tu costo de logging superará tu costo de cómputo.",
+            "No correlacionar métricas con deploys: un pico de latencia 10 minutos después de un deploy es casi seguramente el deploy; sin marcadores de deploy en tus dashboards, desperdicias 30 minutos descartando infraestructura."
+          ]
+        }
       ],
       "antiPatternsHeader": "Anti-patrones comunes en todas las rondas",
       "antiPatterns": [
-        { "bad": "'Usaría Kafka aquí.'", "why": "Nombrar el producto sin la razón suena a cargo-cult. Necesitas mostrar que entiendes POR QUÉ importa la categoría antes de nombrar una herramienta.", "fix": "'Necesito un broker de mensajería — algo que desacople productor y consumidor y amortigüe picos. En la práctica es Kafka o RabbitMQ; iría por Kafka si necesito replay o muy alto throughput.'" },
-        { "bad": "'Lo sacamos.'", "why": "En behavioral, 'nosotros' tapa tu contribución específica. Capital One explícitamente indaga ownership individual.", "fix": "Di 'Yo hice X, Y lideró Z, Z hizo pair conmigo en W.' Nombra compañeros. Deja tu rebanada clara." },
-        { "bad": "'$127,430.' como respuesta.", "why": "Falsa precisión en un case señala exceso de confianza sobre supuestos débiles. Los entrevistadores atacan el supuesto más débil.", "fix": "'Entre $100K y $150K, más sensible al costo de adquisición que asumí en $45.' Dueño del rango, nombras la sensibilidad." },
-        { "bad": "'No sé.'", "why": "Quedarte en 'no sé' cuesta señal. Está bien no saber — pero lo que haces después es lo que evalúan.", "fix": "'No he usado ese patrón específicamente. Mi modelo mental sería X porque Y. ¿Qué me falta?' Mantén el diálogo." }
+        {
+          "bad": "'Usaría Kafka aquí.'",
+          "why": "Nombrar el producto sin la razón suena a cargo-cult. Necesitas mostrar que entiendes POR QUÉ importa la categoría antes de nombrar una herramienta.",
+          "fix": "'Necesito un broker de mensajería — algo que desacople productor y consumidor y amortigüe picos. En la práctica es Kafka o RabbitMQ; iría por Kafka si necesito replay o muy alto throughput.'",
+          "triggers": [
+            "Ya usaste Kafka en tu proyecto anterior y el diseño actual tiene una forma similar — el pattern-match se dispara antes de que razonar sobre los nuevos constraints.",
+            "El entrevistador pregunta '¿qué pondrías entre estos dos servicios?' y la presión del silencio te hace alcanzar por un nombre familiar.",
+            "Estás dibujando el diagrama de arquitectura y necesitas llenar una caja rápido — el nombre del producto sale antes del razonamiento de categoría."
+          ],
+          "examples": [
+            "'Usaría Kafka aquí.' (sin categoría, sin razón de por qué se necesita un broker)",
+            "'Pondría Redis entre el checkout y el servicio de búsqueda.' (sin discutir qué resuelve el cache — latencia, shedding de hot-keys, estado de sesión)",
+            "'Usaría DynamoDB para el store de transacciones.' (sin mencionar patrones de acceso, requerimientos de consistencia, ni qué costaría la alternativa relacional)"
+          ]
+        },
+        {
+          "bad": "'Lo sacamos.'",
+          "why": "En behavioral, 'nosotros' tapa tu contribución específica. Capital One explícitamente indaga ownership individual.",
+          "fix": "Di 'Yo hice X, Y lideró Z, Z hizo pair conmigo en W.' Nombra compañeros. Deja tu rebanada clara.",
+          "triggers": [
+            "La historia involucra un equipo grande y genuinamente estás orgulloso del resultado grupal — el framing de 'nosotros' se siente honesto, así que el framing de ownership individual parece que estás apropiándote del crédito.",
+            "El entrevistador pregunta 'cuéntame de una vez que tu equipo shippeó algo complejo' — la pregunta tiene 'equipo', así que respuestas con 'nosotros' se sienten apropiadas.",
+            "Te preocupa sonar arrogante al decir 'yo', así que usas 'nosotros' como hedge que termina siendo contraproducente."
+          ],
+          "examples": [
+            "'Rediseñamos la lógica de retry de pagos y redujimos los fallos un 40%.' (¿quién fue dueño de qué? ¿cuál fue tu contribución específica?)",
+            "'El equipo construyó el servicio de fraud scoring en un trimestre.' (¿cuántos ingenieros? ¿cuál fue tu rebanada?)",
+            "'Decidimos usar el patrón circuit-breaker.' (¿quién lo propuso? ¿quién lo construyó? ¿quién hizo pushback?)"
+          ]
+        },
+        {
+          "bad": "'$127,430.' como respuesta.",
+          "why": "Falsa precisión en un case señala exceso de confianza sobre supuestos débiles. Los entrevistadores atacan el supuesto más débil.",
+          "fix": "'Entre $100K y $150K, más sensible al costo de adquisición que asumí en $45.' Dueño del rango, nombras la sensibilidad.",
+          "triggers": [
+            "Estabas haciendo cálculo mental paso a paso y la multiplicación final produce un número específico — lo lees sin dar un paso atrás para verificar la precisión.",
+            "El entrevistador pausa expectante después de que construiste tu árbol de estimación — la presión del silencio te hace comprometerte con el número exacto que tienes en la cabeza.",
+            "Quieres sonar riguroso y preciso, y un número específico se siente más riguroso que un rango."
+          ],
+          "examples": [
+            "'El mercado total direccionable es $4,320,000,000.' (en un case de 40 minutos construido sobre tres inputs supuestos)",
+            "'Cada cliente genera $247 de revenue anual.' (derivado de cinco supuestos, cada uno con un margen de error del 20%)",
+            "'Necesitamos $1,843,200 en ahorros anuales para llegar al break-even.' (precisión que implica que conoces la estructura de costos exacta del programa de rewards de Capital One)"
+          ]
+        },
+        {
+          "bad": "'No sé.'",
+          "why": "Quedarte en 'no sé' cuesta señal. Está bien no saber — pero lo que haces después es lo que evalúan.",
+          "fix": "'No he usado ese patrón específicamente. Mi modelo mental sería X porque Y. ¿Qué me falta?' Mantén el diálogo.",
+          "triggers": [
+            "El entrevistador nombra una tecnología o patrón específico que nunca has usado — el instinto honesto es admitirlo de inmediato, pero te detienes ahí en lugar de razonar hacia adelante.",
+            "Una pregunta de seguimiento va más profundo que el límite de tu conocimiento — llegas al borde de tu experiencia y el reflejo es parar en lugar de extrapolar.",
+            "Estás cansado 2.5 horas después del inicio del loop y la carga cognitiva de razonar hacia adelante se siente demasiado alta — el camino de menor resistencia es 'no sé'."
+          ],
+          "examples": [
+            "'No sé mucho de pipelines CDC.' (punto final — sin modelo mental ofrecido, sin razonamiento desde primeros principios intentado)",
+            "'Nunca he diseñado un sistema de detección de fraude.' (declarado como descalificador en lugar de como punto de partida para razonar)",
+            "'No estoy familiarizado con Regulation E.' (en lugar de: 'No conozco el reglamento específico, pero si es sobre protección al consumidor financiero, esperaría que cubra divulgación y derechos de disputa')"
+          ]
+        }
       ],
       "prepHeader": "Timeline de preparación",
       "prep": [
@@ -820,6 +1175,17 @@
             "Corre 2 Mock Power Days completos en Anabasis. Uno en la mañana, uno después de comer para simular cansancio.",
             "Relee tu CV y prepara 3 historias STAR por valor de Capital One.",
             "Dale un vistazo a la línea de productos de Capital One — conoce qué hacen One, Eno y el stack de rewards."
+          ],
+          "rationale": "Una semana antes es la última ventana donde todavía puedes cambiar la forma de tu preparación. Si en este punto descubres que tus historias behavioral están débiles, tienes tiempo de construir tres nuevas antes del loop. Después de esta ventana, la prep se vuelve ejecutiva — puedes refinar pero no puedes reconstruir.",
+          "deliverables": [
+            "Un doc escrito con al menos 8 historias STAR mapeadas a los 4 valores de Capital One (2 por valor como mínimo), cada una cronometrada en 8-12 minutos en voz alta.",
+            "Dos Mock Power Days completos con notas escritas sobre qué ronda se sintió más débil y qué cambiarías.",
+            "Un resumen de una página del portafolio de productos de Capital One — One, Eno, card rewards, card stack cloud-native — con un detalle técnico o de producto específico por producto."
+          ],
+          "pitfalls": [
+            "Correr los Mock Power Days seguidos en el mismo día para 'terminarlos' — la simulación de fatiga solo funciona si hay un día de recuperación entre los dos.",
+            "Escribir historias STAR que solo cubran resultados positivos: los entrevistadores preguntan explícitamente por fracasos y desacuerdos; prepara al menos dos historias donde las cosas salieron mal.",
+            "Hojear la página de productos sin entender el ángulo técnico — saber que 'Capital One usa AWS' es lo básico; saber que reconstruyeron su core banking en un card stack cloud-native es la señal."
           ]
         },
         {
@@ -828,6 +1194,17 @@
             "Un Mock GCA ligero (40 min) — solo para mantenerte caliente, no te mates.",
             "Repasa tus historias STAR en voz alta. Cronometra cada una; apunta a 8-12 min.",
             "Duerme. Todo lo demás es optimización alrededor del descanso."
+          ],
+          "rationale": "El día antes es para calibración y descanso, no para aprender material nuevo. Nada de lo que aprendas esta noche va a consolidarse a tiempo para ayudarte mañana. Tu trabajo es confirmar que las herramientas están afiladas y luego guardarlas.",
+          "deliverables": [
+            "Un problema de GCA intentado y revisado — no para practicar patrones nuevos sino para confirmar que tu ritual de calentamiento funciona.",
+            "Historias STAR cronometradas en voz alta: sabes que cada una cae dentro de la ventana de 8-12 minutos sin apresurar.",
+            "Setup físico claro para mañana: editor abierto, cámara probada, agua en el escritorio, notificaciones apagadas."
+          ],
+          "pitfalls": [
+            "Hacer grinding de 3 horas de problemas de LeetCode la noche anterior — los patrones nuevos no van a pegarse y vas a estar cognitivamente agotado para el loop.",
+            "Leer nuevos frameworks behavioral o libros la noche anterior: tus historias STAR necesitan salir de manera natural, no a través de un lente nuevo que aprendiste a las 11 PM.",
+            "Dormir menos de 7 horas por ansiedad: la falta de sueño deteriora la memoria de trabajo y la fluidez verbal — las dos cosas sobre las que corre Power Day."
           ]
         },
         {
@@ -836,6 +1213,17 @@
             "Agua, nada de pico de café. Baño.",
             "Abre el editor que vas a usar. Calienta los dedos con un problema fácil — no arranques frío.",
             "Lee tu one-pager de historias STAR una última vez. Ciérralo."
+          ],
+          "rationale": "La hora antes es sobre calentamiento físico y cognitivo, no sobre revisar contenido. Tu objetivo es estar a temperatura operativa — manos calientes, fluidez verbal activa, ansiedad convertida en foco — cuando empiece la primera ronda.",
+          "deliverables": [
+            "Un problema de coding fácil resuelto: los dedos están calientes, el entorno del editor está confirmado funcionando, y le recordaste a tu cerebro cómo se siente codear bajo observación.",
+            "El one-pager de STAR revisado y cerrado: las historias están activadas en la memoria de trabajo pero no estás leyendo notas durante el loop.",
+            "Entorno físico bloqueado: ángulo de cámara verificado, fondo apropiado, sin notificaciones de teléfono, agua al alcance."
+          ],
+          "pitfalls": [
+            "Resolver un problema difícil en la hora anterior y quedarte trabado — vas a llevar esa frustración y duda a la Ronda 1.",
+            "Revisar historias STAR hasta justo cuando empieza la entrevista — si todavía estás leyendo tus notas cuando entra la llamada, las historias no van a sonar naturales.",
+            "Pico de cafeína 30 minutos antes del inicio: el máximo de alerta se va a ir a media entrevista; hidratate con agua."
           ]
         },
         {
@@ -844,6 +1232,17 @@
             "Narra cada decisión. Si estás callado, no pueden puntuar tu pensamiento.",
             "En 'no sé': validar → modelo mental → qué alcanzarías → qué verificarías.",
             "Entre rondas: estírate, hidrátate, resetea. NO hagas post-mortem de la ronda que acabas de terminar — envenena la siguiente."
+          ],
+          "rationale": "Durante el loop, tu único trabajo es mantener la señal fluyendo. Los entrevistadores puntúan lo que pueden observar — si tu pensamiento es invisible, no puede puntuarse. Cada descanso es un reset, no una revisión.",
+          "deliverables": [
+            "Después de cada problema de coding: un análisis de complejidad verbal breve entregado antes de que el entrevistador lo tenga que pedir — 'O(n) tiempo, O(1) espacio porque reutilizo el array de entrada como mi ventana'.",
+            "Después de cada historia behavioral: al menos un número concreto en el Resultado, entregado sin que te lo pidan.",
+            "Después de cada descanso: un reset físico de 30 segundos — pararte, tomar agua, respirar — antes de que entre la siguiente ronda."
+          ],
+          "pitfalls": [
+            "Hacer post-mortem de una ronda durante el descanso: no puedes cambiar una ronda que ya terminó, y reproducir los errores llena tu memoria de trabajo con ruido para la siguiente.",
+            "Quedarte callado por más de 30 segundos durante un problema de coding o diseño — un silencio largo sin narración parece confusión, aunque estés pensando con claridad.",
+            "Dejar que una pregunta difícil en la Ronda 3 sabotee tu energía para la Ronda 4: trata cada ronda como independiente; el puntaje es holístico, no secuencial."
           ]
         }
       ],

@@ -693,81 +693,180 @@ export function OverviewRoundsTabs({
 }: {
   header: string
   items: DeepItem[]
-  labels: { evaluated: string; pacing: string; pitfalls: string }
+  labels: {
+    evaluated: string
+    pacing: string
+    pitfalls: string
+    signals?: string
+    inPractice?: string
+    playbook?: string
+  }
 }) {
   return (
     <OverviewSection header={header}>
-      <Tabs defaultValue={items[0]?.title}>
-        <TabsList className="h-auto flex-wrap gap-1 bg-muted/40 p-1">
-          {items.map((it, i) => (
-            <TabsTrigger
-              key={it.title}
-              value={it.title}
-              className="data-[state=active]:bg-background text-xs"
-            >
-              <span className="font-mono text-[10px] opacity-50 mr-1.5 tabular-nums">
-                R{i + 1}
-              </span>
-              {it.title.replace(/^(Round|Ronda)\s+\d+\s*[—-]\s*/i, '')}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        {items.map((it) => (
-          <TabsContent key={it.title} value={it.title} className="mt-3">
-            <MagicCard className="p-6 space-y-5">
-              <div>
-                <h4 className="font-heading text-lg font-semibold mb-2">
-                  {it.title}
-                </h4>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {it.body}
-                </p>
-              </div>
-              <Separator />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {it.evaluated && (
-                  <div className="space-y-1">
-                    <div className="uppercase tracking-wider text-[10px] font-semibold text-primary/80">
-                      {labels.evaluated}
+      <article className="mx-auto max-w-3xl space-y-16 py-4">
+        {items.map((it, i) => {
+          const cleanTitle = it.title.replace(/^(Round|Ronda)\s+\d+\s*[—-]\s*/i, '')
+          return (
+            <section key={it.title} className="space-y-7">
+              <header className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+                    § {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <Separator orientation="vertical" className="h-3.5" />
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+                    R{i + 1}
+                  </span>
+                </div>
+                <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
+                  {cleanTitle}
+                </h3>
+              </header>
+
+              <p className="text-[15px] leading-[1.9] text-foreground/90">
+                {it.body}
+              </p>
+
+              {(it.evaluated || it.pacing) && (
+                <dl className="grid grid-cols-1 md:grid-cols-2 gap-6 border-l-2 border-border pl-6 py-1">
+                  {it.evaluated && (
+                    <div className="space-y-1.5">
+                      <dt className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
+                        {labels.evaluated}
+                      </dt>
+                      <dd className="text-[15px] leading-[1.8] text-foreground/85">
+                        {it.evaluated}
+                      </dd>
                     </div>
-                    <p className="text-sm leading-relaxed">{it.evaluated}</p>
-                  </div>
-                )}
-                {it.pacing && (
-                  <div className="space-y-1">
-                    <div className="uppercase tracking-wider text-[10px] font-semibold text-muted-foreground/70">
-                      {labels.pacing}
+                  )}
+                  {it.pacing && (
+                    <div className="space-y-1.5">
+                      <dt className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
+                        {labels.pacing}
+                      </dt>
+                      <dd className="text-[15px] leading-[1.8] text-muted-foreground">
+                        {it.pacing}
+                      </dd>
                     </div>
-                    <p className="text-sm leading-relaxed">{it.pacing}</p>
-                  </div>
-                )}
-              </div>
-              {it.pitfalls && it.pitfalls.length > 0 && (
-                <>
-                  <Separator />
-                  <div className="space-y-2">
-                    <div className="uppercase tracking-wider text-[10px] font-semibold text-amber-600">
-                      {labels.pitfalls}
-                    </div>
-                    <ul className="space-y-1.5">
-                      {it.pitfalls.map((p, j) => (
-                        <li
-                          key={j}
-                          className="flex gap-2 text-sm leading-relaxed"
-                        >
-                          <span className="text-amber-600 shrink-0">•</span>
-                          <span className="text-muted-foreground">{p}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </>
+                  )}
+                </dl>
               )}
-            </MagicCard>
-          </TabsContent>
-        ))}
-      </Tabs>
+
+              {(it.example ||
+                (it.signals && it.signals.length > 0) ||
+                (it.pitfalls && it.pitfalls.length > 0) ||
+                (it.playbook && it.playbook.length > 0)) && (
+                <Card className="bg-muted/30 shadow-none">
+                  <CardContent className="space-y-6">
+                    {it.example && (
+                      <div className="space-y-2">
+                        <div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
+                          {labels.inPractice ?? 'In practice'}
+                        </div>
+                        <p className="text-[15px] leading-[1.9] italic text-foreground/85">
+                          {it.example}
+                        </p>
+                      </div>
+                    )}
+
+                    {it.signals && it.signals.length > 0 && (
+                      <PaperBulletList
+                        label={labels.signals ?? 'Signals'}
+                        tone="emerald"
+                        items={it.signals}
+                      />
+                    )}
+
+                    {it.pitfalls && it.pitfalls.length > 0 && (
+                      <PaperBulletList
+                        label={labels.pitfalls}
+                        tone="amber"
+                        items={it.pitfalls}
+                      />
+                    )}
+
+                    {it.playbook && it.playbook.length > 0 && (
+                      <PaperBulletList
+                        label={labels.playbook ?? 'Playbook'}
+                        tone="primary"
+                        items={it.playbook}
+                      />
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
+              {i < items.length - 1 && <PaperSceneBreak />}
+            </section>
+          )
+        })}
+      </article>
     </OverviewSection>
+  )
+}
+
+function PaperBulletList({
+  label,
+  items,
+  tone,
+}: {
+  label: string
+  items: string[]
+  tone: 'emerald' | 'amber' | 'rose' | 'primary'
+}) {
+  const dot =
+    tone === 'emerald'
+      ? 'bg-emerald-500/70'
+      : tone === 'amber'
+        ? 'bg-amber-500/70'
+        : tone === 'rose'
+          ? 'bg-rose-500/70'
+          : 'bg-primary/70'
+  const labelColor =
+    tone === 'emerald'
+      ? 'text-emerald-600/90'
+      : tone === 'amber'
+        ? 'text-amber-600/90'
+        : tone === 'rose'
+          ? 'text-rose-600/90'
+          : 'text-primary/90'
+  return (
+    <div className="space-y-2">
+      <div
+        className={cn(
+          'text-[10px] uppercase tracking-[0.22em] font-semibold',
+          labelColor
+        )}
+      >
+        {label}
+      </div>
+      <ul className="space-y-2">
+        {items.map((it, i) => (
+          <li
+            key={i}
+            className="flex gap-3 text-[14px] leading-[1.8] text-foreground/85"
+          >
+            <span
+              aria-hidden
+              className={cn('mt-2 size-1.5 shrink-0 rounded-full', dot)}
+            />
+            <span>{it}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function PaperSceneBreak() {
+  return (
+    <div
+      aria-hidden
+      className="pt-6 text-center font-mono text-xs tracking-[0.5em] text-muted-foreground/40 select-none"
+    >
+      § § §
+    </div>
   )
 }
 
@@ -783,91 +882,85 @@ export function OverviewValuesTabs({
     signal: string
     antiSignal: string
     petPeeve: string
+    signals?: string[]
+    antiSignals?: string[]
+    petPeeves?: string[]
+    example?: string
   }>
-  labels: { signal: string; antiSignal: string; petPeeve: string }
+  labels: {
+    signal: string
+    antiSignal: string
+    petPeeve: string
+    inPractice?: string
+  }
 }) {
   return (
     <OverviewSection header={header}>
-      <Tabs defaultValue={items[0]?.title}>
-        <TabsList className="h-auto flex-wrap gap-1 bg-muted/40 p-1">
-          {items.map((v) => (
-            <TabsTrigger
-              key={v.title}
-              value={v.title}
-              className="data-[state=active]:bg-background text-xs"
-            >
-              {v.title}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        {items.map((v) => (
-          <TabsContent key={v.title} value={v.title} className="mt-3">
-            <MagicCard className="p-6 space-y-4">
-              <div>
-                <h4 className="font-heading text-lg font-semibold mb-1">
+      <article className="mx-auto max-w-3xl space-y-16 py-4">
+        {items.map((v, i) => {
+          const signals = v.signals && v.signals.length > 0 ? v.signals : [v.signal]
+          const antiSignals =
+            v.antiSignals && v.antiSignals.length > 0 ? v.antiSignals : [v.antiSignal]
+          const petPeeves =
+            v.petPeeves && v.petPeeves.length > 0 ? v.petPeeves : [v.petPeeve]
+          return (
+            <section key={v.title} className="space-y-7">
+              <header className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+                    § {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <Separator orientation="vertical" className="h-3.5" />
+                  <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+                    Value
+                  </span>
+                </div>
+                <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
                   {v.title}
-                </h4>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {v.body}
-                </p>
-              </div>
-              <Separator />
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <ValuesColumn
-                  tone="good"
-                  label={labels.signal}
-                  value={v.signal}
-                />
-                <ValuesColumn
-                  tone="bad"
-                  label={labels.antiSignal}
-                  value={v.antiSignal}
-                />
-                <ValuesColumn
-                  tone="warn"
-                  label={labels.petPeeve}
-                  value={v.petPeeve}
-                />
-              </div>
-            </MagicCard>
-          </TabsContent>
-        ))}
-      </Tabs>
-    </OverviewSection>
-  )
-}
+                </h3>
+              </header>
 
-function ValuesColumn({
-  tone,
-  label,
-  value,
-}: {
-  tone: 'good' | 'bad' | 'warn'
-  label: string
-  value: string
-}) {
-  const toneClass =
-    tone === 'good'
-      ? 'text-emerald-600 border-emerald-500/30 bg-emerald-500/5'
-      : tone === 'bad'
-        ? 'text-rose-600 border-rose-500/30 bg-rose-500/5'
-        : 'text-amber-600 border-amber-500/30 bg-amber-500/5'
-  const marker = tone === 'good' ? '✓' : tone === 'bad' ? '✗' : '!'
-  return (
-    <div
-      className={cn(
-        'rounded-md border-l-2 p-3 space-y-1',
-        toneClass
-      )}
-    >
-      <div className="flex items-center gap-1.5">
-        <span className="font-semibold">{marker}</span>
-        <span className="uppercase tracking-wider text-[10px] font-semibold">
-          {label}
-        </span>
-      </div>
-      <p className="text-xs text-foreground leading-relaxed">{value}</p>
-    </div>
+              <p className="text-[15px] leading-[1.9] text-foreground/90">
+                {v.body}
+              </p>
+
+              <Card className="bg-muted/30 shadow-none">
+                <CardContent className="space-y-6">
+                  {v.example && (
+                    <div className="space-y-2">
+                      <div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
+                        {labels.inPractice ?? 'In practice'}
+                      </div>
+                      <p className="text-[15px] leading-[1.9] italic text-foreground/85">
+                        {v.example}
+                      </p>
+                    </div>
+                  )}
+
+                  <PaperBulletList
+                    label={labels.signal}
+                    tone="emerald"
+                    items={signals}
+                  />
+                  <PaperBulletList
+                    label={labels.antiSignal}
+                    tone="rose"
+                    items={antiSignals}
+                  />
+                  <PaperBulletList
+                    label={labels.petPeeve}
+                    tone="amber"
+                    items={petPeeves}
+                  />
+                </CardContent>
+              </Card>
+
+              {i < items.length - 1 && <PaperSceneBreak />}
+            </section>
+          )
+        })}
+      </article>
+    </OverviewSection>
   )
 }
 
@@ -879,53 +972,83 @@ export function OverviewAntiPatternsAccordion({
 }: {
   header: string
   sub?: string
-  items: Array<{ bad: string; why: string; fix: string }>
-  labels: { bad: string; why: string; fix: string }
+  items: Array<{
+    bad: string
+    why: string
+    fix: string
+    examples?: string[]
+    triggers?: string[]
+  }>
+  labels: {
+    bad: string
+    why: string
+    fix: string
+    examples?: string
+    triggers?: string
+  }
 }) {
   return (
     <OverviewSection header={header} sub={sub}>
-      <div className="space-y-2">
+      <article className="mx-auto max-w-3xl space-y-16 py-4">
         {items.map((ap, i) => (
-          <Collapsible key={i}>
-            <MagicCard className="overflow-hidden p-0">
-              <CollapsibleTrigger
-                className="w-full p-4 flex items-center gap-3 text-left hover:bg-muted/30 transition-colors group"
-              >
-                  <span className="shrink-0 size-7 rounded-md bg-rose-500/10 text-rose-600 flex items-center justify-center text-xs font-semibold ring-1 ring-rose-500/20">
-                    ✗
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <div className="uppercase tracking-wider text-[9px] font-semibold text-rose-600 mb-0.5">
-                      {labels.bad}
-                    </div>
-                    <div className="text-sm font-medium leading-snug truncate">
-                      {ap.bad}
-                    </div>
+          <section key={i} className="space-y-7">
+            <header className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+                  § {String(i + 1).padStart(2, '0')}
+                </span>
+                <Separator orientation="vertical" className="h-3.5" />
+                <span className="text-[10px] uppercase tracking-[0.22em] text-rose-600/90 font-semibold">
+                  {labels.bad}
+                </span>
+              </div>
+              <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
+                {ap.bad}
+              </h3>
+            </header>
+
+            <blockquote className="border-l-2 border-amber-500/50 pl-6 py-1 space-y-2">
+              <div className="text-[10px] uppercase tracking-[0.22em] text-amber-600/90 font-semibold">
+                {labels.why}
+              </div>
+              <p className="text-[15px] leading-[1.9] text-muted-foreground">
+                {ap.why}
+              </p>
+            </blockquote>
+
+            <Card className="bg-muted/30 shadow-none">
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <div className="text-[10px] uppercase tracking-[0.22em] text-emerald-600/90 font-semibold">
+                    {labels.fix}
                   </div>
-                  <ChevronDownIcon className="shrink-0 size-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="px-4 pb-4 pl-[60px] space-y-3 border-t border-border/50 pt-3">
-                  <div className="space-y-1">
-                    <div className="uppercase tracking-wider text-[10px] font-semibold text-amber-600">
-                      {labels.why}
-                    </div>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {ap.why}
-                    </p>
-                  </div>
-                  <div className="space-y-1 border-l-2 border-emerald-500/50 pl-3 py-1.5 bg-emerald-500/5 rounded-r-md">
-                    <div className="uppercase tracking-wider text-[10px] font-semibold text-emerald-600">
-                      {labels.fix}
-                    </div>
-                    <p className="text-sm leading-relaxed italic">{ap.fix}</p>
-                  </div>
+                  <p className="text-[15px] leading-[1.9] italic text-foreground/85">
+                    {ap.fix}
+                  </p>
                 </div>
-              </CollapsibleContent>
-            </MagicCard>
-          </Collapsible>
+
+                {ap.triggers && ap.triggers.length > 0 && (
+                  <PaperBulletList
+                    label={labels.triggers ?? 'Triggers'}
+                    tone="amber"
+                    items={ap.triggers}
+                  />
+                )}
+
+                {ap.examples && ap.examples.length > 0 && (
+                  <PaperBulletList
+                    label={labels.examples ?? 'Examples'}
+                    tone="rose"
+                    items={ap.examples}
+                  />
+                )}
+              </CardContent>
+            </Card>
+
+            {i < items.length - 1 && <PaperSceneBreak />}
+          </section>
         ))}
-      </div>
+      </article>
     </OverviewSection>
   )
 }
@@ -1035,6 +1158,9 @@ export type DeepItem = {
   trap?: string
   evaluated?: string
   pitfalls?: string[]
+  signals?: string[]
+  example?: string
+  playbook?: string[]
 }
 
 export function OverviewDeepCards({
@@ -1206,35 +1332,95 @@ export function OverviewGlossary({
 }: {
   header: string
   sub: string
-  rows: Array<{ category: string; products: string; why: string }>
-  columns: { category: string; products: string; why: string }
+  rows: Array<{
+    category: string
+    products: string
+    why: string
+    example?: string
+    signals?: string[]
+    pitfalls?: string[]
+  }>
+  columns: {
+    category: string
+    products: string
+    why: string
+    inPractice?: string
+    signals?: string
+    pitfalls?: string
+  }
 }) {
   return (
     <OverviewSection header={header} sub={sub}>
-      <div className="rounded-xl border bg-card/60 backdrop-blur-sm overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[200px]">{columns.category}</TableHead>
-              <TableHead className="w-[260px]">{columns.products}</TableHead>
-              <TableHead>{columns.why}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((r) => (
-              <TableRow key={r.category}>
-                <TableCell className="font-medium">{r.category}</TableCell>
-                <TableCell className="text-muted-foreground text-xs">
-                  {r.products}
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground leading-relaxed">
-                  {r.why}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+      <article className="mx-auto max-w-3xl space-y-16 py-4">
+        {rows.map((r, i) => (
+          <section key={r.category} className="space-y-7">
+            <header className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+                  § {String(i + 1).padStart(2, '0')}
+                </span>
+                <Separator orientation="vertical" className="h-3.5" />
+                <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+                  {columns.category}
+                </span>
+              </div>
+              <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
+                {r.category}
+              </h3>
+            </header>
+
+            <p className="text-[15px] leading-[1.9] text-foreground/90">
+              {r.why}
+            </p>
+
+            <dl className="border-l-2 border-border pl-6 py-1 space-y-1.5">
+              <dt className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-semibold">
+                {columns.products}
+              </dt>
+              <dd className="text-[15px] leading-[1.8] text-muted-foreground">
+                {r.products}
+              </dd>
+            </dl>
+
+            {(r.example ||
+              (r.signals && r.signals.length > 0) ||
+              (r.pitfalls && r.pitfalls.length > 0)) && (
+              <Card className="bg-muted/30 shadow-none">
+                <CardContent className="space-y-6">
+                  {r.example && (
+                    <div className="space-y-2">
+                      <div className="text-[10px] uppercase tracking-[0.22em] text-primary/90 font-semibold">
+                        {columns.inPractice ?? 'In practice'}
+                      </div>
+                      <p className="text-[15px] leading-[1.9] italic text-foreground/85">
+                        {r.example}
+                      </p>
+                    </div>
+                  )}
+
+                  {r.signals && r.signals.length > 0 && (
+                    <PaperBulletList
+                      label={columns.signals ?? 'When to reach for it'}
+                      tone="emerald"
+                      items={r.signals}
+                    />
+                  )}
+
+                  {r.pitfalls && r.pitfalls.length > 0 && (
+                    <PaperBulletList
+                      label={columns.pitfalls ?? 'Common mistakes'}
+                      tone="amber"
+                      items={r.pitfalls}
+                    />
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {i < rows.length - 1 && <PaperSceneBreak />}
+          </section>
+        ))}
+      </article>
     </OverviewSection>
   )
 }
@@ -1323,37 +1509,78 @@ export function OverviewAntiPatterns({
 export function OverviewPrepTimeline({
   header,
   items,
+  labels,
 }: {
   header: string
-  items: Array<{ when: string; tasks: string[] }>
+  items: Array<{
+    when: string
+    tasks: string[]
+    rationale?: string
+    deliverables?: string[]
+    pitfalls?: string[]
+  }>
+  labels?: {
+    tasks?: string
+    deliverables?: string
+    pitfalls?: string
+  }
 }) {
   return (
     <OverviewSection header={header}>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <article className="mx-auto max-w-3xl space-y-16 py-4">
         {items.map((block, i) => (
-          <MagicCard key={block.when} className="p-5 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary text-[11px] font-semibold ring-1 ring-primary/20 tabular-nums">
-                {i + 1}
-              </span>
-              <h4 className="font-heading text-sm font-semibold uppercase tracking-wider">
+          <section key={block.when} className="space-y-7">
+            <header className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs text-muted-foreground/70 tabular-nums tracking-wider">
+                  § {String(i + 1).padStart(2, '0')}
+                </span>
+                <Separator orientation="vertical" className="h-3.5" />
+                <span className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 font-semibold">
+                  Phase
+                </span>
+              </div>
+              <h3 className="font-heading text-3xl font-semibold tracking-tight leading-tight">
                 {block.when}
-              </h4>
-            </div>
-            <ul className="space-y-2">
-              {block.tasks.map((task, j) => (
-                <li
-                  key={j}
-                  className="flex items-start gap-2 text-sm leading-relaxed"
-                >
-                  <span className="text-primary mt-0.5">▸</span>
-                  <span>{task}</span>
-                </li>
-              ))}
-            </ul>
-          </MagicCard>
+              </h3>
+            </header>
+
+            {block.rationale && (
+              <p className="text-[15px] leading-[1.9] text-foreground/90">
+                {block.rationale}
+              </p>
+            )}
+
+            <Card className="bg-muted/30 shadow-none">
+              <CardContent className="space-y-6">
+                <PaperBulletList
+                  label={labels?.tasks ?? 'Tasks'}
+                  tone="primary"
+                  items={block.tasks}
+                />
+
+                {block.deliverables && block.deliverables.length > 0 && (
+                  <PaperBulletList
+                    label={labels?.deliverables ?? 'Deliverables'}
+                    tone="emerald"
+                    items={block.deliverables}
+                  />
+                )}
+
+                {block.pitfalls && block.pitfalls.length > 0 && (
+                  <PaperBulletList
+                    label={labels?.pitfalls ?? 'Pitfalls'}
+                    tone="amber"
+                    items={block.pitfalls}
+                  />
+                )}
+              </CardContent>
+            </Card>
+
+            {i < items.length - 1 && <PaperSceneBreak />}
+          </section>
         ))}
-      </div>
+      </article>
     </OverviewSection>
   )
 }

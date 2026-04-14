@@ -402,6 +402,11 @@
       "action": "Your move"
     }
   },
+  "prevNext": {
+    "nav": "Chapter navigation",
+    "previous": "Previous",
+    "next": "Next"
+  },
   "overviewChapters": {
     "actions": {
       "practice": "Random practice",
@@ -531,6 +536,12 @@
     "inPractice": "In practice",
     "conceptSignals": "Signals you're doing it well",
     "conceptPitfalls": "Common mistakes",
+    "playbook": "Playbook",
+    "triggers": "Triggers",
+    "examples": "Examples",
+    "deliverables": "Deliverables",
+    "tasks": "Tasks",
+    "whenToUse": "When to reach for it",
     "level": "Level",
     "probes": "Probes for",
     "tip": "How to read them",
@@ -678,7 +689,18 @@
             "Jumping to code before agreeing on the approach and complexity target.",
             "Treating the interviewer's hint as an attack instead of a collaboration signal."
           ],
-          "pacing": "5 min clarify + agree on approach · 25 min code · 5 min test edge cases · 5 min complexity + improvement discussion."
+          "pacing": "5 min clarify + agree on approach · 25 min code · 5 min test edge cases · 5 min complexity + improvement discussion.",
+          "example": "You read the prompt, say 'I see a sliding window fingerprint here — let me confirm the constraint before I pick the target complexity,' then write the skeleton in pseudocode while narrating. When the interviewer drops a subtle edge-case hint — 'what if the input is empty?' — you say 'good catch, let me add that guard' and keep moving. The code compiles clean on the first run.",
+          "signals": [
+            "States the complexity target out loud and gets the interviewer to nod before writing a line of code.",
+            "Narrates every non-obvious decision — 'I'm using a left-pointer, right-pointer to avoid the inner loop' — so the interviewer can follow the reasoning without asking.",
+            "When hitting a bug, self-corrects with reasoning rather than trial-and-error: 'This index is off by one because I'm not accounting for the inclusive bound — fixing it here.'"
+          ],
+          "playbook": [
+            "Before writing code, declare the complexity target out loud and get the interviewer to agree: 'I'm targeting O(n) time, O(1) space — does that match what you have in mind?'",
+            "Write a two-line function stub with the signature and return type before filling the body, so the interviewer can see the shape of your solution immediately.",
+            "After your solution passes the base case, propose one adversarial edge case yourself — don't wait for the interviewer to find it."
+          ]
         },
         {
           "title": "Round 2 — Coding + Job Fit",
@@ -689,7 +711,18 @@
             "Not connecting your trajectory to something concrete Capital One builds.",
             "Spending so long on the behavioral half you rush the code half (or vice versa)."
           ],
-          "pacing": "25 min coding · 20 min 'why Capital One' + career trajectory. Expect drill-down questions on specifics."
+          "pacing": "25 min coding · 20 min 'why Capital One' + career trajectory. Expect drill-down questions on specifics.",
+          "example": "The coding problem wraps up in 22 minutes. The interviewer pivots: 'Tell me why Capital One.' You say: 'I've spent the last four years building payment rails — dispute resolution, chargebacks, ledger reconciliation. Capital One's bet on a cloud-native card stack is the hardest version of those problems at scale. The work I'd do here is harder than what I'd do anywhere else.' The interviewer drills: 'What specifically about the cloud-native piece?' You're ready.",
+          "signals": [
+            "The 'why Capital One' answer references a specific product or technical challenge — One, Eno, the card-rewards platform — not a generic company attribute.",
+            "Manages the clock without being prompted: pivots cleanly from coding to job-fit when the problem is done, or checks in at the 25-minute mark.",
+            "Answers job-fit questions with the same precision as technical ones — names a specific team, role, or problem rather than 'I want to grow'."
+          ],
+          "playbook": [
+            "Before the round, prepare one concrete 'why Capital One' story tied to a specific product or engineering challenge you've researched — not a value proposition you read on the careers page.",
+            "At the 25-minute mark, if the interviewer hasn't pivoted, say 'I think we're in good shape on the code — want to shift to the job-fit conversation?' — show you're tracking the clock.",
+            "When the interviewer drills on your 'why', answer with a constraint, not a preference: 'The fraud detection pipeline at this transaction volume is a harder version of what I've built — that's the pull.'"
+          ]
         },
         {
           "title": "Round 3 — System Design or Behavioral",
@@ -700,7 +733,18 @@
             "Behavioral: 'we' instead of 'I' when asked about your specific decision. Heroic framing on team wins.",
             "Both: not anchoring to Capital One's banking context (money = strong consistency, audit = first-class)."
           ],
-          "pacing": "Sys-design: 5 min requirements · 5 min estimates · 20 min components · 15 min deepening on 1-2 areas they probe. Behavioral: 1-2 stories, 8-12 min each."
+          "pacing": "Sys-design: 5 min requirements · 5 min estimates · 20 min components · 15 min deepening on 1-2 areas they probe. Behavioral: 1-2 stories, 8-12 min each.",
+          "example": "The prompt is: 'Design a real-time fraud detection system.' You open: 'Before I draw anything — is the requirement real-time authorization or async flagging? Those are different consistency models.' After confirming, you say: 'I'll estimate 2,000 card transactions per second at peak. That shapes the latency budget: authorization is synchronous, so the fraud check needs to stay under 80 ms end-to-end.' Then you draw the path: API gateway → fraud scoring service → feature store → rule engine, naming the category of each component before its product.",
+          "signals": [
+            "Opens by clarifying consistency requirements — synchronous vs. async, strong vs. eventual — before drawing a single component.",
+            "Anchors estimates to a concrete number: '2,000 transactions per second, 50 ms latency budget for authorization' — not 'high traffic'.",
+            "Names the failure mode that justifies each architectural choice: 'I put the messaging broker here so a slow fraud check can't back-pressure the authorization path.'"
+          ],
+          "playbook": [
+            "For sys-design: state the three constraints that will drive every decision — throughput target, latency budget, consistency requirement — before drawing anything.",
+            "For behavioral: open with a one-sentence Situation that anchors scope and stakes, then say 'my specific job was...' before the interviewer has to ask.",
+            "If you get behavioral and the story starts drifting past 10 minutes, surface it: 'I want to land the result — we cut p99 latency from 800 ms to 120 ms. Want me to go deeper on any part of the Action?'"
+          ]
         },
         {
           "title": "Round 4 — Business Case",
@@ -711,7 +755,18 @@
             "Picking a framework and then abandoning it mid-analysis.",
             "Over-precise numbers ($127.43) that signal false confidence. Use ranges."
           ],
-          "pacing": "5 min clarify + pick framework · 10 min size the problem · 15 min analysis · 10 min recommendation + sensitivity."
+          "pacing": "5 min clarify + pick framework · 10 min size the problem · 15 min analysis · 10 min recommendation + sensitivity.",
+          "example": "The prompt: 'Capital One is considering a new cashback product. Is it worth it?' You say: 'I'll use a profit tree — Revenue = new card fees + interchange + float; Cost = cashback liability + acquisition + fraud. Let me walk each bucket and flag which driver I think dominates.' After 12 minutes of structured analysis you land: 'The case hinges on churn reduction — if the cashback keeps 8% more customers annually, IRR is positive at year 2. If it's 4%, we're break-even at year 4, which is marginal.' The interviewer pushes your churn number. You defend it without flinching.",
+          "signals": [
+            "Announces the framework and its top-level structure before asking a single clarifying question — the roadmap is visible from minute one.",
+            "Names the single most sensitive assumption and quantifies it: 'This hinges on the churn-reduction rate — a 4-point swing changes the IRR by three years.'",
+            "When the interviewer pushes an assumption, gives a criterion for changing it: 'I'd revise that assumption if you told me the current churn cohort skews toward high-spend customers.'"
+          ],
+          "playbook": [
+            "Open with: 'I'll use [framework name] because this is a [problem shape] question' — one sentence, framework named, reason stated, before any numbers.",
+            "After sizing the problem, pause and say which assumption is load-bearing: 'Everything downstream of this analysis is most sensitive to [X] — I'm assuming [value].'",
+            "When defending against pushback, do not repeat the number — give the logic: 'I get to that estimate via [chain of reasoning]; if [input assumption] changes, the number moves to [range].'"
+          ]
         }
       ],
       "valuesHeader": "The 4 values — how Capital One actually probes",
@@ -721,28 +776,92 @@
           "body": "Bar-raising, root-cause over patch, data-driven quality.",
           "signal": "Names a specific bar you raised with numbers. Discusses quality tradeoffs that cost you short-term.",
           "antiSignal": "Conflates working extra hours with raising the bar. Describes effort, not outcome.",
-          "petPeeve": "'I spent weekends on it' without explaining what specifically got better and why."
+          "petPeeve": "'I spent weekends on it' without explaining what specifically got better and why.",
+          "example": "We were two weeks from launch and I found that the fee-calculation service was returning stale rates under concurrent load — about 0.3% of transactions were being undercharged. I flagged it to my manager knowing it would slip the sprint. We delayed one week, patched the race condition, and avoided what would have been a regulatory disclosure under Reg E.",
+          "signals": [
+            "Names a specific metric that changed as a result of the quality investment — 'error rate dropped from 0.3% to zero' — not 'things got better'.",
+            "Discusses the short-term cost of the quality call without framing it as martyrdom: 'We slipped one sprint; the alternative was a Reg E disclosure.'",
+            "Distinguishes root-cause fix from patch: explicitly says why they chose the deeper solution and what the patch would have left exposed."
+          ],
+          "antiSignals": [
+            "Describes the effort — 'I refactored the entire module' — but never measures what improved after the refactor.",
+            "Uses 'quality' as a synonym for 'worked hard': the story is about hours put in, not a measurable bar raised.",
+            "Outcome is 'the team was happier' or 'the code was cleaner' — no external customer or compliance impact named."
+          ],
+          "petPeeves": [
+            "'I spent three weekends on it' — hours as the metric of excellence, with no outcome number attached.",
+            "Stories where the quality problem was obvious and everyone agreed — no tension, no tradeoff, no real decision made.",
+            "Conflating code review thoroughness with raising the bar: reviewing PRs carefully is baseline, not a bar-raise story."
+          ]
         },
         {
           "title": "Do The Right Thing",
           "body": "Holding the line under pressure, with a named cost.",
           "signal": "Names the specific cost you paid (political, timeline, relationship). Verbatim language of what you said.",
           "antiSignal": "Describes speaking up without quoting yourself. Makes the decision sound easy or inevitable.",
-          "petPeeve": "'I reported it' with no tension — if there was no cost, there was no decision."
+          "petPeeve": "'I reported it' with no tension — if there was no cost, there was no decision.",
+          "example": "We were two weeks from shipping and I noticed the new fee flow didn't accurately reflect the actual fee structure — we were underdisclosing on one charge type. I raised it with my manager knowing it would delay the launch. We slipped one sprint, fixed the disclosure, and avoided what would have been a regulatory audit finding. My director wasn't happy with the delay at first.",
+          "signals": [
+            "Quotes themselves — 'I said to my manager: this is a potential Reg E issue and I think we need to delay' — rather than paraphrasing the act of speaking up.",
+            "Names the cost explicitly and doesn't minimize it: 'That decision made me unpopular with two stakeholders for about a month.'",
+            "The story has a moment where doing the right thing was genuinely unclear or controversial — not an obvious call everyone agreed on."
+          ],
+          "antiSignals": [
+            "The ethical decision was costless — everyone agreed it was the right thing and there was no pushback or delay.",
+            "The story is framed as rule-following: 'I followed the compliance policy' — no personal judgment under ambiguity.",
+            "Describes escalating without saying what they specifically said or what happened next — the narrative jumps from 'I raised it' to 'the problem was fixed'."
+          ],
+          "petPeeves": [
+            "'I always do the right thing' as an opening — a values statement, not a story with a named cost.",
+            "'I reported it to compliance' with no tension — if it was an obvious compliance issue, there was no ethical decision, just a procedure.",
+            "Stories about preventing a minor process deviation: low stakes means low signal on this value."
+          ]
         },
         {
           "title": "Respect for Individuals",
           "body": "Dignity under pressure, credit flow, bias-awareness.",
           "signal": "Says what you chose NOT to say. Credit flows to less-visible contributors. Names a bias you caught in yourself.",
           "antiSignal": "Uses 'convinced' as resolution — people were overpowered, not persuaded. Teammates are props for growth arc.",
-          "petPeeve": "Stories where you were 'right' about a teammate being 'wrong' — zero bias acknowledgment."
+          "petPeeve": "Stories where you were 'right' about a teammate being 'wrong' — zero bias acknowledgment.",
+          "example": "A junior engineer on my team proposed an approach I thought was wrong. I caught myself about to override it publicly in the design review. Instead I asked them to walk me through their reasoning — and realized their constraint modeling was actually more complete than mine. I said so in the meeting, by name.",
+          "signals": [
+            "Names a bias or assumption they caught in themselves — 'I initially dismissed the idea because the person was junior, not because the idea was bad.'",
+            "Credit flows to someone less visible: names a teammate who doesn't appear in the manager's highlight reel and explains their specific contribution.",
+            "Describes a choice not to speak or not to escalate — 'I decided not to correct them in the meeting; I caught up with them one-on-one.'"
+          ],
+          "antiSignals": [
+            "Resolves the conflict by being persuasive: 'I explained my reasoning and they came around' — no acknowledgment that the other person's view had merit.",
+            "The 'respect' story is actually a mentorship story about how the candidate helped a junior person improve — growth arc centered on the candidate, not the other person's dignity.",
+            "Teammates are unnamed, undifferentiated, and exist only as context for the candidate's decisions."
+          ],
+          "petPeeves": [
+            "Stories framed as 'I was right, but I was nice about explaining it' — politeness is not respect, and being right isn't the same as listening.",
+            "No acknowledgment of power differential: a senior overriding a junior 'respectfully' is still overriding — the candidate doesn't name that tension.",
+            "Bias acknowledgment is abstract: 'I try to be aware of bias' without naming a specific instance where bias affected their judgment."
+          ]
         },
         {
           "title": "Succeed Together",
           "body": "Shared outcomes, proactive unblocking, no solo heroics.",
           "signal": "Names teammates. Shows a capability that belongs to the team, not to you. Proactive unblocking signals.",
           "antiSignal": "Team success with no named teammates. Martyr framing on drudge work.",
-          "petPeeve": "'We shipped it' without saying who did what — generic team language."
+          "petPeeve": "'We shipped it' without saying who did what — generic team language.",
+          "example": "Three days before the Black Friday deploy freeze, I noticed Elena's pipeline work was blocked on an infra ticket that wasn't going to move in time. I hadn't been assigned to that work, but I picked up the ticket, cleared it in a day, and flagged the unblock to the team. We shipped with 48 hours to spare. Elena owned that pipeline; I just removed the blocker.",
+          "signals": [
+            "Names at least two teammates by name and describes their specific contributions, not just 'the team worked hard'.",
+            "Describes a proactive unblocking action — something they did before being asked, in service of someone else's goal.",
+            "Distinguishes their contribution from the team's outcome without heroic framing: 'I cleared one blocker; the ship was Elena's.'"
+          ],
+          "antiSignals": [
+            "Uses 'we' throughout with no named teammates — the interviewer can't tell if this was a team of two or ten, or what anyone specifically did.",
+            "The story centers on how hard the candidate worked personally, with teammates as background context: martyr framing dressed as teamwork.",
+            "Proactive unblocking stories where the candidate ended up doing most of the critical-path work — that's rescuing, not enabling."
+          ],
+          "petPeeves": [
+            "'We were a really great team' — a characterization, not a story about specific shared action.",
+            "The only named teammate is a manager who gets credit for 'trusting' the candidate — peers are invisible.",
+            "'I stepped up when no one else would' — solo heroic framing that implies the team was weak, not that the candidate was collaborative."
+          ]
         }
       ],
       "languageHeader": "How to say it — don't do this, do this",
@@ -792,25 +911,261 @@
       "glossaryHeader": "Enterprise architecture glossary — category first, product second",
       "glossarySub": "If you only name the product, you look like you're cargo-culting. Name the category and the failure mode it solves; then the product comes naturally.",
       "glossary": [
-        { "category": "Messaging broker", "products": "RabbitMQ, Kafka, AWS SNS/SQS", "why": "Decouples producer from consumer; buffers spikes; enables fan-out." },
-        { "category": "Distributed cache", "products": "Redis, Memcached", "why": "Sub-ms reads; hot-key shedding; session storage." },
-        { "category": "Relational database", "products": "Postgres, MySQL, Aurora", "why": "ACID transactions; strong consistency; money lives here." },
-        { "category": "Columnar / wide-column", "products": "Cassandra, DynamoDB, BigTable", "why": "Horizontal scale on a predictable key; eventual consistency OK." },
-        { "category": "Object store", "products": "S3, GCS, Azure Blob", "why": "Cheap durable blobs; logs, backups, static assets." },
-        { "category": "CDC pipeline", "products": "Debezium, Kafka Connect, DynamoDB Streams", "why": "Emit row changes as events; drive downstream indexes/caches." },
-        { "category": "Search index", "products": "Elasticsearch, OpenSearch", "why": "Full-text + aggregations at latency SQL can't hit." },
-        { "category": "API gateway", "products": "Kong, AWS API Gateway, Envoy", "why": "Auth, rate-limit, routing at the edge." },
-        { "category": "Service mesh", "products": "Istio, Linkerd", "why": "Mutual TLS, retries, tracing, traffic shifting — out of your service." },
-        { "category": "Identity / SSO provider", "products": "Okta, Auth0, AWS Cognito", "why": "OIDC/SAML; token issuance; delegated auth." },
-        { "category": "Feature-flag service", "products": "LaunchDarkly, Split, Unleash", "why": "Decouple deploy from release; targeted rollouts; kill switches." },
-        { "category": "Observability stack", "products": "Datadog, New Relic, Prometheus+Grafana", "why": "Metrics + traces + logs; SLOs; paging." }
+        {
+          "category": "Messaging broker",
+          "products": "RabbitMQ, Kafka, AWS SNS/SQS",
+          "why": "Decouples producer from consumer; buffers spikes; enables fan-out.",
+          "example": "Between the checkout service and the fraud scorer I put a messaging broker so a slow fraud check can't back-pressure checkout latency, and a traffic spike at 9 PM doesn't cascade to the downstream indexer.",
+          "signals": [
+            "When you need async decoupling between two services with different latency SLOs — one synchronous, one that can tolerate seconds of lag.",
+            "When a single event needs to fan out to multiple consumers — audit log, fraud scorer, and search indexer all consuming the same payment event.",
+            "When you need event replay for recovery or audit — reprocessing transactions after a downstream outage or a rule-engine change."
+          ],
+          "pitfalls": [
+            "Using a broker for request-response patterns: a broker adds latency and complexity when the caller needs a synchronous answer within 100 ms.",
+            "Choosing Kafka for a low-throughput use case without accounting for partition management overhead — sometimes SQS is the right level of tool.",
+            "Not designing for idempotent consumers: at-least-once delivery means your downstream must handle duplicate messages, especially for financial transactions."
+          ]
+        },
+        {
+          "category": "Distributed cache",
+          "products": "Redis, Memcached",
+          "why": "Sub-ms reads; hot-key shedding; session storage.",
+          "example": "In front of the card-rewards lookup I put a distributed cache — reward balances are read on every transaction display but only update nightly, so a 30-second TTL absorbs 95% of read traffic without touching the database.",
+          "signals": [
+            "When a dataset is read-heavy, rarely mutated, and tolerable for brief staleness — reward balances, exchange rates, reference data.",
+            "When a hot partition in the database is causing p99 latency spikes: cache the hot-key range with a short TTL.",
+            "When session state needs sub-ms access across stateless service replicas — JWT blacklists, rate-limit counters, distributed locks."
+          ],
+          "pitfalls": [
+            "Caching user-specific financial data without a TTL — a stale balance shown after an account update can trigger a compliance finding.",
+            "Cache-aside without handling the thundering herd: on a cold start after a cache flush, every replica hits the database simultaneously.",
+            "Treating the cache as the source of truth for any data that requires strong consistency — ledger balances and transaction states must be read from the database."
+          ]
+        },
+        {
+          "category": "Relational database",
+          "products": "Postgres, MySQL, Aurora",
+          "why": "ACID transactions; strong consistency; money lives here.",
+          "example": "Every debit and credit for a card transaction lives in the relational database — the ACID guarantee is what lets me write a transfer as a single atomic unit and know the ledger is always balanced, even if the app server dies mid-write.",
+          "signals": [
+            "Any time money changes hands: transfers, ledger entries, chargebacks — strong consistency is non-negotiable and ACID is the right tool.",
+            "When you need complex joins across normalized tables and query patterns aren't known at schema design time.",
+            "When the data has rigid referential integrity requirements — foreign keys across accounts, transactions, and dispute records."
+          ],
+          "pitfalls": [
+            "Using a relational database for write-heavy workloads with unpredictable access patterns — you'll hit write-amplification and lock contention before 50K transactions/sec without significant sharding.",
+            "Putting blob or unstructured data (JSON event payloads) in a relational table and then querying into the blob — that's what a document or search store is for.",
+            "Skipping connection pooling in a high-concurrency payment service: opening a new Postgres connection per request at 2,000 req/s will exhaust the connection limit in seconds."
+          ]
+        },
+        {
+          "category": "Columnar / wide-column",
+          "products": "Cassandra, DynamoDB, BigTable",
+          "why": "Horizontal scale on a predictable key; eventual consistency OK.",
+          "example": "For the transaction history view — give me the last 90 days of transactions for customer ID 123 — I use a wide-column store partitioned by customer ID so a single-key read is a local partition scan, not a cross-shard join across a relational cluster.",
+          "signals": [
+            "When your primary access pattern is a single-key lookup or a range scan on a known partition key — transaction history, event logs, time-series metrics.",
+            "When you need predictable horizontal write scale beyond what a single relational leader can provide — 100K+ writes/sec across geographically distributed accounts.",
+            "When eventual consistency is acceptable for the use case — user activity feeds, non-financial preference data, audit logs where a brief lag is tolerable."
+          ],
+          "pitfalls": [
+            "Modeling data relationally in Cassandra and then doing multi-partition queries — you'll get scatter-gather at scale, which is slower than the SQL join you were avoiding.",
+            "Choosing DynamoDB without modeling access patterns upfront: a hot partition key (like a popular merchant ID) will throttle your entire table under load.",
+            "Using a wide-column store for financial ledger data that requires strong consistency — eventual consistency and money are a dangerous combination without additional coordination."
+          ]
+        },
+        {
+          "category": "Object store",
+          "products": "S3, GCS, Azure Blob",
+          "why": "Cheap durable blobs; logs, backups, static assets.",
+          "example": "I store monthly statement PDFs in S3 — they're written once, read rarely, and durable storage matters more than read latency. At 100 million accounts generating one PDF per month, the cost delta vs. a database is several orders of magnitude.",
+          "signals": [
+            "Immutable or write-once artifacts: statements, audit logs, contract documents, ML training datasets — written once and read infrequently.",
+            "Large binary payloads that don't need querying or indexing — storing them in a database column wastes IOPS and adds no value.",
+            "Data lake or batch-processing pipelines: raw event streams land in S3, processed by Spark or Athena, without touching the transactional database."
+          ],
+          "pitfalls": [
+            "Storing objects that are queried on their content — an object store is a key-value blob store, not a search engine; put those in Elasticsearch.",
+            "Using an object store as a coordination mechanism: polling S3 for new files creates lag and cost; use a messaging broker for event-driven triggers.",
+            "Forgetting lifecycle policies: statement PDFs older than 7 years need to move to Glacier under compliance policy, or your storage bill grows linearly forever."
+          ]
+        },
+        {
+          "category": "CDC pipeline",
+          "products": "Debezium, Kafka Connect, DynamoDB Streams",
+          "why": "Emit row changes as events; drive downstream indexes/caches.",
+          "example": "Between the payments database and the fraud feature store I put a CDC pipeline — every INSERT or UPDATE to the transactions table becomes an event on Kafka within 50 ms, without the payment service having to double-write to two systems.",
+          "signals": [
+            "When you need downstream systems to react to database changes in near-real-time without coupling them to the application write path.",
+            "When you've accumulated a cache or search index that has drifted from the source of truth and you need a reliable sync mechanism.",
+            "When you need an audit trail of every row mutation without adding instrumentation to every application code path."
+          ],
+          "pitfalls": [
+            "Treating CDC as a primary integration pattern for new systems — it's a change-capture tool, not a substitute for a well-designed event-driven API.",
+            "Not accounting for schema evolution: a CDC pipeline breaks when the source table adds a non-nullable column unless the consumer handles missing fields gracefully.",
+            "Using CDC to drive synchronous workflows: CDC events are eventually consistent, so a downstream service reading from CDC can be seconds behind the source database."
+          ]
+        },
+        {
+          "category": "Search index",
+          "products": "Elasticsearch, OpenSearch",
+          "why": "Full-text + aggregations at latency SQL can't hit.",
+          "example": "For the transaction search feature — 'find all my Amazon purchases over $50 in the last 3 months' — I use a search index. The query has full-text match, a numeric filter, and a date range; that combination on 2 billion transaction rows in Postgres would take seconds, but Elasticsearch returns it under 100 ms.",
+          "signals": [
+            "When the query involves full-text search, fuzzy matching, or faceted filtering that a relational WHERE clause can't handle efficiently at scale.",
+            "When aggregation queries — total spend by category, top 10 merchants — need to run in under 200 ms across hundreds of millions of rows.",
+            "When you need relevance ranking rather than deterministic sort — fraud risk scores, document similarity, recommendation feeds."
+          ],
+          "pitfalls": [
+            "Using Elasticsearch as the primary store for financial data — it offers eventual consistency and no ACID guarantees, so it should be a read replica, not the source of truth.",
+            "Over-indexing every field by default: Elasticsearch's dynamic mapping will index everything unless you configure explicit mappings, which creates unnecessary disk and memory overhead.",
+            "Not accounting for reindex cost: changing a mapping on a 2-billion-document index requires a full reindex that can take hours and doubles your cluster storage temporarily."
+          ]
+        },
+        {
+          "category": "API gateway",
+          "products": "Kong, AWS API Gateway, Envoy",
+          "why": "Auth, rate-limit, routing at the edge.",
+          "example": "All external traffic hits the API gateway first — JWT validation, rate limiting at 1,000 req/s per client token, and routing to the right downstream service. The payment service never sees an unauthenticated request.",
+          "signals": [
+            "When you need a single enforcement point for auth, rate limiting, and routing across multiple downstream services — don't replicate that logic in every service.",
+            "When you need to version APIs externally (/v1, /v2) without changing downstream service contracts.",
+            "When you need to enforce throttling per client token to prevent one tenant from starving others — classic in multi-tenant card-issuing platforms."
+          ],
+          "pitfalls": [
+            "Putting business logic in the API gateway: it should enforce cross-cutting concerns, not make product decisions — routing to the 'right' account type belongs in a service, not a gateway rule.",
+            "Not designing for gateway failure: if the gateway is a single point of failure with no circuit-breaking, a gateway outage takes down all external traffic simultaneously.",
+            "Using the API gateway for service-to-service calls inside the cluster — that's what a service mesh is for; routing internal traffic through the edge gateway adds unnecessary latency."
+          ]
+        },
+        {
+          "category": "Service mesh",
+          "products": "Istio, Linkerd",
+          "why": "Mutual TLS, retries, tracing, traffic shifting — out of your service.",
+          "example": "I don't write retry logic or mTLS handshakes in my payment service — the sidecar proxy handles that. When I want to canary a new version of the fraud scorer to 5% of traffic, I configure a traffic-shifting rule in the mesh, not a feature flag in application code.",
+          "signals": [
+            "When you need mTLS between services in a regulated environment — PCI-DSS and SOC2 auditors want encryption in transit at the service-to-service layer, not just at the edge.",
+            "When you need distributed tracing across 20+ microservices without instrumenting each one individually.",
+            "When you want to do canary releases or traffic shifting without deploying new application code — the mesh handles the routing rules."
+          ],
+          "pitfalls": [
+            "Introducing a service mesh in a small microservices environment (fewer than 10 services): the operational overhead of managing a control plane exceeds the benefit.",
+            "Relying on the mesh for retry logic without making services idempotent: the mesh will retry failed requests, and if the downstream isn't idempotent, you'll create duplicate financial transactions.",
+            "Not monitoring the sidecar resource overhead: each Envoy sidecar consumes 50-100 MB of RAM; at 200 pods, that's 10-20 GB of overhead before your application runs."
+          ]
+        },
+        {
+          "category": "Identity / SSO provider",
+          "products": "Okta, Auth0, AWS Cognito",
+          "why": "OIDC/SAML; token issuance; delegated auth.",
+          "example": "The card-management portal delegates authentication to the SSO provider — we never store passwords. When a user logs in, the provider issues a JWT with a 15-minute expiry and a refresh token, and every service validates the JWT signature locally without a network call.",
+          "signals": [
+            "Any time you need federated identity across multiple services or products — don't build your own auth when a regulated, audited provider exists.",
+            "When the application needs to support enterprise SSO (SAML) for corporate clients alongside consumer OAuth — the provider handles both protocols.",
+            "When compliance requires MFA enforcement: the SSO provider enforces the policy centrally, so every app in the fleet gets MFA without per-app changes."
+          ],
+          "pitfalls": [
+            "Validating JWTs by calling the SSO provider on every request — that creates a synchronous dependency; validate the signature locally using the provider's public key instead.",
+            "Not designing for token revocation: JWTs are stateless, so a 15-minute expiry window means a compromised token is valid for up to 15 minutes even after the user logs out.",
+            "Storing the client secret in application environment variables without rotation: a leaked secret gives full access to token issuance for your entire app."
+          ]
+        },
+        {
+          "category": "Feature-flag service",
+          "products": "LaunchDarkly, Split, Unleash",
+          "why": "Decouple deploy from release; targeted rollouts; kill switches.",
+          "example": "We deployed the new KYC flow to production three weeks before launch, dark — the flag was off for 100% of traffic. On launch day we rolled to 1% of new accounts, watched the error rate for 30 minutes, then ramped to 100% over two hours. Zero deploy required on launch day.",
+          "signals": [
+            "When you need to decouple deployment from release — ship code to production continuously and turn features on for specific cohorts without a new deploy.",
+            "When a new feature affects a regulated flow (KYC, credit decisioning, fee disclosure) and you need the ability to kill it instantly if a compliance issue surfaces.",
+            "When you need to A/B test a product change on a specific user segment — high-spend customers, new-account cohort — without forking the codebase."
+          ],
+          "pitfalls": [
+            "Leaving stale flags in the codebase: every active flag is a branch in your logic; after rollout is complete, remove the flag and the dead code path within one sprint.",
+            "Using feature flags for long-lived configuration: flags are for release control, not for permanent config — use environment variables or a config service for permanent values.",
+            "Not accounting for flag evaluation latency: a synchronous flag evaluation on every request adds a network call if the SDK isn't caching; misconfigured caching TTL can cause stale rollout states."
+          ]
+        },
+        {
+          "category": "Observability stack",
+          "products": "Datadog, New Relic, Prometheus+Grafana",
+          "why": "Metrics + traces + logs; SLOs; paging.",
+          "example": "I instrument the payment authorization path with a p99 latency metric and a trace ID on every request. When p99 crosses 200 ms I get paged. The trace ID lets me jump from the alert straight to the specific request that caused the spike — fraud scorer timeout, not database.",
+          "signals": [
+            "Before any production deployment of a feature that touches the authorization path — define the SLO (p99 < 150 ms, error rate < 0.1%) and the alert threshold before the code ships.",
+            "When debugging a latency regression: distributed traces show you where time is spent per service hop, not just the aggregate end-to-end time.",
+            "When you need to prove to an auditor that a compliance-relevant event (login, account change, transaction) was logged with a timestamp and a user identifier."
+          ],
+          "pitfalls": [
+            "Setting alert thresholds on averages: a p99 spike that affects 1% of requests is invisible in the mean but represents 20,000 bad requests per second at scale.",
+            "Logging too much at INFO level in a high-throughput path: 2,000 transactions/sec generating 5 log lines each is 864 million log lines per day — your logging cost will exceed your compute cost.",
+            "Not correlating metrics with deploys: a latency spike 10 minutes after a deploy is almost certainly the deploy; without deploy markers on your dashboards, you waste 30 minutes ruling out infrastructure."
+          ]
+        }
       ],
       "antiPatternsHeader": "Anti-patterns across all rounds",
       "antiPatterns": [
-        { "bad": "'I'd use Kafka here.'", "why": "Naming the product without the reason signals cargo-cult. You need to show you understand WHY the category matters before naming a specific tool.", "fix": "'I need a messaging broker — something that decouples producer from consumer and buffers spikes. In practice that's Kafka or RabbitMQ; I'd reach for Kafka if I need replay or very high throughput.'" },
-        { "bad": "'We shipped it.'", "why": "In behavioral rounds, 'we' language masks your specific contribution. Capital One explicitly probes for individual ownership.", "fix": "Say 'I did X, Y led Z, Z paired with me on W.' Name teammates. Make your slice crisp." },
-        { "bad": "'$127,430.' as the answer.", "why": "False precision in a business case signals overconfidence in shaky assumptions. Interviewers will push on the weakest assumption.", "fix": "'Somewhere between $100K and $150K, most sensitive to customer-acquisition cost which I assumed at $45.' Own the range, name the sensitivity." },
-        { "bad": "'I don't know.'", "why": "Stopping at 'I don't know' costs signal. It's fine not to know — but what you do next is what they evaluate.", "fix": "'I haven't used that pattern specifically. My mental model would be X because Y. What am I missing?' Stay in dialogue." }
+        {
+          "bad": "'I'd use Kafka here.'",
+          "why": "Naming the product without the reason signals cargo-cult. You need to show you understand WHY the category matters before naming a specific tool.",
+          "fix": "'I need a messaging broker — something that decouples producer from consumer and buffers spikes. In practice that's Kafka or RabbitMQ; I'd reach for Kafka if I need replay or very high throughput.'",
+          "triggers": [
+            "You've used Kafka on your last project and the current design has a similar shape — pattern-match fires before you've reasoned about the new constraints.",
+            "The interviewer asks 'what would you put between these two services?' and the silence pressure makes you reach for a familiar name.",
+            "You're drawing the architecture diagram and need to fill a box quickly — the product name comes out before the category reasoning."
+          ],
+          "examples": [
+            "'I'd use Kafka here.' (no category, no reason why a broker is needed)",
+            "'I'd put Redis between the checkout and the search service.' (no discussion of what the cache is solving — latency? hot-key shedding? session state?)",
+            "'I'd use DynamoDB for the transaction store.' (no mention of access patterns, consistency requirements, or what a relational alternative would cost)"
+          ]
+        },
+        {
+          "bad": "'We shipped it.'",
+          "why": "In behavioral rounds, 'we' language masks your specific contribution. Capital One explicitly probes for individual ownership.",
+          "fix": "Say 'I did X, Y led Z, Z paired with me on W.' Name teammates. Make your slice crisp.",
+          "triggers": [
+            "The story involves a large team and you're genuinely proud of the group outcome — 'we' feels accurate and honest, so individual ownership framing feels like taking credit.",
+            "The interviewer asks 'tell me about a time your team shipped something complex' — the question has 'team' in it, so 'we' answers feel appropriate.",
+            "You're worried about sounding arrogant by saying 'I', so you default to 'we' as a hedge that backfires."
+          ],
+          "examples": [
+            "'We redesigned the payment retry logic and reduced failures by 40%.' (who owned what? what was your specific contribution?)",
+            "'The team built the fraud scoring service in one quarter.' (how many engineers? what was your slice?)",
+            "'We decided to use a circuit-breaker pattern.' (who proposed it? who built it? who pushed back?)"
+          ]
+        },
+        {
+          "bad": "'$127,430.' as the answer.",
+          "why": "False precision in a business case signals overconfidence in shaky assumptions. Interviewers will push on the weakest assumption.",
+          "fix": "'Somewhere between $100K and $150K, most sensitive to customer-acquisition cost which I assumed at $45.' Own the range, name the sensitivity.",
+          "triggers": [
+            "You've been doing mental math step-by-step and the final multiplication produces a specific number — you read it out without stepping back to sanity-check the precision.",
+            "The interviewer pauses expectantly after you've built up your estimate tree — the silence pressure makes you commit to the exact number in your head.",
+            "You want to sound rigorous and precise, and a specific number feels more rigorous than a range."
+          ],
+          "examples": [
+            "'The total addressable market is $4,320,000,000.' (in a 40-minute case built on three assumed inputs)",
+            "'Each customer generates $247 in annual revenue.' (derived from five assumptions, each with a 20% error bar)",
+            "'We need $1,843,200 in annual cost savings to break even.' (precision that implies you know the exact cost structure of Capital One's rewards program)"
+          ]
+        },
+        {
+          "bad": "'I don't know.'",
+          "why": "Stopping at 'I don't know' costs signal. It's fine not to know — but what you do next is what they evaluate.",
+          "fix": "'I haven't used that pattern specifically. My mental model would be X because Y. What am I missing?' Stay in dialogue.",
+          "triggers": [
+            "The interviewer names a specific technology or pattern you've never used — the honest instinct is to admit it immediately, but you stop there instead of reasoning forward.",
+            "A follow-up question goes deeper than your knowledge boundary — you hit the edge of your experience and the reflex is to stop rather than extrapolate.",
+            "You're tired 2.5 hours into the loop and the cognitive load of reasoning forward feels too high — the path of least resistance is 'I don't know'."
+          ],
+          "examples": [
+            "'I don't know much about CDC pipelines.' (full stop — no mental model offered, no first-principles reasoning attempted)",
+            "'I've never designed a fraud detection system.' (stated as a disqualifier rather than as a starting point for reasoning)",
+            "'I'm not familiar with Regulation E.' (instead of: 'I don't know the specific reg, but if it's about consumer financial protection I'd expect it to cover disclosure and dispute rights')"
+          ]
+        }
       ],
       "prepHeader": "Preparation timeline",
       "prep": [
@@ -820,6 +1175,17 @@
             "Run 2 full Mock Power Days in Anabasis. One in the morning, one after lunch to simulate fatigue.",
             "Re-read your resume and prepare 3 STAR stories per Capital One value.",
             "Skim Capital One's product line — know what One, Eno, and their card rewards stack actually do."
+          ],
+          "rationale": "One week out is the last window where you can still change the shape of your preparation. If you discover your behavioral stories are weak here, you have time to build three new ones before the loop. After this window, prep becomes execution-mode — you can refine but you can't rebuild.",
+          "deliverables": [
+            "A written doc with at least 8 STAR stories mapped to the 4 Capital One values (2 per value minimum), each timed at 8-12 minutes out loud.",
+            "Two completed Mock Power Days with written notes on which round felt weakest and what you'd fix.",
+            "A one-page summary of Capital One's product portfolio — One, Eno, card rewards, cloud-native card stack — with one specific technical or product detail per product."
+          ],
+          "pitfalls": [
+            "Running Mock Power Days back-to-back on the same day to 'get them done' — fatigue simulation only works if there's a recovery day in between.",
+            "Writing STAR stories that cover only positive outcomes: interviewers explicitly probe for failures and disagreements; prepare at least two stories where things went wrong.",
+            "Skimming the product page without understanding the technical angle — knowing 'Capital One uses AWS' is table stakes; knowing they rebuilt their core banking on a cloud-native card platform is the signal."
           ]
         },
         {
@@ -828,6 +1194,17 @@
             "One light Mock GCA (40 min) — just to stay warm, don't grind.",
             "Review your STAR stories out loud. Time each one; target 8-12 min.",
             "Sleep. Everything else is optimization around rest."
+          ],
+          "rationale": "The day before is for calibration and rest, not for learning new material. Anything you learn tonight won't consolidate in time to help you tomorrow. Your job is to confirm the tools are sharp, then put them down.",
+          "deliverables": [
+            "One GCA problem attempted and reviewed — not to practice new patterns but to confirm your warm-up ritual works.",
+            "STAR stories timed out loud: you know each one lands within the 8-12 minute window without rushing.",
+            "A clear physical setup for tomorrow: editor open, camera tested, water on the desk, notifications off."
+          ],
+          "pitfalls": [
+            "Grinding 3 hours of LeetCode problems the night before — new patterns won't stick and you'll be cognitively depleted for the loop.",
+            "Reading new behavioral frameworks or books the night before: your STAR stories need to come out naturally, not through a new lens you learned at 11 PM.",
+            "Sleeping fewer than 7 hours because you're anxious: sleep deprivation degrades working memory and verbal fluency — the two things Power Day runs on."
           ]
         },
         {
@@ -836,6 +1213,17 @@
             "Water, no coffee spike. Bathroom.",
             "Open the editor you'll use. Warm fingers with one easy problem — don't start fresh cold.",
             "Read your one-pager of STAR stories one last time. Close it."
+          ],
+          "rationale": "The hour before is about physical and cognitive warm-up, not content review. Your goal is to be at operating temperature — hands warm, verbal fluency online, anxiety converted into focus — when the first round starts.",
+          "deliverables": [
+            "One easy coding problem solved: fingers are warm, the editor environment is confirmed working, and you've reminded your brain what it feels like to code under observation.",
+            "STAR one-pager reviewed and closed: the stories are primed in working memory but you're not reading from notes during the loop.",
+            "Physical environment locked in: camera angle checked, background appropriate, no phone notifications, water within reach."
+          ],
+          "pitfalls": [
+            "Solving a hard problem in the hour before and getting stuck — you'll carry that frustration and self-doubt into Round 1.",
+            "Over-reviewing STAR stories right up until the interview starts — if you're still reading your notes when the call connects, the stories won't sound natural.",
+            "Caffeine spike 30 minutes before start: peak alertness will wear off mid-loop; hydrate with water instead."
           ]
         },
         {
@@ -844,6 +1232,17 @@
             "Narrate every decision. If you're quiet, they can't score your thinking.",
             "On 'I don't know': validate → mental model → what you'd reach for → what you'd need to verify.",
             "Between rounds: stretch, hydrate, reset. Do NOT post-mortem the round you just finished — it poisons the next one."
+          ],
+          "rationale": "During the loop, your only job is to keep the signal flowing. Interviewers score what they can observe — if your thinking is invisible, it can't be scored. Every break is a reset, not a review.",
+          "deliverables": [
+            "After each coding problem: a brief verbal complexity analysis delivered before the interviewer has to ask — 'O(n) time, O(1) space because I reuse the input array as my window.'",
+            "After each behavioral story: at least one concrete number in the Result, delivered without prompting.",
+            "After each break: a 30-second physical reset — stand up, drink water, breathe — before the next round joins."
+          ],
+          "pitfalls": [
+            "Post-morteming a round during the break: you cannot change a round that's over, and replaying mistakes fills your working memory with noise for the next round.",
+            "Going quiet for more than 30 seconds during a coding or design problem — a long silence with no narration looks like confusion, even if you're thinking clearly.",
+            "Letting a tough question in Round 3 derail your energy for Round 4: treat each round as independent; the score is holistic, not sequential."
           ]
         }
       ],
