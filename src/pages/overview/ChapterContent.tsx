@@ -314,15 +314,25 @@ export function ChapterContent({
 
 	if (topic === "gca") {
 		if (slug === "scoring") {
-			const items = tArray<DeepItem>(t, "sectionOverview.gca.scoring");
+			const items = tArray<{
+				term: string;
+				definition: string;
+				why: string;
+				example: string;
+				signals?: string[];
+				pitfalls?: string[];
+			}>(t, "sectionOverview.gca.scoring");
 			return (
-				<OverviewDeepCards
+				<OverviewConcepts
 					header={t("sectionOverview.gca.scoringHeader")}
+					sub={t("sectionOverview.gca.scoringSub")}
 					items={items}
 					labels={{
-						pattern: labels.pattern,
-						pacing: labels.pacing,
-						trap: labels.trap,
+						definition: labels.definition,
+						whyMatters: labels.whyMatters,
+						inPractice: labels.inPractice,
+						signals: labels.conceptSignals,
+						pitfalls: labels.conceptPitfalls,
 					}}
 				/>
 			);

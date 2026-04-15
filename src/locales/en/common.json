@@ -558,34 +558,71 @@
       "title": "GCA · 70 minutes, 4 problems, 1000 points",
       "summary": "A timed coding screen Capital One uses early in the loop. Four problems of increasing weight. All-or-nothing scoring per problem.",
       "scoringHeader": "How scoring actually works",
+      "scoringSub": "Scoring isn't just how points are assigned — it's a lens into what Capital One is actually selecting for. Each concept on this page is a rule of the GCA format plus the judgment call that rule is really measuring.",
       "scoring": [
         {
-          "title": "Max score: 1000 — the weight arithmetic",
-          "body": "Weights compound geometrically: 100 + 200 + 300 + 400 = 1000. Capital One's published pass threshold is around 600, but a confident advance signal is 800 or more. Module 4 alone is worth more than Modules 1 and 2 combined, so the ceiling lives at the bottom of the exam.",
-          "pattern": "Treat the four modules as an investment portfolio. Your time-per-point yield is higher on Modules 3 and 4 than on Module 1 — clear the easy floor fast and shift the majority of the remaining budget into the modules whose weight you can still earn.",
-          "pacing": "Module 1 deserves 8 minutes at most. Polishing it for 15 minutes to shave off imagined bugs is how strong candidates end the exam at 600 instead of 800.",
-          "trap": "Perfecting the 100-point module while the 400-point module runs out of clock. 100 points of certainty is worth less than 400 points of a solid attempt."
+          "term": "Weight compounding",
+          "definition": "The four modules carry geometrically compounding weights — 100, 200, 300, 400 — adding to a maximum of 1000. Capital One's published pass threshold hovers around 600, but a confident advance signal is 800 or more. Module 4 alone outweighs Modules 1 and 2 combined, so the ceiling of your score lives at the bottom of the exam.",
+          "why": "A geometric-weight scoreboard is designed to discriminate between candidates who can handle warmup problems and candidates who can handle real complexity. Capital One isn't hiring for who can sort an array fastest; they're measuring who can execute under the same pattern-recognition pressure that Power Day will impose on you a week later.",
+          "example": "Suppose you spend 15 minutes perfecting Module 1 (100 points), 15 on Module 2 (200), 15 on Module 3 (300, passes), and 25 trying Module 4 (400, doesn't land). You score 600. Now suppose you cut Module 1 to 8 minutes, finish Module 2 in 13, invest 18 into Module 3, and have 31 minutes on Module 4 — enough to land it for 1000. Same cognitive effort, +400 points, from nothing but time allocation.",
+          "signals": [
+            "You read all four statements within the first 2 minutes so your subconscious starts processing the harder modules while you solve the easier ones.",
+            "You name your per-module budget out loud before you write a line — '8 for M1, 13 for M2, 18 for M3, 25 for M4' — and physically check the clock when you exit each module.",
+            "When Module 1 runs long, you make an explicit decision to cap the loss ('I'll submit what I have at minute 10 and come back later') instead of drifting into Module 2 late."
+          ],
+          "pitfalls": [
+            "You perfect the warmup for 15 minutes because 'it's almost right' and end the exam at 600 with Module 4 blank, when 8 minutes would have been plenty.",
+            "You treat all four modules as equal-priority problems and let the clock allocate itself, which is the same as giving your strongest module the least time.",
+            "You skip reading Module 4 until minute 50 and discover it's the pattern you know best — now you have 20 minutes for a problem that wanted 25 and a clear head."
+          ]
         },
         {
-          "title": "All-or-nothing per problem — correctness trumps speed",
-          "body": "Each module is scored binary: every hidden test passes, or the module scores zero. There is no partial credit for a solution that fails a single edge case. A 'mostly right' answer is worth the same as an empty file.",
-          "pattern": "Write a correct brute force before you write an optimized solution, whenever input size allows it (typically Modules 1 and 2). A brute force that passes is worth infinitely more than a clever algorithm that fails one edge.",
-          "pacing": "After your solution passes the visible samples, spend 90 seconds walking through edge cases out loud: empty input, single element, all duplicates, maximum size, negative values. Don't submit without this pass.",
-          "trap": "Clicking submit the moment the sample tests go green. Samples are a compile check; the grader lives elsewhere, and it is ruthless about edges you didn't think about."
+          "term": "All-or-nothing correctness",
+          "definition": "Each module scores binary. Every hidden test passes and you collect the full weight, or any test fails — even one edge case — and the module scores zero. There is no partial credit. A solution that passes 9 of 10 hidden tests on Module 4 earns the same as an empty file.",
+          "why": "The rubric is weighted toward engineers who ship production code that handles every input, not candidates who ship code that only handles the happy path. Capital One would rather you deliver a slow correct solution to a hard module than a fast broken solution to the same module, because the slow correct version is the one that doesn't page someone at 3am.",
+          "example": "On Module 3 you have a BFS that passes the two visible samples. You're tempted to submit. Instead, you trace through: empty grid, single cell, unreachable target, grid with cycles. The cycle case reveals your visited set isn't being carried across recursion levels. You fix it, re-run, submit. Without that 90-second pass, the grader would have hit your cycle bug on a hidden 200×200 input and scored you zero on a module you otherwise had.",
+          "signals": [
+            "After your solution passes the visible samples, you spend 60–90 seconds walking edge cases out loud before submitting — empty, single element, max size, all duplicates, off-by-one from the boundary.",
+            "You write a brute-force version first when the input size allows it and verify it against the sample, giving yourself a reference implementation to cross-check your optimized version.",
+            "You sanity-check your solution against the constraints: if n can be 10^5, you mentally reject any O(n²) inner loop even if it passes the sample with n = 5."
+          ],
+          "pitfalls": [
+            "You submit the moment the visible samples go green because you assume the grader uses inputs of similar size and shape — they don't.",
+            "You write the optimized solution directly, skip the brute-force comparison, and miss a base-case error that a brute force would have caught on the first run.",
+            "You see a sample pass and ship without reading the constraints, leaving your O(n²) to time out on the hidden n = 10^5 inputs."
+          ]
         },
         {
-          "title": "Hidden tests do the grading — samples are a sanity check",
-          "body": "The two or three tests visible in the editor are lightweight validators for obvious bugs and compile errors. The actual grader runs dozens of hidden cases with large inputs, adversarial boundaries, and performance limits. Passing the visible tests is necessary but far from sufficient.",
-          "pattern": "Think like the grader. Before you submit, generate your own mental test list: empty, single, maximum size, all identical, already sorted, reverse sorted, off-by-one from the constraint boundary. If you cannot invent five tests beyond the samples, you do not yet understand the problem.",
-          "pacing": "Budget roughly 2 of the ~15 minutes per module to think about edges. That small investment converts probable zeros into full credit.",
-          "trap": "Seeing green on the samples and assuming you're done. The grader has n = 10^5 inputs — your O(n²) passed the n = 5 sample and will time out on everything that actually counts."
+          "term": "Hidden grading",
+          "definition": "The two or three tests visible in the editor are lightweight sanity checks — they exist to catch compile errors and flagrant bugs. The real grading runs against a hidden suite of dozens of tests: inputs near the constraint ceiling, adversarial edges, and performance cutoffs. Your score is determined entirely by the hidden suite; the visible tests can pass and you can still fail.",
+          "why": "Hidden grading mirrors what code review and QA do to your commits in production. Capital One wants engineers who generate their own coverage, who anticipate the inputs a reviewer would ask about, who don't wait for someone else to surface the bug. A candidate who needs the hidden suite to reveal an edge case is a candidate who'd need production traffic to reveal it — which is too late.",
+          "example": "You're on Module 2 with a sliding-window problem. The sample passes — nums = [1, 2, 3], k = 2, output 3 — and you're about to submit. Instead you ask: what if nums is empty? What if k is 0? What if k equals nums.length? What if every element is negative? What if n = 10^5 and every element is identical? Forty seconds of that exercise reveals your window never shrinks below size k when the inputs are uniform — a bug the hidden suite would have caught on its 'all zeros' case.",
+          "signals": [
+            "Before you submit, you can list at least five inputs outside the visible samples that your solution should handle — and you've mentally walked your code through them.",
+            "When a constraint reads '1 ≤ n ≤ 10^5', you build at least one mental test near the ceiling ('what does my algorithm do when every element is the same?') before submitting.",
+            "You treat the visible samples as the minimum viable evidence that the code compiles, not as evidence that it is correct, and your language reflects that — 'samples are green, now let me actually test it.'"
+          ],
+          "pitfalls": [
+            "You read the first sample, implement against its shape, and forget that the same algorithm has to survive inputs twenty thousand times larger.",
+            "You assume that because the sample covered one edge (say, empty input), the grader won't have a different edge (say, a single element) — the grader always has more edges than the samples expose.",
+            "You never look at the constraints section because 'the algorithm is what matters,' which is exactly how O(n²) solutions make it to the grader and time out on everything that isn't the sample."
+          ]
         },
         {
-          "title": "Run freely — only the last submit at timeout is graded",
-          "body": "Code execution during the 70 minutes is unlimited. There is no penalty for a failed run and no penalty for submitting multiple times. Only the final submission on each problem at the end of the exam is scored, which turns the whole test into a long iterate-and-verify loop rather than a one-shot attempt.",
-          "pattern": "Use the console as a live debugger. Print intermediate values to see what your code is really doing. Submit early, even with a partial solution — then iterate. Submissions are replaceable, zeros are not.",
-          "pacing": "Don't ration your runs. Execute every 30–60 seconds while developing. The cost is zero and the information gain is real.",
-          "trap": "Holding a broken solution because you want to 'finish it first,' then hitting the timeout with nothing submitted. At minute 65, submit whatever you have and keep iterating — a 50% submission beats a 0% submission every single time."
+          "term": "Unlimited iteration",
+          "definition": "Code execution during the 70 minutes is unlimited. There's no penalty for a failed run, no penalty for submitting multiple times, no cooldown between attempts. Only the last submission on each problem at the end of the exam is graded, which means every intermediate state — every print, every partial — is a free investigation rather than a commitment.",
+          "why": "A format that rewards iteration and penalizes commitment is pointing at a specific engineering virtue: debugging velocity. Capital One values engineers who learn fast from each run, who treat the machine as a collaborator rather than a judge, who don't freeze up when the first attempt doesn't work. If you can't iterate freely here, you won't iterate freely in production either.",
+          "example": "You're on Module 4, stuck on a DP recurrence. Instead of staring at your code, you insert `System.out.println(Arrays.toString(dp))` inside the loop, run it, and see dp[3] is 5 when you expected 8. The missing transition is now obvious. You fix it, remove the print, run again, submit. Three runs, five minutes, a solved module. Without using the Run button as a debugger, you'd have spent 20 minutes reasoning about a bug the compiler could have shown you in ten seconds.",
+          "signals": [
+            "You hit Run every 30–60 seconds while developing — on partial code, with prints in it, without worrying whether it's ready to submit yet.",
+            "You submit early and often — even a clearly partial solution — so that at any given moment there's a non-zero grade locked in and your iteration risk is zero.",
+            "When you hit a bug you can't reason about, your first move is to add a print and run, not to re-read the code for the fourth time."
+          ],
+          "pitfalls": [
+            "You hold back runs because you want to 'finish it first' and end up at the 65-minute mark with code you haven't tested once on the machine.",
+            "You write a full solution in your head, submit it once, and only then discover a bug — instead of iterating toward correctness run by run, which is cheaper and more reliable.",
+            "You stare at broken code for five minutes trying to reason through it when a single print would have shown you the bug in fifteen seconds."
+          ]
         }
       ],
       "modulesHeader": "The 4 modules — what's tested, how to attack",

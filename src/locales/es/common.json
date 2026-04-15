@@ -558,34 +558,71 @@
       "title": "GCA · 70 minutos, 4 problemas, 1000 puntos",
       "summary": "Un screening de código cronometrado que Capital One usa temprano en el loop. Cuatro problemas de peso creciente. Puntaje todo-o-nada por problema.",
       "scoringHeader": "Cómo puntúa de verdad",
+      "scoringSub": "La puntuación no es solo cómo se asignan los puntos — es una lente de lo que Capital One realmente está evaluando. Cada concepto en esta página es una regla del formato GCA, más el juicio que esa regla está midiendo de verdad.",
       "scoring": [
         {
-          "title": "Puntaje máximo: 1000 — la aritmética de los pesos",
-          "body": "Los pesos crecen de forma geométrica: 100 + 200 + 300 + 400 = 1000. El umbral publicado por Capital One para avanzar ronda los 600, pero una señal de avance sólida es 800 o más. El Módulo 4 por sí solo pesa más que los Módulos 1 y 2 juntos, por lo que el techo del examen vive al final.",
-          "pattern": "Trata los cuatro módulos como un portafolio de inversión. El rendimiento por minuto es mucho mayor en los Módulos 3 y 4 que en el 1 — liquida el suelo fácil rápido y redirige la mayoría del presupuesto restante hacia los módulos cuyo peso todavía puedes capturar.",
-          "pacing": "El Módulo 1 merece 8 minutos como máximo. Pulirlo durante 15 minutos buscando bugs imaginarios es la forma en la que candidatos fuertes terminan en 600 en lugar de 800.",
-          "trap": "Perfeccionar el módulo de 100 puntos mientras al de 400 se le acaba el reloj. 100 puntos de certeza valen menos que 400 puntos de un intento sólido."
+          "term": "Pesos que compuestan",
+          "definition": "Los cuatro módulos cargan pesos que compuestan geométricamente — 100, 200, 300, 400 — sumando un máximo de 1000. El umbral publicado por Capital One para avanzar ronda los 600, pero una señal de avance sólida es 800 o más. El Módulo 4 por sí solo pesa más que los Módulos 1 y 2 juntos, por lo que el techo de tu puntaje vive al final del examen.",
+          "why": "Un marcador de pesos geométricos está diseñado para discriminar entre candidatos que pueden resolver problemas de warmup y candidatos que pueden ejecutar bajo la misma presión de reconocimiento de patrones que Power Day te va a imponer una semana después. Capital One no contrata a quien ordena un arreglo más rápido; mide a quien puede ejecutar bajo presión real.",
+          "example": "Supón que inviertes 15 minutos en perfeccionar el Módulo 1 (100 puntos), 15 en el 2 (200), 15 en el 3 (300, pasa) y 25 intentando el 4 (400, no aterriza). Sacas 600. Ahora supón que cortas el Módulo 1 a 8 minutos, terminas el 2 en 13, inviertes 18 en el 3 y tienes 31 minutos para el Módulo 4 — suficiente para aterrizarlo y llegar a 1000. Mismo esfuerzo cognitivo, +400 puntos, solo por reasignar el tiempo.",
+          "signals": [
+            "Lees los cuatro enunciados dentro de los primeros 2 minutos del examen para que tu subconsciente empiece a procesar los módulos difíciles mientras resuelves los fáciles.",
+            "Declaras tu presupuesto por módulo en voz alta antes de escribir una línea — '8 para M1, 13 para M2, 18 para M3, 25 para M4' — y revisas el reloj físicamente al salir de cada módulo.",
+            "Cuando el Módulo 1 se extiende, tomas una decisión explícita de acotar la pérdida ('envío lo que tengo al minuto 10 y regreso después') en lugar de deslizarte al Módulo 2 tarde."
+          ],
+          "pitfalls": [
+            "Perfeccionas el warmup durante 15 minutos porque 'ya casi sale' y terminas el examen en 600 con el Módulo 4 vacío, cuando 8 minutos habrían bastado.",
+            "Tratas los cuatro módulos como problemas de prioridad equivalente y dejas que el reloj haga la asignación por ti, lo cual equivale a darle a tu módulo más fuerte el menor tiempo.",
+            "No lees el Módulo 4 hasta el minuto 50 y descubres que es el patrón que mejor dominas — ahora tienes 20 minutos para un problema que quería 25 y una mente despejada."
+          ]
         },
         {
-          "title": "Todo o nada por problema — la correctitud vence a la velocidad",
-          "body": "Cada módulo se puntúa de forma binaria: o pasan todos los tests ocultos, o el módulo saca cero. No hay crédito parcial por una solución que falla un solo edge case. Una respuesta 'casi correcta' vale lo mismo que un archivo vacío.",
-          "pattern": "Escribe un brute force correcto antes de escribir una solución optimizada siempre que el tamaño de la entrada lo permita (típicamente Módulos 1 y 2). Un brute force que pasa vale infinitamente más que un algoritmo ingenioso que falla un caso borde.",
-          "pacing": "Después de que tu solución pase los samples visibles, dedica 90 segundos a recorrer los edge cases en voz alta: entrada vacía, un solo elemento, todos duplicados, tamaño máximo, valores negativos. No envíes sin esa pasada.",
-          "trap": "Hacer clic en submit en cuanto los sample tests se ponen verdes. Los samples son un compile check; el grader vive en otro lugar y es implacable con los bordes en los que no pensaste."
+          "term": "Correctitud todo o nada",
+          "definition": "Cada módulo se puntúa de forma binaria. O pasan todos los tests ocultos y cobras el peso completo, o cualquier test falla — aunque sea un solo edge case — y el módulo saca cero. No hay crédito parcial. Una solución que pasa 9 de 10 tests ocultos en el Módulo 4 vale lo mismo que un archivo vacío.",
+          "why": "La rúbrica está inclinada hacia ingenieros que envían código de producción capaz de manejar cualquier entrada, no hacia candidatos que solo envían código que maneja el happy path. Capital One prefiere que entregues una solución lenta y correcta a un módulo difícil antes que una solución rápida y rota al mismo módulo, porque la versión lenta y correcta es la que no despierta a alguien a las 3 de la mañana.",
+          "example": "En el Módulo 3 tienes un BFS que pasa los dos samples visibles. Estás por enviar. En cambio, recorres mentalmente: grid vacío, una sola celda, destino inalcanzable, grid con ciclos. El caso con ciclos revela que tu visited set no se propaga entre niveles de recursión. Lo arreglas, vuelves a correr, envías. Sin esa pasada de 90 segundos, el grader habría encontrado tu bug de ciclos en una entrada oculta de 200×200 y te habría dado cero en un módulo que ya tenías ganado.",
+          "signals": [
+            "Después de que tu solución pase los samples visibles, dedicas 60 a 90 segundos a recorrer edge cases en voz alta antes de enviar — entrada vacía, un solo elemento, tamaño máximo, todos duplicados, uno fuera del borde del constraint.",
+            "Escribes una versión brute force primero cuando el tamaño de entrada lo permite, y la validas contra el sample para tener una implementación de referencia contra la cual cruzar tu versión optimizada.",
+            "Cruzas tu solución contra los constraints: si n puede ser 10^5, rechazas mentalmente cualquier loop interno O(n²) aunque pase el sample con n = 5."
+          ],
+          "pitfalls": [
+            "Envías en cuanto los samples visibles se ponen verdes porque asumes que el grader usa entradas de tamaño y forma similar — no las usa.",
+            "Escribes la solución optimizada directamente, te saltas la comparación con brute force y se te escapa un error de caso base que un brute force habría detectado en la primera corrida.",
+            "Ves pasar un sample y envías sin leer los constraints, dejando que tu O(n²) haga timeout en las entradas ocultas con n = 10^5."
+          ]
         },
         {
-          "title": "Los tests ocultos califican — los visibles son sanity check",
-          "body": "Los dos o tres tests que ves en el editor son validadores ligeros para bugs obvios y errores de compilación. El grader real corre decenas de casos ocultos con entradas grandes, bordes adversariales y límites de desempeño. Pasar los visibles es necesario, pero dista mucho de ser suficiente.",
-          "pattern": "Piensa como el grader. Antes de enviar, genera tu propia lista mental de tests: vacío, uno solo, tamaño máximo, todos iguales, ya ordenado, ordenado al revés, uno fuera del límite del constraint. Si no puedes inventar cinco tests más allá de los samples, todavía no entiendes el problema.",
-          "pacing": "Presupuesta aproximadamente 2 de los ~15 minutos por módulo para pensar en bordes. Esa pequeña inversión convierte ceros probables en puntaje completo.",
-          "trap": "Ver verde en los samples y dar por hecho que ya terminaste. El grader tiene entradas con n = 10^5 — tu O(n²) pasó el sample de n = 5 y hará timeout en todo lo que realmente cuenta."
+          "term": "Calificación oculta",
+          "definition": "Los dos o tres tests visibles en el editor son validadores ligeros — existen para atrapar errores de compilación y bugs flagrantes. La calificación real corre contra una suite oculta de decenas de tests: entradas cerca del techo del constraint, bordes adversariales y límites de desempeño. Tu puntaje lo determina por completo la suite oculta; los tests visibles pueden pasar y aun así puedes fallar.",
+          "why": "La calificación oculta replica lo que el code review y QA le hacen a tus commits en producción. Capital One quiere ingenieros que generan su propia cobertura, que anticipan las entradas que un revisor preguntaría, que no esperan a que alguien más encuentre el bug. Un candidato que necesita la suite oculta para descubrir un edge case es un candidato que necesitaría tráfico de producción para descubrirlo — y eso es tarde.",
+          "example": "Estás en el Módulo 2 con un problema de sliding window. El sample pasa: nums = [1, 2, 3], k = 2, salida 3, y estás por enviar. En cambio preguntas: ¿qué pasa si nums está vacío? ¿Si k es 0? ¿Si k es igual a nums.length? ¿Si todos los elementos son negativos? ¿Si n = 10^5 y todos los elementos son idénticos? Cuarenta segundos de ese ejercicio revelan que tu ventana nunca se encoge por debajo del tamaño k cuando las entradas son uniformes — un bug que la suite oculta habría encontrado con su caso de 'todos ceros'.",
+          "signals": [
+            "Antes de enviar, puedes enumerar al menos cinco entradas fuera de los samples visibles que tu solución debe manejar — y has recorrido mentalmente tu código contra cada una.",
+            "Cuando un constraint dice '1 ≤ n ≤ 10^5', construyes al menos un test mental cerca del techo ('¿qué hace mi algoritmo cuando todos los elementos son iguales?') antes de enviar.",
+            "Tratas los samples visibles como evidencia mínima de que el código compila, no como evidencia de que es correcto, y tu lenguaje lo refleja — 'los samples están verdes, ahora déjame probarlo de verdad.'"
+          ],
+          "pitfalls": [
+            "Lees el primer sample, implementas contra su forma, y olvidas que el mismo algoritmo debe sobrevivir entradas veinte mil veces más grandes.",
+            "Asumes que porque el sample cubrió un borde (digamos, entrada vacía), el grader no tendrá un borde distinto (digamos, un solo elemento) — el grader siempre tiene más bordes de los que los samples exponen.",
+            "Nunca miras la sección de constraints porque 'lo que importa es el algoritmo', que es exactamente como las soluciones O(n²) llegan al grader y hacen timeout en todo lo que no sea el sample."
+          ]
         },
         {
-          "title": "Corre libremente — solo el último submit al cierre se califica",
-          "body": "La ejecución de código durante los 70 minutos es ilimitada. No hay penalización por un run fallido ni por enviar varias veces. Solo la última entrega de cada problema al cierre del examen se puntúa, lo que convierte todo el test en un ciclo largo de iterar y verificar en lugar de un intento único.",
-          "pattern": "Usa la consola como un debugger en vivo. Imprime valores intermedios para ver qué está haciendo tu código en realidad. Envía temprano, aunque tengas una solución parcial — después iteras. Los submits se pueden reemplazar, los ceros no.",
-          "pacing": "No raciones los runs. Ejecuta cada 30–60 segundos mientras desarrollas. El costo es cero y la información que ganas es real.",
-          "trap": "Aferrarse a una solución rota porque quieres 'terminarla primero' y llegar al timeout sin haber enviado nada. En el minuto 65, envía lo que tengas y sigue iterando — una entrega al 50% le gana cada vez a una entrega al 0%."
+          "term": "Iteración ilimitada",
+          "definition": "La ejecución de código durante los 70 minutos es ilimitada. No hay penalización por un run fallido, no hay penalización por enviar varias veces, no hay cooldown entre intentos. Solo la última entrega de cada problema al cierre del examen se califica, lo que significa que cada estado intermedio — cada print, cada parcial — es una investigación gratuita en lugar de un compromiso.",
+          "why": "Un formato que premia la iteración y castiga el compromiso apunta a una virtud de ingeniería específica: velocidad de debugging. Capital One valora ingenieros que aprenden rápido de cada corrida, que tratan a la máquina como colaboradora en lugar de juez, que no se congelan cuando el primer intento no funciona. Si no puedes iterar con libertad aquí, tampoco lo harás en producción.",
+          "example": "Estás en el Módulo 4, atorado en una recurrencia de DP. En lugar de quedarte viendo tu código, insertas `System.out.println(Arrays.toString(dp))` dentro del loop, corres, y ves que dp[3] es 5 cuando esperabas 8. La transición que falta queda obvia. La arreglas, quitas el print, corres otra vez, envías. Tres corridas, cinco minutos, un módulo resuelto. Sin usar el botón Run como debugger, habrías gastado 20 minutos razonando sobre un bug que el compilador te podía mostrar en diez segundos.",
+          "signals": [
+            "Presionas Run cada 30 a 60 segundos mientras desarrollas — sobre código parcial, con prints, sin preocuparte si ya está listo para enviar.",
+            "Envías temprano y frecuente — incluso una solución claramente parcial — para que en cualquier momento haya una nota distinta de cero asegurada y tu riesgo de iteración sea cero.",
+            "Cuando encuentras un bug que no puedes razonar, tu primer movimiento es agregar un print y correr, no releer el código por cuarta vez."
+          ],
+          "pitfalls": [
+            "Te aguantas las corridas porque quieres 'terminarlo primero' y llegas al minuto 65 con código que no has probado ni una vez en la máquina.",
+            "Escribes una solución completa en tu cabeza, la envías una sola vez, y hasta ahí descubres un bug — en lugar de iterar hacia la corrección corrida por corrida, que es más barato y confiable.",
+            "Te quedas viendo código roto durante cinco minutos tratando de razonarlo cuando un solo print te habría mostrado el bug en quince segundos."
+          ]
         }
       ],
       "modulesHeader": "Los 4 módulos — qué se prueba, cómo atacarlo",
