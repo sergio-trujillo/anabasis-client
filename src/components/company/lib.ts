@@ -1,6 +1,13 @@
 import type { useTranslation } from "react-i18next";
 
-export type Section = { id: string; name: string; kind: string };
+export type Section = {
+	id: string;
+	name: string;
+	kind: string;
+	/** Optional sub-grouping label. Sections sharing a group render as a
+	 * nested block in the sidebar + company loop card. */
+	group?: string;
+};
 
 export type Phase = {
 	id: string;

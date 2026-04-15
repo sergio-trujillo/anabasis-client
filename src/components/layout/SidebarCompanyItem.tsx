@@ -18,11 +18,20 @@ import {
 } from "@/components/ui/sidebar";
 import { trpc } from "@/lib/trpc";
 
+type Section = {
+	id: string;
+	name: string;
+	kind: string;
+	/** Optional sub-grouping label. Sections sharing a group render as a
+	 * nested collapsible inside the phase. */
+	group?: string;
+};
+
 type Phase = {
 	id: string;
 	name: string;
 	description: string;
-	sections: Array<{ id: string; name: string; kind: string }>;
+	sections: Section[];
 };
 
 type Loop = {
@@ -98,6 +107,23 @@ export function SidebarCompanyItem({ company }: { company: Company }) {
 	);
 }
 
+type BucketItem = { section: Section; href: string };
+type Bucket = { group?: string; items: BucketItem[] };
+
+function bucketsFor(phase: Phase, companySlug: string): Bucket[] {
+	const buckets: Bucket[] = [];
+	for (const section of phase.sections) {
+		const href = sectionHref(companySlug, section.id);
+		const last = buckets[buckets.length - 1];
+		if (section.group && last && last.group === section.group) {
+			last.items.push({ section, href });
+		} else {
+			buckets.push({ group: section.group, items: [{ section, href }] });
+		}
+	}
+	return buckets;
+}
+
 function PhaseGroup({
 	phase,
 	companySlug,
@@ -107,8 +133,10 @@ function PhaseGroup({
 	companySlug: string;
 	currentPath: string;
 }) {
-	const hrefs = phase.sections.map((s) => sectionHref(companySlug, s.id));
-	const isPhaseActive = hrefs.some((h) => currentPath === h);
+	const buckets = bucketsFor(phase, companySlug);
+	const isPhaseActive = buckets.some((b) =>
+		b.items.some((it) => currentPath === it.href),
+	);
 
 	const [open, setOpen] = useState(isPhaseActive);
 	useEffect(() => {
@@ -122,26 +150,73 @@ function PhaseGroup({
 			className="group/collapsible"
 			render={<SidebarMenuSubItem />}
 		>
-			<CollapsibleTrigger
-				className="flex w-full items-center gap-2 rounded-md px-2 py-1 text-[10px] font-medium uppercase tracking-wide transition-colors text-muted-foreground hover:text-foreground hover:bg-muted data-[state=open]:text-foreground"
-			>
+			<CollapsibleTrigger className="flex w-full items-center gap-2 rounded-md px-2 py-1 text-[10px] font-medium uppercase tracking-wide transition-colors text-muted-foreground hover:text-foreground hover:bg-muted data-[state=open]:text-foreground">
 				<ChevronRightIcon className="size-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
 				<span className="flex-1 truncate text-left">{phase.name}</span>
 			</CollapsibleTrigger>
 			<CollapsibleContent>
 				<SidebarMenuSub>
-					{phase.sections.map((section, i) => {
-						const href = hrefs[i];
-						const isActive = currentPath === href;
-						return (
-							<SidebarMenuSubItem key={section.id}>
-								<SidebarMenuSubButton
-									isActive={isActive}
-									render={<Link to={href}>{section.name}</Link>}
-								/>
-							</SidebarMenuSubItem>
-						);
-					})}
+					{buckets.flatMap((bucket, bi) =>
+						bucket.group
+							? [
+									<NestedGroup
+										key={`${bucket.group}-${bi}`}
+										label={bucket.group}
+										items={bucket.items}
+										currentPath={currentPath}
+									/>,
+								]
+							: bucket.items.map(({ section, href }) => (
+									<SidebarMenuSubItem key={section.id}>
+										<SidebarMenuSubButton
+											isActive={currentPath === href}
+											render={<Link to={href}>{section.name}</Link>}
+										/>
+									</SidebarMenuSubItem>
+								)),
+					)}
+				</SidebarMenuSub>
+			</CollapsibleContent>
+		</Collapsible>
+	);
+}
+
+function NestedGroup({
+	label,
+	items,
+	currentPath,
+}: {
+	label: string;
+	items: BucketItem[];
+	currentPath: string;
+}) {
+	const isActive = items.some((it) => currentPath === it.href);
+	const [open, setOpen] = useState(isActive);
+	useEffect(() => {
+		if (isActive) setOpen(true);
+	}, [isActive]);
+
+	return (
+		<Collapsible
+			open={open}
+			onOpenChange={setOpen}
+			className="group/subcollapsible"
+			render={<SidebarMenuSubItem />}
+		>
+			<CollapsibleTrigger className="flex w-full items-center gap-2 rounded-md px-2 py-1 text-xs font-medium transition-colors text-muted-foreground hover:text-foreground hover:bg-muted data-[state=open]:text-foreground">
+				<ChevronRightIcon className="size-3 transition-transform duration-200 group-data-[state=open]/subcollapsible:rotate-90" />
+				<span className="flex-1 truncate text-left">{label}</span>
+			</CollapsibleTrigger>
+			<CollapsibleContent>
+				<SidebarMenuSub>
+					{items.map(({ section, href }) => (
+						<SidebarMenuSubItem key={section.id}>
+							<SidebarMenuSubButton
+								isActive={currentPath === href}
+								render={<Link to={href}>{section.name}</Link>}
+							/>
+						</SidebarMenuSubItem>
+					))}
 				</SidebarMenuSub>
 			</CollapsibleContent>
 		</Collapsible>
