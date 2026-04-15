@@ -559,10 +559,34 @@
       "summary": "A timed coding screen Capital One uses early in the loop. Four problems of increasing weight. All-or-nothing scoring per problem.",
       "scoringHeader": "How scoring actually works",
       "scoring": [
-        { "title": "Max score: 1000", "body": "Weights add up: 100 + 200 + 300 + 400. Capital One's published threshold is ~600, but stretch for 800+." },
-        { "title": "All-or-nothing per problem", "body": "Pass all tests = full weight. One hidden edge-case fail = zero. Correctness is king." },
-        { "title": "Hidden tests do the grading", "body": "Sample tests are a sanity check. The grader hammers with large inputs and nasty edges." },
-        { "title": "One submission, no penalty for waiting", "body": "You can run your code as many times as you want. Only the last submit at timeout is graded." }
+        {
+          "title": "Max score: 1000 — the weight arithmetic",
+          "body": "Weights compound geometrically: 100 + 200 + 300 + 400 = 1000. Capital One's published pass threshold is around 600, but a confident advance signal is 800 or more. Module 4 alone is worth more than Modules 1 and 2 combined, so the ceiling lives at the bottom of the exam.",
+          "pattern": "Treat the four modules as an investment portfolio. Your time-per-point yield is higher on Modules 3 and 4 than on Module 1 — clear the easy floor fast and shift the majority of the remaining budget into the modules whose weight you can still earn.",
+          "pacing": "Module 1 deserves 8 minutes at most. Polishing it for 15 minutes to shave off imagined bugs is how strong candidates end the exam at 600 instead of 800.",
+          "trap": "Perfecting the 100-point module while the 400-point module runs out of clock. 100 points of certainty is worth less than 400 points of a solid attempt."
+        },
+        {
+          "title": "All-or-nothing per problem — correctness trumps speed",
+          "body": "Each module is scored binary: every hidden test passes, or the module scores zero. There is no partial credit for a solution that fails a single edge case. A 'mostly right' answer is worth the same as an empty file.",
+          "pattern": "Write a correct brute force before you write an optimized solution, whenever input size allows it (typically Modules 1 and 2). A brute force that passes is worth infinitely more than a clever algorithm that fails one edge.",
+          "pacing": "After your solution passes the visible samples, spend 90 seconds walking through edge cases out loud: empty input, single element, all duplicates, maximum size, negative values. Don't submit without this pass.",
+          "trap": "Clicking submit the moment the sample tests go green. Samples are a compile check; the grader lives elsewhere, and it is ruthless about edges you didn't think about."
+        },
+        {
+          "title": "Hidden tests do the grading — samples are a sanity check",
+          "body": "The two or three tests visible in the editor are lightweight validators for obvious bugs and compile errors. The actual grader runs dozens of hidden cases with large inputs, adversarial boundaries, and performance limits. Passing the visible tests is necessary but far from sufficient.",
+          "pattern": "Think like the grader. Before you submit, generate your own mental test list: empty, single, maximum size, all identical, already sorted, reverse sorted, off-by-one from the constraint boundary. If you cannot invent five tests beyond the samples, you do not yet understand the problem.",
+          "pacing": "Budget roughly 2 of the ~15 minutes per module to think about edges. That small investment converts probable zeros into full credit.",
+          "trap": "Seeing green on the samples and assuming you're done. The grader has n = 10^5 inputs — your O(n²) passed the n = 5 sample and will time out on everything that actually counts."
+        },
+        {
+          "title": "Run freely — only the last submit at timeout is graded",
+          "body": "Code execution during the 70 minutes is unlimited. There is no penalty for a failed run and no penalty for submitting multiple times. Only the final submission on each problem at the end of the exam is scored, which turns the whole test into a long iterate-and-verify loop rather than a one-shot attempt.",
+          "pattern": "Use the console as a live debugger. Print intermediate values to see what your code is really doing. Submit early, even with a partial solution — then iterate. Submissions are replaceable, zeros are not.",
+          "pacing": "Don't ration your runs. Execute every 30–60 seconds while developing. The cost is zero and the information gain is real.",
+          "trap": "Holding a broken solution because you want to 'finish it first,' then hitting the timeout with nothing submitted. At minute 65, submit whatever you have and keep iterating — a 50% submission beats a 0% submission every single time."
+        }
       ],
       "modulesHeader": "The 4 modules — what's tested, how to attack",
       "modulesDeep": [

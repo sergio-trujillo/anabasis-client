@@ -15,7 +15,6 @@ import { OverviewConcepts } from "./components/OverviewConcepts";
 import { OverviewDeepCards } from "./components/OverviewDeepCards";
 import { OverviewFingerprints } from "./components/OverviewFingerprints";
 import { OverviewGlossary } from "./components/OverviewGlossary";
-import { OverviewGrid } from "./components/OverviewGrid";
 import { OverviewPanelCards } from "./components/OverviewPanelCards";
 import { OverviewPrepTimeline } from "./components/OverviewPrepTimeline";
 import { OverviewRoundsTabs } from "./components/OverviewRoundsTabs";
@@ -315,14 +314,16 @@ export function ChapterContent({
 
 	if (topic === "gca") {
 		if (slug === "scoring") {
-			const items = tArray<{ title: string; body: string }>(
-				t,
-				"sectionOverview.gca.scoring",
-			);
+			const items = tArray<DeepItem>(t, "sectionOverview.gca.scoring");
 			return (
-				<OverviewGrid
+				<OverviewDeepCards
 					header={t("sectionOverview.gca.scoringHeader")}
 					items={items}
+					labels={{
+						pattern: labels.pattern,
+						pacing: labels.pacing,
+						trap: labels.trap,
+					}}
 				/>
 			);
 		}

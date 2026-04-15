@@ -559,10 +559,34 @@
       "summary": "Un screening de código cronometrado que Capital One usa temprano en el loop. Cuatro problemas de peso creciente. Puntaje todo-o-nada por problema.",
       "scoringHeader": "Cómo puntúa de verdad",
       "scoring": [
-        { "title": "Puntaje máximo: 1000", "body": "Los pesos suman: 100 + 200 + 300 + 400. El umbral publicado de Capital One ronda los ~600, pero apunta a 800+." },
-        { "title": "Todo o nada por problema", "body": "Pasar todos los tests = peso completo. Un solo edge-case oculto que falle = cero. Reina la correctitud." },
-        { "title": "Los tests ocultos califican", "body": "Los tests visibles son sanity check. El grader martillea con inputs grandes y bordes feos." },
-        { "title": "Una entrega, sin penalización por esperar", "body": "Corres tu código cuantas veces quieras. Solo el último submit al final cuenta." }
+        {
+          "title": "Puntaje máximo: 1000 — la aritmética de los pesos",
+          "body": "Los pesos crecen de forma geométrica: 100 + 200 + 300 + 400 = 1000. El umbral publicado por Capital One para avanzar ronda los 600, pero una señal de avance sólida es 800 o más. El Módulo 4 por sí solo pesa más que los Módulos 1 y 2 juntos, por lo que el techo del examen vive al final.",
+          "pattern": "Trata los cuatro módulos como un portafolio de inversión. El rendimiento por minuto es mucho mayor en los Módulos 3 y 4 que en el 1 — liquida el suelo fácil rápido y redirige la mayoría del presupuesto restante hacia los módulos cuyo peso todavía puedes capturar.",
+          "pacing": "El Módulo 1 merece 8 minutos como máximo. Pulirlo durante 15 minutos buscando bugs imaginarios es la forma en la que candidatos fuertes terminan en 600 en lugar de 800.",
+          "trap": "Perfeccionar el módulo de 100 puntos mientras al de 400 se le acaba el reloj. 100 puntos de certeza valen menos que 400 puntos de un intento sólido."
+        },
+        {
+          "title": "Todo o nada por problema — la correctitud vence a la velocidad",
+          "body": "Cada módulo se puntúa de forma binaria: o pasan todos los tests ocultos, o el módulo saca cero. No hay crédito parcial por una solución que falla un solo edge case. Una respuesta 'casi correcta' vale lo mismo que un archivo vacío.",
+          "pattern": "Escribe un brute force correcto antes de escribir una solución optimizada siempre que el tamaño de la entrada lo permita (típicamente Módulos 1 y 2). Un brute force que pasa vale infinitamente más que un algoritmo ingenioso que falla un caso borde.",
+          "pacing": "Después de que tu solución pase los samples visibles, dedica 90 segundos a recorrer los edge cases en voz alta: entrada vacía, un solo elemento, todos duplicados, tamaño máximo, valores negativos. No envíes sin esa pasada.",
+          "trap": "Hacer clic en submit en cuanto los sample tests se ponen verdes. Los samples son un compile check; el grader vive en otro lugar y es implacable con los bordes en los que no pensaste."
+        },
+        {
+          "title": "Los tests ocultos califican — los visibles son sanity check",
+          "body": "Los dos o tres tests que ves en el editor son validadores ligeros para bugs obvios y errores de compilación. El grader real corre decenas de casos ocultos con entradas grandes, bordes adversariales y límites de desempeño. Pasar los visibles es necesario, pero dista mucho de ser suficiente.",
+          "pattern": "Piensa como el grader. Antes de enviar, genera tu propia lista mental de tests: vacío, uno solo, tamaño máximo, todos iguales, ya ordenado, ordenado al revés, uno fuera del límite del constraint. Si no puedes inventar cinco tests más allá de los samples, todavía no entiendes el problema.",
+          "pacing": "Presupuesta aproximadamente 2 de los ~15 minutos por módulo para pensar en bordes. Esa pequeña inversión convierte ceros probables en puntaje completo.",
+          "trap": "Ver verde en los samples y dar por hecho que ya terminaste. El grader tiene entradas con n = 10^5 — tu O(n²) pasó el sample de n = 5 y hará timeout en todo lo que realmente cuenta."
+        },
+        {
+          "title": "Corre libremente — solo el último submit al cierre se califica",
+          "body": "La ejecución de código durante los 70 minutos es ilimitada. No hay penalización por un run fallido ni por enviar varias veces. Solo la última entrega de cada problema al cierre del examen se puntúa, lo que convierte todo el test en un ciclo largo de iterar y verificar en lugar de un intento único.",
+          "pattern": "Usa la consola como un debugger en vivo. Imprime valores intermedios para ver qué está haciendo tu código en realidad. Envía temprano, aunque tengas una solución parcial — después iteras. Los submits se pueden reemplazar, los ceros no.",
+          "pacing": "No raciones los runs. Ejecuta cada 30–60 segundos mientras desarrollas. El costo es cero y la información que ganas es real.",
+          "trap": "Aferrarse a una solución rota porque quieres 'terminarla primero' y llegar al timeout sin haber enviado nada. En el minuto 65, envía lo que tengas y sigue iterando — una entrega al 50% le gana cada vez a una entrega al 0%."
+        }
       ],
       "modulesHeader": "Los 4 módulos — qué se prueba, cómo atacarlo",
       "modulesDeep": [
