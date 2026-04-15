@@ -6,7 +6,7 @@
 
 import { LockIcon, MountainSnowIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
+import { Link } from "react-router";
 import type { Company } from "@/components/catalog/types";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -35,7 +35,6 @@ const PLACEHOLDER_USER = {
 
 export function AppSidebar() {
 	const { t } = useTranslation();
-	const navigate = useNavigate();
 	const companiesQuery = trpc.companies.list.useQuery();
 	const companies = companiesQuery.data ?? [];
 	const active = companies.filter((c) => c.status === "active");
@@ -44,27 +43,20 @@ export function AppSidebar() {
 	return (
 		<Sidebar collapsible="icon">
 			<SidebarHeader>
-				<SidebarMenu>
-					<SidebarMenuItem>
-						<SidebarMenuButton
-							size="lg"
-							tooltip="Anabasis · ἀνάβασις"
-							onClick={() => navigate("/")}
-						>
-							<div className="flex aspect-square size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:rounded-lg">
-								<MountainSnowIcon className="size-5 group-data-[collapsible=icon]:size-4" />
-							</div>
-							<div className="grid flex-1 text-left text-sm leading-tight">
-								<span className="truncate font-heading font-semibold">
-									Anabasis
-								</span>
-								<span className="truncate text-xs text-muted-foreground">
-									ἀνάβασις · the ascent
-								</span>
-							</div>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
-				</SidebarMenu>
+				<Link
+					to="/"
+					className="flex items-center gap-3 px-2 py-3 rounded-lg hover:bg-sidebar-accent transition-colors group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
+				>
+					<div className="flex aspect-square size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:rounded-lg">
+						<MountainSnowIcon className="size-5 group-data-[collapsible=icon]:size-4" />
+					</div>
+					<div className="flex flex-col leading-none group-data-[collapsible=icon]:hidden">
+						<span className="text-base font-bold tracking-tight">Anabasis</span>
+						<span className="text-[11px] text-muted-foreground">
+							ἀνάβασις · the ascent
+						</span>
+					</div>
+				</Link>
 			</SidebarHeader>
 
 			<SidebarContent>
