@@ -722,6 +722,104 @@ function getWordRange(model: editor.ITextModel, position: { lineNumber: number; 
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────
+// Auto-import: when a completion for a non-java.lang type is accepted,
+// attach a TextEdit that prepends `import <fqcn>;` at the top of the file.
+// java.lang types are implicit — no import needed.
+// ─────────────────────────────────────────────────────────────────────────
+
+const JAVA_TYPE_IMPORTS: Record<string, string> = {
+  // java.util collections + utilities
+  List: 'java.util.List',
+  ArrayList: 'java.util.ArrayList',
+  LinkedList: 'java.util.LinkedList',
+  Map: 'java.util.Map',
+  HashMap: 'java.util.HashMap',
+  TreeMap: 'java.util.TreeMap',
+  LinkedHashMap: 'java.util.LinkedHashMap',
+  Set: 'java.util.Set',
+  HashSet: 'java.util.HashSet',
+  TreeSet: 'java.util.TreeSet',
+  LinkedHashSet: 'java.util.LinkedHashSet',
+  Queue: 'java.util.Queue',
+  PriorityQueue: 'java.util.PriorityQueue',
+  Deque: 'java.util.Deque',
+  ArrayDeque: 'java.util.ArrayDeque',
+  Stack: 'java.util.Stack',
+  Vector: 'java.util.Vector',
+  Arrays: 'java.util.Arrays',
+  Collections: 'java.util.Collections',
+  Optional: 'java.util.Optional',
+  Comparator: 'java.util.Comparator',
+  Iterator: 'java.util.Iterator',
+  Objects: 'java.util.Objects',
+  Random: 'java.util.Random',
+  // java.util.stream
+  Stream: 'java.util.stream.Stream',
+  Collectors: 'java.util.stream.Collectors',
+  IntStream: 'java.util.stream.IntStream',
+  LongStream: 'java.util.stream.LongStream',
+  DoubleStream: 'java.util.stream.DoubleStream',
+}
+
+// Compute a TextEdit that inserts `import <fqcn>;` at the right spot, unless
+// the file already imports it (either directly or via a wildcard). Returns
+// null when no edit is needed.
+function buildImportEdit(
+  model: editor.ITextModel,
+  monaco: Monaco,
+  fqcn: string,
+): languages.TextEdit | null {
+  const source = model.getValue()
+  const pkg = fqcn.slice(0, fqcn.lastIndexOf('.'))
+  const directRe = new RegExp(
+    `^\\s*import\\s+${fqcn.replace(/\./g, '\\.')}\\s*;`,
+    'm',
+  )
+  const wildcardRe = new RegExp(
+    `^\\s*import\\s+${pkg.replace(/\./g, '\\.')}\\.\\*\\s*;`,
+    'm',
+  )
+  if (directRe.test(source) || wildcardRe.test(source)) return null
+
+  // Find insertion line: after the last existing import, or after a package
+  // declaration, or line 1.
+  const lines = source.split('\n')
+  let insertLine = 1
+  let hasExistingImport = false
+  for (let i = 0; i < lines.length; i += 1) {
+    const ln = lines[i].trim()
+    if (ln.startsWith('package ')) {
+      insertLine = i + 2 // after the package line (1-indexed + blank line)
+    }
+    if (ln.startsWith('import ')) {
+      insertLine = i + 2 // after this import
+      hasExistingImport = true
+    }
+    if (ln.startsWith('class ') || ln.startsWith('public class ')) break
+  }
+
+  const textToInsert = hasExistingImport
+    ? `import ${fqcn};\n`
+    : `import ${fqcn};\n\n`
+
+  return {
+    range: new monaco.Range(insertLine, 1, insertLine, 1),
+    text: textToInsert,
+  }
+}
+
+// Collect every non-java.lang type referenced inside a snippet's insertText
+// so we can attach the right set of import edits when the snippet is picked.
+function collectSnippetImports(insertText: string): string[] {
+  const imports: string[] = []
+  for (const [typeName, fqcn] of Object.entries(JAVA_TYPE_IMPORTS)) {
+    const re = new RegExp(`\\b${typeName}\\b`)
+    if (re.test(insertText)) imports.push(fqcn)
+  }
+  return imports
+}
+
 export function registerJavaCompletions(monaco: Monaco): void {
   // Keywords, types, and snippets
   monaco.languages.registerCompletionItemProvider('java', {
@@ -735,22 +833,34 @@ export function registerJavaCompletions(monaco: Monaco): void {
         range,
       }))
 
-      const typeSuggestions: languages.CompletionItem[] = JAVA_TYPES.map((type) => ({
-        label: type,
-        kind: monaco.languages.CompletionItemKind.Class,
-        insertText: type,
-        detail: 'Java type',
-        range,
-      }))
+      const typeSuggestions: languages.CompletionItem[] = JAVA_TYPES.map((type) => {
+        const fqcn = JAVA_TYPE_IMPORTS[type]
+        const importEdit = fqcn ? buildImportEdit(model, monaco, fqcn) : null
+        return {
+          label: type,
+          kind: monaco.languages.CompletionItemKind.Class,
+          insertText: type,
+          detail: fqcn ? `Java type · ${fqcn}` : 'Java type',
+          range,
+          additionalTextEdits: importEdit ? [importEdit] : undefined,
+        }
+      })
 
-      const snippetSuggestions: languages.CompletionItem[] = JAVA_SNIPPETS.map((s) => ({
-        label: s.label,
-        kind: monaco.languages.CompletionItemKind.Snippet,
-        insertText: s.insertText,
-        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-        detail: s.detail,
-        range,
-      }))
+      const snippetSuggestions: languages.CompletionItem[] = JAVA_SNIPPETS.map((s) => {
+        const imports = collectSnippetImports(s.insertText)
+        const edits = imports
+          .map((fqcn) => buildImportEdit(model, monaco, fqcn))
+          .filter((e): e is languages.TextEdit => e !== null)
+        return {
+          label: s.label,
+          kind: monaco.languages.CompletionItemKind.Snippet,
+          insertText: s.insertText,
+          insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+          detail: s.detail,
+          range,
+          additionalTextEdits: edits.length > 0 ? edits : undefined,
+        }
+      })
 
       return {
         suggestions: [...keywordSuggestions, ...typeSuggestions, ...snippetSuggestions],
@@ -785,6 +895,7 @@ export function registerJavaCompletions(monaco: Monaco): void {
       }
 
       // Simple "something." pattern
+      let staticHostForImport: string | null = null
       if (methods.length === 0) {
         const dotMatch = textBeforeCursor.match(/(\w+)\.\s*$/)
         if (!dotMatch) return { suggestions: [] }
@@ -794,6 +905,9 @@ export function registerJavaCompletions(monaco: Monaco): void {
         // Check static methods first (starts with uppercase)
         if (prefix[0] === prefix[0].toUpperCase() && STATIC_METHODS[prefix]) {
           methods = STATIC_METHODS[prefix]
+          // If the class is importable (e.g., Arrays, Collections, Objects),
+          // attach the import edit so accepting the method also adds it.
+          if (JAVA_TYPE_IMPORTS[prefix]) staticHostForImport = prefix
         }
 
         // Check if it's a variable — try to resolve its type
@@ -819,6 +933,10 @@ export function registerJavaCompletions(monaco: Monaco): void {
         }
       }
 
+      const importEdit = staticHostForImport
+        ? buildImportEdit(model, monaco, JAVA_TYPE_IMPORTS[staticHostForImport])
+        : null
+
       // Deduplicate by label+detail (overloads have different details)
       const seen = new Set<string>()
       const suggestions: languages.CompletionItem[] = []
@@ -839,6 +957,7 @@ export function registerJavaCompletions(monaco: Monaco): void {
             : undefined,
           range,
           sortText: `0_${m.label}`,
+          additionalTextEdits: importEdit ? [importEdit] : undefined,
         })
       }
 
