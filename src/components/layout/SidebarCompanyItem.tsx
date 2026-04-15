@@ -119,42 +119,30 @@ function PhaseGroup({
 		<Collapsible
 			open={open}
 			onOpenChange={setOpen}
-			className="group/phase mt-2"
+			className="group/collapsible"
 			render={<SidebarMenuSubItem />}
 		>
 			<CollapsibleTrigger
-				className={
-					"flex w-full items-center gap-2 rounded-md px-2 py-1 text-[10px] font-medium uppercase tracking-wide transition-colors " +
-					(isPhaseActive
-						? "text-foreground"
-						: "text-muted-foreground hover:text-foreground hover:bg-muted")
-				}
+				className="flex w-full items-center gap-2 rounded-md px-2 py-1 text-[10px] font-medium uppercase tracking-wide transition-colors text-muted-foreground hover:text-foreground hover:bg-muted data-[state=open]:text-foreground"
 			>
-				<ChevronRightIcon className="size-3 transition-transform duration-200 group-data-open/phase:rotate-90" />
+				<ChevronRightIcon className="size-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
 				<span className="flex-1 truncate text-left">{phase.name}</span>
 			</CollapsibleTrigger>
 			<CollapsibleContent>
-				<ul className="mt-1 space-y-0.5">
+				<SidebarMenuSub>
 					{phase.sections.map((section, i) => {
 						const href = hrefs[i];
 						const isActive = currentPath === href;
 						return (
-							<li key={section.id}>
-								<Link
-									to={href}
-									className={
-										"block pl-5 pr-2 py-1 text-xs rounded-md truncate transition-colors " +
-										(isActive
-											? "bg-muted text-foreground"
-											: "text-muted-foreground hover:text-foreground hover:bg-muted")
-									}
-								>
-									{section.name}
-								</Link>
-							</li>
+							<SidebarMenuSubItem key={section.id}>
+								<SidebarMenuSubButton
+									isActive={isActive}
+									render={<Link to={href}>{section.name}</Link>}
+								/>
+							</SidebarMenuSubItem>
 						);
 					})}
-				</ul>
+				</SidebarMenuSub>
 			</CollapsibleContent>
 		</Collapsible>
 	);

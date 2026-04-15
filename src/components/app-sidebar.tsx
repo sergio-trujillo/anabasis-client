@@ -51,8 +51,8 @@ export function AppSidebar() {
 							tooltip="Anabasis · ἀνάβασις"
 							onClick={() => navigate("/")}
 						>
-							<div className="flex aspect-square size-8 items-center justify-center rounded-lg border bg-sidebar-accent text-sidebar-accent-foreground">
-								<MountainSnowIcon className="size-4" />
+							<div className="flex aspect-square size-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:rounded-lg">
+								<MountainSnowIcon className="size-5 group-data-[collapsible=icon]:size-4" />
 							</div>
 							<div className="grid flex-1 text-left text-sm leading-tight">
 								<span className="truncate font-heading font-semibold">
