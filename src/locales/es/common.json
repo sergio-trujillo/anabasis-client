@@ -195,7 +195,10 @@
     "testsFailed_other": "{{count}} pruebas fallaron",
     "passed": "pasaron",
     "expected": "Esperado",
-    "actual": "Actual"
+    "actual": "Actual",
+    "testsTab": "Pruebas",
+    "consoleTab": "Consola",
+    "consoleEmpty": "Sin salida — usa System.out.println para ver mensajes."
   },
   "problem": {
     "run": "Ejecutar",

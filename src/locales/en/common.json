@@ -195,7 +195,10 @@
     "testsFailed_other": "{{count}} tests failed",
     "passed": "passed",
     "expected": "Expected",
-    "actual": "Actual"
+    "actual": "Actual",
+    "testsTab": "Tests",
+    "consoleTab": "Console",
+    "consoleEmpty": "No stdout — add System.out.println to see output."
   },
   "problem": {
     "run": "Run",

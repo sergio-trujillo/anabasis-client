@@ -1,13 +1,14 @@
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
-  CheckCircleIcon,
-  XCircleIcon,
   AlertCircleIcon,
+  CheckCircleIcon,
+  ChevronRightIcon,
   LoaderIcon,
   TerminalIcon,
-  ChevronRightIcon,
+  XCircleIcon,
 } from 'lucide-react'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface TestResult {
   name: string
@@ -26,6 +27,7 @@ interface RunResult {
   passedTests: number
   failedTests: number
   timeMs: number
+  stdout?: string
 }
 
 interface OutputPanelProps {
@@ -181,27 +183,89 @@ export function OutputPanel({ result, isRunning, onGoToLine }: OutputPanelProps)
         <pre className="whitespace-pre-wrap rounded-md bg-muted/50 p-3 font-mono text-xs text-destructive">
           {parseCompilationError(result.compilationError, onGoToLine)}
         </pre>
+        {result.stdout && <ConsoleBlock stdout={result.stdout} />}
       </div>
     )
   }
 
-  return (
-    <div className="h-full overflow-auto p-4">
-      {/* Summary */}
-      <div className={`mb-3 flex items-center gap-2 text-sm font-medium ${result.success ? 'text-green-500' : 'text-destructive'}`}>
-        {result.success ? <CheckCircleIcon className="size-4" /> : <XCircleIcon className="size-4" />}
-        {result.success ? t('output.allPassed') : t('output.testsFailed', { count: result.failedTests })}
-        <span className="text-xs text-muted-foreground">
-          ({result.passedTests}/{result.totalTests} {t('output.passed')}, {result.timeMs}ms)
-        </span>
-      </div>
+  const hasStdout = !!(result.stdout && result.stdout.length > 0)
 
-      {/* Test results */}
-      <div className="space-y-1.5">
-        {result.testResults.map((test) => (
-          <TestResultItem key={test.name} test={test} onGoToLine={onGoToLine} />
-        ))}
+  return (
+    <div className="h-full overflow-hidden flex flex-col">
+      <Tabs defaultValue="tests" className="flex flex-col h-full">
+        <TabsList className="mx-4 mt-3 w-fit">
+          <TabsTrigger value="tests" className="text-xs">
+            {t('output.testsTab', { defaultValue: 'Tests' })}
+            <span className="ml-1.5 text-muted-foreground tabular-nums">
+              {result.passedTests}/{result.totalTests}
+            </span>
+          </TabsTrigger>
+          <TabsTrigger value="console" className="text-xs" disabled={!hasStdout}>
+            {t('output.consoleTab', { defaultValue: 'Console' })}
+            {hasStdout && (
+              <span className="ml-1.5 size-1.5 rounded-full bg-primary inline-block" />
+            )}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="tests" className="flex-1 overflow-auto px-4 pb-4 mt-2">
+          <div
+            className={`mb-3 flex items-center gap-2 text-sm font-medium ${result.success ? 'text-green-500' : 'text-destructive'}`}
+          >
+            {result.success ? (
+              <CheckCircleIcon className="size-4" />
+            ) : (
+              <XCircleIcon className="size-4" />
+            )}
+            {result.success
+              ? t('output.allPassed')
+              : t('output.testsFailed', { count: result.failedTests })}
+            <span className="text-xs text-muted-foreground">
+              ({result.passedTests}/{result.totalTests} {t('output.passed')},{' '}
+              {result.timeMs}ms)
+            </span>
+          </div>
+
+          <div className="space-y-1.5">
+            {result.testResults.map((test) => (
+              <TestResultItem key={test.name} test={test} onGoToLine={onGoToLine} />
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent
+          value="console"
+          className="flex-1 overflow-auto px-4 pb-4 mt-2"
+        >
+          {hasStdout ? (
+            <pre className="whitespace-pre-wrap rounded-md bg-muted/50 p-3 font-mono text-xs leading-relaxed">
+              {result.stdout}
+            </pre>
+          ) : (
+            <div className="flex h-full items-center justify-center gap-2 text-xs text-muted-foreground">
+              <TerminalIcon className="size-3.5" />
+              {t('output.consoleEmpty', {
+                defaultValue: 'No stdout — add System.out.println to see output.',
+              })}
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
+}
+
+function ConsoleBlock({ stdout }: { stdout: string }) {
+  const { t } = useTranslation()
+  return (
+    <div className="mt-4">
+      <div className="mb-2 flex items-center gap-2 text-xs font-medium text-muted-foreground">
+        <TerminalIcon className="size-3.5" />
+        {t('output.consoleTab', { defaultValue: 'Console' })}
       </div>
+      <pre className="whitespace-pre-wrap rounded-md bg-muted/50 p-3 font-mono text-xs leading-relaxed">
+        {stdout}
+      </pre>
     </div>
   )
 }
