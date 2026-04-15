@@ -46,6 +46,12 @@ type RunResult = {
   timeMs: number
 }
 
+export interface CodeExampleProp {
+  input: string
+  output: string
+  explanation?: string
+}
+
 export interface CodeProblemLayoutProps {
   title: { en: string; es?: string | null }
   statement: { en: string; es?: string | null }
@@ -62,6 +68,12 @@ export interface CodeProblemLayoutProps {
     explanation?: { en: string; es?: string | null }
     complexity?: { en: string; es?: string | null }
   }
+  /** Worked examples shown below the statement (LeetCode-style). */
+  examples?: CodeExampleProp[]
+  /** Bulleted constraints (locale-resolved at parent). */
+  constraints?: string[]
+  /** Progressive hints rendered as collapsible details (locale-resolved). */
+  hints?: string[]
   /** Optional — right-side badge (e.g. "Problem 2 of 4 · 300 pts"). */
   rightSlot?: React.ReactNode
   /** Optional — rendered under the statement (e.g. "Next problem →" link). */
@@ -85,6 +97,9 @@ export function CodeProblemLayout({
   onReset,
   result,
   solution,
+  examples,
+  constraints,
+  hints,
   rightSlot,
   belowStatement,
 }: CodeProblemLayoutProps) {
@@ -168,8 +183,15 @@ export function CodeProblemLayout({
                       setScrolled((prev) => (prev ? top > 12 : top > 28))
                     }}
                   >
-                    <div className="px-6 pt-4 pb-6 text-sm text-foreground/90">
+                    <div className="px-6 pt-4 pb-6 text-sm text-foreground/90 space-y-6">
                       <ShadcnMarkdown>{bilingual(statement)}</ShadcnMarkdown>
+                      {examples && examples.length > 0 && (
+                        <ExamplesSection examples={examples} />
+                      )}
+                      {constraints && constraints.length > 0 && (
+                        <ConstraintsSection constraints={constraints} />
+                      )}
+                      {hints && hints.length > 0 && <HintsSection hints={hints} />}
                     </div>
                   </div>
                 </TabsContent>
@@ -303,5 +325,98 @@ function SolutionPanel({
         </Button>
       )}
     </div>
+  )
+}
+
+function ExamplesSection({ examples }: { examples: CodeExampleProp[] }) {
+  const { t } = useTranslation()
+  return (
+    <section className="space-y-3">
+      {examples.map((ex, i) => (
+        <div
+          key={i}
+          className="rounded-md border border-border/60 bg-muted/20 p-4 space-y-2"
+        >
+          <div className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
+            {t('problem.example', { defaultValue: 'Example' })} {i + 1}
+          </div>
+          <div className="space-y-1.5 font-mono text-xs">
+            <div className="flex gap-2">
+              <span className="shrink-0 text-muted-foreground/70 w-[68px]">
+                {t('problem.input', { defaultValue: 'Input' })}:
+              </span>
+              <code className="whitespace-pre-wrap break-all">{ex.input}</code>
+            </div>
+            <div className="flex gap-2">
+              <span className="shrink-0 text-muted-foreground/70 w-[68px]">
+                {t('problem.output', { defaultValue: 'Output' })}:
+              </span>
+              <code className="whitespace-pre-wrap break-all">{ex.output}</code>
+            </div>
+          </div>
+          {ex.explanation && (
+            <div className="pt-2 border-t border-border/50 text-xs text-muted-foreground leading-relaxed">
+              <span className="font-semibold text-foreground/80 mr-1">
+                {t('problem.explanation', { defaultValue: 'Explanation' })}:
+              </span>
+              {ex.explanation}
+            </div>
+          )}
+        </div>
+      ))}
+    </section>
+  )
+}
+
+function ConstraintsSection({ constraints }: { constraints: string[] }) {
+  const { t } = useTranslation()
+  return (
+    <section className="space-y-2">
+      <h4 className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
+        {t('problem.constraints', { defaultValue: 'Constraints' })}
+      </h4>
+      <ul className="space-y-1 pl-5 list-disc marker:text-muted-foreground/50 text-xs leading-relaxed">
+        {constraints.map((c, i) => (
+          <li key={i}>
+            <code className="font-mono text-[11px]">{c}</code>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+function HintsSection({ hints }: { hints: string[] }) {
+  const { t } = useTranslation()
+  return (
+    <section className="space-y-2">
+      <h4 className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
+        {t('problem.hints', { defaultValue: 'Hints' })}
+      </h4>
+      <div className="space-y-1.5">
+        {hints.map((h, i) => (
+          <details
+            key={i}
+            className="rounded-md border border-border/60 bg-muted/20 px-3 py-2 text-xs [&_summary::-webkit-details-marker]:hidden [&[open]>summary_svg]:rotate-90"
+          >
+            <summary className="flex items-center gap-2 cursor-pointer select-none text-muted-foreground hover:text-foreground transition-colors list-none">
+              <svg
+                className="size-3 transition-transform shrink-0"
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <path d="M4.5 3l3 3-3 3" />
+              </svg>
+              <span className="font-semibold">
+                {t('problem.hint', { defaultValue: 'Hint' })} {i + 1}
+              </span>
+            </summary>
+            <p className="mt-2 pl-5 leading-relaxed text-foreground/85">{h}</p>
+          </details>
+        ))}
+      </div>
+    </section>
   )
 }

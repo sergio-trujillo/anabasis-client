@@ -17,7 +17,7 @@ import { CodeProblemLayout } from '@/components/problem/CodeProblemLayout'
 import { Badge } from '@/components/ui/badge'
 import { MagicCard } from '@/components/ui/magic-card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { bilingual } from '@/lib/i18n'
+import { bilingual, bilingualList } from '@/lib/i18n'
 import { trpc } from '@/lib/trpc'
 
 const DIFF_ORDER: Record<string, number> = { easy: 0, medium: 1, hard: 2 }
@@ -112,6 +112,14 @@ type CodeSolution = {
   complexity?: { en: string; es?: string | null }
 }
 
+type CodeExample = {
+  input: string
+  output: string
+  explanation?: { en: string; es?: string | null }
+}
+
+type BilingualList = string[] | { en: string[]; es?: string[] | null }
+
 type CodeExercise = {
   id: string
   type: 'code'
@@ -121,6 +129,9 @@ type CodeExercise = {
   testCode: string
   difficulty?: string
   solution?: CodeSolution
+  examples?: CodeExample[]
+  constraints?: BilingualList
+  hints?: BilingualList
 }
 
 type Sibling = {
@@ -177,6 +188,12 @@ function CodeExerciseRunner({
       </div>
     ) : null
 
+  const examplesForUI = exercise.examples?.map((ex) => ({
+    input: ex.input,
+    output: ex.output,
+    explanation: ex.explanation ? bilingual(ex.explanation) : undefined,
+  }))
+
   return (
     <div className="h-[calc(100vh-3.5rem)]">
       <CodeProblemLayout
@@ -192,6 +209,9 @@ function CodeExerciseRunner({
         onReset={() => setCode(exercise.starterCode)}
         result={runJava.data ?? null}
         solution={exercise.solution}
+        examples={examplesForUI}
+        constraints={bilingualList(exercise.constraints)}
+        hints={bilingualList(exercise.hints)}
         rightSlot={rightSlot}
         belowStatement={belowStatement}
       />

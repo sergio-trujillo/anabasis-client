@@ -58,4 +58,22 @@ export function bilingual(
   return field.en;
 }
 
+/**
+ * List variant — content authors can author as a plain string[] (locale-neutral)
+ * OR as { en: string[]; es: string[] } when the list needs translation.
+ */
+export function bilingualList(
+  field:
+    | string[]
+    | { en: string[]; es?: string[] | null }
+    | null
+    | undefined,
+): string[] {
+  if (!field) return [];
+  if (Array.isArray(field)) return field;
+  const active = i18n.language as SupportedLanguage;
+  if (active === "es" && field.es && field.es.length > 0) return field.es;
+  return field.en ?? [];
+}
+
 export default i18n;
